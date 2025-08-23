@@ -1,0 +1,9 @@
+langchain-core
+langgraph>0.2.27
+ipykernel
+langchain-openai
+langchain-community
+pandas
+faker
+faiss-cpu
+tabulate
