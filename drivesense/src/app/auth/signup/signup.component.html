@@ -1,0 +1,16 @@
+<!-- signup.component.html -->
+<div class="login-container">
+  <h2 class="header">sign up</h2>
+  <form (ngSubmit)="signup()">
+  <input [(ngModel)]="firstname" placeholder="fist name" />
+  <input [(ngModel)]="lastname" placeholder="last name" />
+  <input [(ngModel)]="email" type="email" placeholder="email Id" />
+  <input [(ngModel)]="mobile" type="tel" placeholder="mobile number" />
+  <input [(ngModel)]="password" type="password" placeholder="password" />
+  <button type="submit">sign up</button>
+</form>
+  <p>
+    Already have an account?
+    <a routerLink="/login">login here</a>
+  </p>
+</div>

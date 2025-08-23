@@ -1,0 +1,7 @@
+<!-- chat-sidebar.component.html -->
+<aside class="sidebar" [class.collapsed]="collapsed">
+  <button (click)="toggleSidebar()">☰</button>
+  <ul *ngIf="!collapsed">
+    <li *ngFor="let convo of conversations">{{ convo.title }}</li>
+  </ul>
+</aside>

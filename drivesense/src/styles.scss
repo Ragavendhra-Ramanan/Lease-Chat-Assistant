@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+html, body {
+    height: 100%;
+    margin:0;
+}
+
+a {
+  text-decoration: none;
+  color: #195381;
+  transition: 0.2s;
+}
+
+a:hover {
+  color: #00adb3;
+}

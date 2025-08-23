@@ -1,0 +1,14 @@
+/* chat-layout.component.scss */
+.app-body {
+  display: flex;
+  height:calc(100vh - 50px);
+}
+
+.chat-area {
+  display: flex;
+  flex: 1;
+  background: url('../../../assets/log.png') no-repeat center center;
+  background-size: cover;
+  flex-direction: column;
+  min-height: 0;
+}
