@@ -4,6 +4,7 @@ import { provideRouter, Routes } from '@angular/router';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
 import { ChatLayoutComponent } from './modules/chat-layout/chat-layout.component';
+import { provideHttpClient } from '@angular/common/http';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -13,5 +14,5 @@ const routes: Routes = [
 ];
 
 export const appConfig: ApplicationConfig = {
-  providers: [provideRouter(routes)]
+  providers: [provideRouter(routes), provideHttpClient()]
 };

@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-signup',
@@ -12,33 +14,44 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./signup.component.scss']
 })
 export class SignupComponent {
-  firstname = '';
-  lastname=''
-  email = '';
-  mobile = '';
-  password = '';
+  user:User ={
+    firstName:'',
+    lastName:'',
+    email:'',
+    mobile:'',
+    password:''
+  };
 
-  constructor(private router: Router) {}
+  constructor(private router: Router,private authService: AuthService) {
+  }
 
   signup() {
-    if (!this.firstname || !this.password) {
+    console.log('Login successful:', this.user)
+    if (!this.user.firstName || !this.user.password) {
       alert('Name and password are required');
       return;
     }
 
-    if (!this.email && !this.mobile) {
+    if (!this.user.email && !this.user.mobile) {
       alert('Please provide at least email or mobile number');
       return;
     }
 
-    // TODO: Call auth service to register user
-    console.log('Signup successful:', {
-      firstnamename: this.firstname,
-      email: this.email,
-      mobile: this.mobile,
-      password: this.password
+this.authService.signup(this.user).subscribe({
+      next: (res) => {
+        console.log('Signup response:',this.user, res);
+        if (res.success) {
+          alert('Signup successful! Please login.');
+          this.router.navigate(['/login']);
+        } else {
+          alert(res.message || 'Signup failed. Try again.');
+        }
+      },
+      error: (err) => {
+        console.error('Signup error:', err);
+        alert('Something went wrong during signup.');
+      }
     });
-
-    this.router.navigate(['/login']);
   }
 }
+
