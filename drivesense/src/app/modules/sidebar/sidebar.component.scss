@@ -1,0 +1,29 @@
+/* chat-sidebar.component.scss */
+.sidebar {
+  width: 250px;
+  background: #3a4780;
+  color: white;
+  height: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-y: auto;
+  transition: width 0.3s;
+  overflow-x: hidden;
+}
+.sidebar.collapsed {
+  width: 50px;
+}
+button{
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  margin: 10px;
+}
+ul{
+  list-style: none;
+  padding: 0;
+}
+li{
+  padding:10px;
+}
