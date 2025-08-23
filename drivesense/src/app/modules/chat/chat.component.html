@@ -1,9 +1,7 @@
 <!-- chat-window.component.html -->
 <div class="chat-window">
   <div #scrollContainer class="messages">
-    <div *ngFor="let message of messages" class="message" [ngClass]="message.sender">
-      {{ message.text }}
-    </div>
+    <div *ngFor="let message of messages" class="message" [ngClass]="message.sender">{{ message.text }}</div>
   </div>
 
   <div class="input-box">
@@ -11,3 +9,6 @@
     <button (click)="sendMessage()">➤</button>
   </div>
 </div>
+
+
+

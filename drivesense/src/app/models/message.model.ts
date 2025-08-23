@@ -2,7 +2,7 @@ export interface Message {
   id?: string;
   conversationId: string;
   userId: string;
-  content: string;
+  text: string;
   sender: 'user' | 'bot';
   timestamp: string; 
 }

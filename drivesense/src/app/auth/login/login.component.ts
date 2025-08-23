@@ -1,9 +1,10 @@
-
 // login.component.ts
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { Login } from '../../models/user.model';
 
 @Component({
   selector: 'app-login',
@@ -13,18 +14,37 @@ import { Router, RouterModule } from '@angular/router';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  username = '';
-  password = '';
+  auth: Login = {
+    userName: '',
+    password: ''
+  };
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   login() {
-    if (this.username && this.password) {
-      // TODO: Replace with actual auth service
-      console.log('Login successful');
-      this.router.navigate(['/chatlayout']);
-    } else {
-      alert('Please enter email and password');
+console.log('Login response:', this.auth);
+
+    if (!this.auth.userName || !this.auth.password) {
+      alert('Please enter email/phone and password');
+      return;
     }
+
+    this.authService.login(this.auth).subscribe({
+      next: (res) => {
+        console.log('Login response:', res);
+
+        if (res?.token) {
+          localStorage.setItem('token', res.token);
+          alert('Login successful!');
+          this.router.navigate(['/chatlayout']);
+        } else {
+          alert(res?.message || 'Invalid credentials');
+        }
+      },
+      error: (err) => {
+        console.error('Login error:', err);
+        alert('Something went wrong. Please try again.');
+      }
+    });
   }
 }
