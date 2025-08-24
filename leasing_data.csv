@@ -1,0 +1,51 @@
+Product ID,Product Name,Short Description,Lease Term,Flexi Lease,Tax Saving Plan,Renewal Cycle,Maintenance Type,Inserted Date
+P1000,Mahindra Hatchback Lease Plan,"48 months hatchback lease from Mahindra with standard terms, tax saving benefits, and garage support.",48 months,No,Yes,Yearly,Garage,2024-08-03
+P1001,Toyota Hatchback Lease Plan,"60 months hatchback lease from Toyota with standard terms, tax saving benefits, and roadside support.",60 months,No,Yes,Quarterly,Roadside,2025-03-10
+P1002,Tata Motors Hatchback Lease Plan,"60 months hatchback lease from Tata Motors with flexible terms, no tax saving plan, and garage support.",60 months,Yes,No,Monthly,Garage,2024-12-17
+P1003,Maruti Suzuki SUV Lease Plan,"12 months suv lease from Maruti Suzuki with standard terms, tax saving benefits, and roadside support.",12 months,No,Yes,Yearly,Roadside,2023-01-31
+P1004,Tata Motors Hatchback Lease Plan,"12 months hatchback lease from Tata Motors with standard terms, no tax saving plan, and roadside support.",12 months,No,No,Yearly,Roadside,2024-12-21
+P1005,Maruti Suzuki Hatchback Lease Plan,"12 months hatchback lease from Maruti Suzuki with standard terms, no tax saving plan, and roadside support.",12 months,No,No,Monthly,Roadside,2022-06-10
+P1006,Maruti Suzuki Hatchback Lease Plan,"12 months hatchback lease from Maruti Suzuki with flexible terms, no tax saving plan, and garage support.",12 months,Yes,No,Yearly,Garage,2022-12-23
+P1007,Maruti Suzuki SUV Lease Plan,"12 months suv lease from Maruti Suzuki with flexible terms, tax saving benefits, and roadside support.",12 months,Yes,Yes,Monthly,Roadside,2024-03-13
+P1008,Tata Motors Sedan Lease Plan,"60 months sedan lease from Tata Motors with standard terms, no tax saving plan, and garage support.",60 months,No,No,Quarterly,Garage,2022-01-03
+P1009,Mahindra SUV Lease Plan,"12 months suv lease from Mahindra with standard terms, no tax saving plan, and garage support.",12 months,No,No,Quarterly,Garage,2024-07-22
+P1010,Hyundai Sedan Lease Plan,"48 months sedan lease from Hyundai with flexible terms, no tax saving plan, and garage support.",48 months,Yes,No,Quarterly,Garage,2023-08-17
+P1011,Hyundai Sedan Lease Plan,"48 months sedan lease from Hyundai with standard terms, no tax saving plan, and roadside support.",48 months,No,No,Quarterly,Roadside,2024-01-20
+P1012,Honda Hatchback Lease Plan,"36 months hatchback lease from Honda with standard terms, tax saving benefits, and garage support.",36 months,No,Yes,Yearly,Garage,2024-12-04
+P1013,Hyundai SUV Lease Plan,"12 months suv lease from Hyundai with flexible terms, no tax saving plan, and garage support.",12 months,Yes,No,Monthly,Garage,2025-03-21
+P1014,Maruti Suzuki Hatchback Lease Plan,"24 months hatchback lease from Maruti Suzuki with flexible terms, tax saving benefits, and roadside support.",24 months,Yes,Yes,Yearly,Roadside,2024-01-28
+P1015,Volkswagen Hatchback Lease Plan,"48 months hatchback lease from Volkswagen with flexible terms, no tax saving plan, and garage support.",48 months,Yes,No,Quarterly,Garage,2023-10-17
+P1016,Hyundai Sedan Lease Plan,"48 months sedan lease from Hyundai with flexible terms, tax saving benefits, and garage support.",48 months,Yes,Yes,Monthly,Garage,2023-09-30
+P1017,Toyota Sedan Lease Plan,"12 months sedan lease from Toyota with flexible terms, no tax saving plan, and roadside support.",12 months,Yes,No,Monthly,Roadside,2022-07-30
+P1018,Mahindra Sedan Lease Plan,"36 months sedan lease from Mahindra with flexible terms, no tax saving plan, and garage support.",36 months,Yes,No,Yearly,Garage,2023-08-22
+P1019,Honda SUV Lease Plan,"12 months suv lease from Honda with standard terms, no tax saving plan, and roadside support.",12 months,No,No,Monthly,Roadside,2024-12-08
+P1020,Maruti Suzuki Sedan Lease Plan,"24 months sedan lease from Maruti Suzuki with standard terms, tax saving benefits, and roadside support.",24 months,No,Yes,Yearly,Roadside,2024-03-01
+P1021,Tata Motors Sedan Lease Plan,"60 months sedan lease from Tata Motors with standard terms, no tax saving plan, and roadside support.",60 months,No,No,Quarterly,Roadside,2024-04-22
+P1022,Honda Hatchback Lease Plan,"36 months hatchback lease from Honda with standard terms, no tax saving plan, and garage support.",36 months,No,No,Yearly,Garage,2024-12-06
+P1023,Volkswagen Sedan Lease Plan,"48 months sedan lease from Volkswagen with standard terms, tax saving benefits, and roadside support.",48 months,No,Yes,Monthly,Roadside,2023-08-02
+P1024,Hyundai Hatchback Lease Plan,"36 months hatchback lease from Hyundai with standard terms, tax saving benefits, and garage support.",36 months,No,Yes,Quarterly,Garage,2023-04-14
+P1025,Maruti Suzuki SUV Lease Plan,"12 months suv lease from Maruti Suzuki with flexible terms, no tax saving plan, and roadside support.",12 months,Yes,No,Quarterly,Roadside,2024-09-24
+P1026,Hyundai Sedan Lease Plan,"60 months sedan lease from Hyundai with flexible terms, no tax saving plan, and roadside support.",60 months,Yes,No,Monthly,Roadside,2024-01-11
+P1027,Mahindra Sedan Lease Plan,"48 months sedan lease from Mahindra with standard terms, no tax saving plan, and garage support.",48 months,No,No,Yearly,Garage,2024-11-10
+P1028,Volkswagen Sedan Lease Plan,"48 months sedan lease from Volkswagen with standard terms, tax saving benefits, and roadside support.",48 months,No,Yes,Yearly,Roadside,2024-05-26
+P1029,Mahindra Hatchback Lease Plan,"36 months hatchback lease from Mahindra with standard terms, no tax saving plan, and garage support.",36 months,No,No,Yearly,Garage,2022-11-17
+P1030,Volkswagen Sedan Lease Plan,"36 months sedan lease from Volkswagen with standard terms, tax saving benefits, and garage support.",36 months,No,Yes,Quarterly,Garage,2023-10-23
+P1031,Toyota Sedan Lease Plan,"60 months sedan lease from Toyota with flexible terms, no tax saving plan, and roadside support.",60 months,Yes,No,Quarterly,Roadside,2024-02-05
+P1032,Volkswagen SUV Lease Plan,"12 months suv lease from Volkswagen with standard terms, tax saving benefits, and garage support.",12 months,No,Yes,Quarterly,Garage,2023-10-31
+P1033,Tata Motors Hatchback Lease Plan,"12 months hatchback lease from Tata Motors with flexible terms, no tax saving plan, and garage support.",12 months,Yes,No,Monthly,Garage,2025-01-21
+P1034,Mahindra Hatchback Lease Plan,"60 months hatchback lease from Mahindra with standard terms, no tax saving plan, and roadside support.",60 months,No,No,Yearly,Roadside,2022-08-20
+P1035,Honda Hatchback Lease Plan,"12 months hatchback lease from Honda with standard terms, no tax saving plan, and garage support.",12 months,No,No,Yearly,Garage,2023-07-02
+P1036,Maruti Suzuki Hatchback Lease Plan,"36 months hatchback lease from Maruti Suzuki with flexible terms, tax saving benefits, and garage support.",36 months,Yes,Yes,Monthly,Garage,2023-03-11
+P1037,Hyundai Hatchback Lease Plan,"48 months hatchback lease from Hyundai with flexible terms, tax saving benefits, and garage support.",48 months,Yes,Yes,Monthly,Garage,2024-11-19
+P1038,Mahindra Sedan Lease Plan,"24 months sedan lease from Mahindra with standard terms, no tax saving plan, and roadside support.",24 months,No,No,Monthly,Roadside,2023-08-13
+P1039,Honda Sedan Lease Plan,"24 months sedan lease from Honda with standard terms, no tax saving plan, and roadside support.",24 months,No,No,Yearly,Roadside,2025-07-05
+P1040,Volkswagen SUV Lease Plan,"12 months suv lease from Volkswagen with standard terms, no tax saving plan, and garage support.",12 months,No,No,Monthly,Garage,2022-09-23
+P1041,Tata Motors SUV Lease Plan,"24 months suv lease from Tata Motors with standard terms, no tax saving plan, and garage support.",24 months,No,No,Monthly,Garage,2024-08-05
+P1042,Hyundai Sedan Lease Plan,"36 months sedan lease from Hyundai with standard terms, tax saving benefits, and garage support.",36 months,No,Yes,Monthly,Garage,2023-02-16
+P1043,Tata Motors Hatchback Lease Plan,"60 months hatchback lease from Tata Motors with flexible terms, tax saving benefits, and garage support.",60 months,Yes,Yes,Monthly,Garage,2022-07-18
+P1044,Mahindra Hatchback Lease Plan,"24 months hatchback lease from Mahindra with flexible terms, no tax saving plan, and garage support.",24 months,Yes,No,Monthly,Garage,2024-09-03
+P1045,Mahindra SUV Lease Plan,"48 months suv lease from Mahindra with standard terms, no tax saving plan, and roadside support.",48 months,No,No,Yearly,Roadside,2025-05-13
+P1046,Tata Motors SUV Lease Plan,"36 months suv lease from Tata Motors with flexible terms, tax saving benefits, and roadside support.",36 months,Yes,Yes,Yearly,Roadside,2024-06-27
+P1047,Honda SUV Lease Plan,"12 months suv lease from Honda with standard terms, tax saving benefits, and garage support.",12 months,No,Yes,Yearly,Garage,2024-04-16
+P1048,Toyota SUV Lease Plan,"12 months suv lease from Toyota with standard terms, tax saving benefits, and roadside support.",12 months,No,Yes,Monthly,Roadside,2022-07-17
+P1049,Hyundai Sedan Lease Plan,"60 months sedan lease from Hyundai with flexible terms, no tax saving plan, and roadside support.",60 months,Yes,No,Yearly,Roadside,2024-03-26

@@ -1,0 +1,9 @@
+ipykernel
+pandas
+Faker
+tabulate
+weaviate-client
+langchain-core
+langgraph>0.2.27
+langchain-openai
+langchain-community

@@ -1,101 +1,101 @@
-Vehicle ID,Country,Make,Model,Year,Mileage,Fuel,Gear Type,Horsepower,Price,Currency,Preowned,Inserted date
-5,South Georgia and the South Sandwich Islands,Tata Motors,SUV,2011,17kmpl,Petrol,Manual,170,4286,Euro,False,2025-01-31
-92,Cocos (Keeling) Islands,Tata Motors,SUV,2015,25kmpl,Petrol,Manual,101,1275,USD,False,2024-05-22
-100,Peru,Hyundai,Sedan,2015,21kmpl,Diesel,Manual,205,2206,Euro,False,2024-04-03
-47,Iraq,Toyota,SUV,2010,19kmpl,Diesel,Manual,196,2824,USD,False,2023-10-17
-59,Christmas Island,Hyundai,Hatchback,2025,23kmpl,Diesel,Manual,165,2900,USD,True,2024-03-06
-68,Cocos (Keeling) Islands,Hyundai,Hatchback,2016,17kmpl,Petrol,Manual,153,1496,USD,False,2024-07-16
-84,Samoa,Volkswagen,SUV,2013,20kmpl,Petrol,Automatic,219,4040,USD,False,2022-10-10
-91,Bouvet Island (Bouvetoya),Hyundai,SUV,2017,23kmpl,Diesel,Manual,89,1029,USD,False,2023-08-07
-78,Aruba,Honda,Hatchback,2025,20kmpl,Petrol,Manual,171,1109,USD,True,2023-10-17
-77,American Samoa,Volkswagen,Sedan,2012,19kmpl,Diesel,Automatic,149,4097,USD,True,2022-11-08
-73,Portugal,Honda,Hatchback,2014,20kmpl,Petrol,Automatic,144,2769,Euro,True,2024-06-07
-88,Liechtenstein,Maruti Suzuki,SUV,2013,24kmpl,EV,Automatic,214,1703,Euro,False,2024-12-11
-85,Tajikistan,Volkswagen,SUV,2011,22kmpl,Petrol,Automatic,97,3978,USD,True,2022-02-23
-80,Cambodia,Hyundai,Sedan,2013,21kmpl,Petrol,Automatic,114,3587,Euro,False,2022-10-15
-4,Bahamas,Maruti Suzuki,Hatchback,2011,25kmpl,Petrol,Manual,190,3445,Euro,True,2025-02-06
-93,Saudi Arabia,Maruti Suzuki,SUV,2024,23kmpl,EV,Automatic,118,1558,USD,True,2024-07-23
-83,Brunei Darussalam,Honda,SUV,2020,21kmpl,Diesel,Automatic,115,2774,USD,False,2024-01-14
-46,Reunion,Toyota,Hatchback,2018,21kmpl,Petrol,Manual,109,1367,Euro,True,2024-02-23
-87,United Kingdom,Tata Motors,Sedan,2013,19kmpl,Diesel,Manual,152,2533,USD,False,2022-12-23
-21,Faroe Islands,Volkswagen,Sedan,2015,17kmpl,EV,Manual,154,4368,Euro,True,2023-09-28
-82,Belgium,Honda,Sedan,2020,21kmpl,Petrol,Manual,109,2801,Euro,True,2023-08-19
-43,Sweden,Volkswagen,Hatchback,2021,22kmpl,Petrol,Automatic,131,2331,Euro,False,2024-12-15
-99,South Africa,Maruti Suzuki,SUV,2016,22kmpl,Petrol,Automatic,153,2996,USD,False,2024-03-25
-49,Guinea,Volkswagen,SUV,2021,24kmpl,EV,Manual,153,2529,USD,False,2024-08-13
-13,Dominica,Volkswagen,SUV,2022,21kmpl,EV,Automatic,114,4203,Euro,False,2025-01-23
-27,Korea,Mahindra,Hatchback,2022,19kmpl,EV,Automatic,205,1616,USD,False,2022-11-13
-50,Argentina,Tata Motors,Sedan,2015,21kmpl,Petrol,Automatic,214,3763,Euro,False,2023-07-25
-31,Tonga,Maruti Suzuki,SUV,2013,19kmpl,Petrol,Automatic,187,2973,Euro,False,2022-07-16
-94,Bhutan,Volkswagen,SUV,2023,19kmpl,Petrol,Manual,170,1556,Euro,False,2023-07-01
-51,Guyana,Volkswagen,Hatchback,2018,17kmpl,EV,Automatic,81,1310,Euro,False,2024-01-01
-79,Colombia,Volkswagen,SUV,2015,19kmpl,Petrol,Automatic,120,2050,USD,False,2022-11-07
-18,Falkland Islands (Malvinas),Hyundai,Sedan,2011,20kmpl,Diesel,Manual,200,1312,Euro,False,2024-09-12
-89,Guinea,Volkswagen,Hatchback,2016,18kmpl,Diesel,Manual,219,1518,Euro,True,2023-07-02
-42,Cyprus,Hyundai,Hatchback,2015,20kmpl,Diesel,Automatic,211,1144,Euro,True,2024-10-10
-97,United States of America,Toyota,Sedan,2010,25kmpl,EV,Manual,181,2669,Euro,False,2024-08-22
-40,Puerto Rico,Hyundai,SUV,2014,23kmpl,Petrol,Automatic,85,1091,USD,True,2025-03-14
-57,North Macedonia,Mahindra,SUV,2020,19kmpl,Petrol,Automatic,181,1076,USD,False,2022-05-14
-58,Malawi,Toyota,Sedan,2024,25kmpl,Diesel,Automatic,218,1863,USD,False,2022-12-29
-71,Malta,Honda,Hatchback,2011,20kmpl,Petrol,Automatic,156,2819,Euro,False,2022-08-24
-20,Chile,Toyota,Hatchback,2020,24kmpl,EV,Manual,196,2634,Euro,False,2024-07-08
-39,Libyan Arab Jamahiriya,Tata Motors,SUV,2012,21kmpl,Diesel,Manual,181,1680,USD,False,2022-12-15
-90,Macao,Maruti Suzuki,SUV,2015,21kmpl,Diesel,Manual,155,4455,Euro,False,2022-02-02
-26,Faroe Islands,Mahindra,SUV,2020,17kmpl,EV,Manual,171,2557,USD,True,2024-02-19
-52,Sierra Leone,Volkswagen,SUV,2021,21kmpl,Petrol,Automatic,119,3851,Euro,True,2023-02-22
-96,Vanuatu,Volkswagen,Sedan,2015,20kmpl,EV,Manual,195,4674,USD,True,2024-11-20
-35,Guyana,Honda,Sedan,2016,24kmpl,EV,Manual,106,3940,Euro,True,2024-09-26
-56,Barbados,Toyota,SUV,2020,25kmpl,EV,Automatic,196,2414,USD,False,2023-12-02
-95,Anguilla,Honda,Hatchback,2017,22kmpl,Petrol,Automatic,218,1656,USD,True,2022-11-20
-69,Morocco,Maruti Suzuki,SUV,2013,25kmpl,Diesel,Manual,200,4199,USD,True,2024-04-11
-23,Cape Verde,Volkswagen,Sedan,2012,17kmpl,EV,Manual,182,1589,Euro,False,2025-03-25
-7,Mali,Volkswagen,SUV,2017,21kmpl,EV,Automatic,131,3938,USD,False,2023-09-29
-61,Dominican Republic,Hyundai,SUV,2018,22kmpl,Diesel,Automatic,151,2768,Euro,False,2022-12-03
-70,Equatorial Guinea,Hyundai,SUV,2015,23kmpl,Diesel,Manual,198,3402,USD,True,2022-03-12
-1,Cocos (Keeling) Islands,Maruti Suzuki,Sedan,2025,25kmpl,Petrol,Manual,83,4477,Euro,True,2024-05-04
-30,Tonga,Tata Motors,Hatchback,2014,17kmpl,Diesel,Manual,90,4346,USD,False,2024-02-26
-41,Bahamas,Mahindra,Sedan,2012,20kmpl,Diesel,Manual,98,4440,Euro,True,2024-08-01
-12,American Samoa,Toyota,Sedan,2024,24kmpl,EV,Automatic,162,3306,Euro,False,2023-07-19
-66,Bhutan,Honda,SUV,2018,25kmpl,Diesel,Manual,177,2492,USD,True,2024-02-23
-65,Kenya,Mahindra,SUV,2023,20kmpl,Diesel,Manual,186,1676,USD,True,2023-12-24
-15,Madagascar,Tata Motors,Hatchback,2017,20kmpl,Petrol,Automatic,160,3433,Euro,True,2024-08-10
-29,Czech Republic,Mahindra,SUV,2018,20kmpl,Petrol,Manual,206,1086,USD,False,2022-03-24
-67,Croatia,Honda,Hatchback,2021,21kmpl,Petrol,Automatic,212,2114,USD,False,2022-09-14
-11,Ireland,Maruti Suzuki,SUV,2012,25kmpl,EV,Automatic,162,3284,Euro,True,2022-08-03
-38,Jersey,Honda,Sedan,2016,24kmpl,Petrol,Automatic,146,1247,Euro,False,2024-08-03
-10,Sudan,Toyota,Hatchback,2023,19kmpl,Diesel,Automatic,96,1403,Euro,False,2022-11-22
-75,Kuwait,Hyundai,Hatchback,2019,19kmpl,EV,Manual,100,4241,USD,True,2023-05-25
-72,Cape Verde,Volkswagen,Sedan,2014,21kmpl,Petrol,Manual,113,4622,USD,True,2022-04-12
-37,United States Virgin Islands,Tata Motors,Hatchback,2016,18kmpl,Petrol,Manual,217,1346,USD,False,2025-07-04
-54,Gabon,Tata Motors,Hatchback,2017,20kmpl,Petrol,Automatic,209,4802,USD,True,2023-04-21
-86,Panama,Maruti Suzuki,SUV,2013,23kmpl,Diesel,Automatic,111,3636,USD,True,2024-11-16
-24,Western Sahara,Tata Motors,SUV,2013,22kmpl,EV,Automatic,167,4528,Euro,False,2023-09-30
-22,Russian Federation,Honda,Sedan,2022,21kmpl,EV,Manual,119,3310,Euro,False,2024-05-19
-36,Slovenia,Hyundai,Hatchback,2025,18kmpl,Diesel,Manual,91,1894,Euro,True,2022-05-25
-53,Swaziland,Tata Motors,SUV,2016,24kmpl,Petrol,Manual,179,2239,Euro,True,2022-03-15
-81,Croatia,Honda,Hatchback,2019,18kmpl,Diesel,Manual,117,3921,USD,True,2022-04-16
-76,French Southern Territories,Tata Motors,SUV,2019,25kmpl,Diesel,Manual,99,4488,USD,True,2023-04-28
-16,Malta,Volkswagen,Sedan,2010,25kmpl,Diesel,Manual,201,3336,USD,True,2022-12-23
-64,Slovenia,Volkswagen,Sedan,2024,17kmpl,EV,Automatic,186,1081,USD,True,2024-07-06
-44,Australia,Volkswagen,Hatchback,2019,22kmpl,EV,Automatic,194,1543,USD,False,2025-06-26
-33,Kazakhstan,Toyota,Sedan,2020,23kmpl,Petrol,Manual,99,2666,USD,True,2022-06-03
-63,Christmas Island,Tata Motors,Sedan,2018,20kmpl,EV,Automatic,175,2143,USD,False,2024-11-27
-32,Qatar,Hyundai,Sedan,2012,21kmpl,Petrol,Manual,200,2820,USD,False,2025-01-26
-3,Zimbabwe,Toyota,Sedan,2020,17kmpl,EV,Manual,85,2078,Euro,True,2023-10-30
-74,Uganda,Toyota,Sedan,2012,20kmpl,EV,Automatic,87,2021,Euro,False,2024-01-24
-9,Timor-Leste,Mahindra,Sedan,2019,23kmpl,EV,Manual,200,3701,USD,True,2023-02-14
-45,Western Sahara,Tata Motors,Hatchback,2017,19kmpl,EV,Manual,146,1485,Euro,False,2022-05-28
-8,Guadeloupe,Tata Motors,SUV,2022,23kmpl,Petrol,Manual,217,4709,Euro,False,2022-03-02
-60,Turks and Caicos Islands,Volkswagen,SUV,2011,24kmpl,EV,Automatic,124,2017,Euro,False,2024-06-26
-2,Bouvet Island (Bouvetoya),Tata Motors,Sedan,2019,24kmpl,Diesel,Manual,159,3393,Euro,True,2025-01-14
-28,Pakistan,Mahindra,Sedan,2022,25kmpl,EV,Manual,215,1434,Euro,False,2023-05-08
-55,Japan,Maruti Suzuki,Sedan,2023,25kmpl,Diesel,Automatic,145,4479,Euro,False,2022-10-19
-98,Greece,Tata Motors,Sedan,2020,19kmpl,Diesel,Manual,172,1499,Euro,True,2022-01-18
-62,Pitcairn Islands,Volkswagen,Sedan,2015,19kmpl,EV,Automatic,165,4065,USD,True,2023-07-14
-6,Holy See (Vatican City State),Toyota,Hatchback,2017,17kmpl,Diesel,Automatic,166,4579,Euro,False,2024-09-20
-19,Barbados,Tata Motors,Sedan,2023,23kmpl,Diesel,Automatic,216,3107,USD,True,2023-07-16
-48,Egypt,Volkswagen,Sedan,2017,17kmpl,Diesel,Manual,193,1710,USD,True,2024-01-29
-34,Pitcairn Islands,Hyundai,Hatchback,2021,22kmpl,EV,Manual,187,1219,Euro,True,2023-01-09
-25,Somalia,Maruti Suzuki,Hatchback,2014,18kmpl,EV,Manual,202,2834,Euro,True,2023-08-27
-14,Netherlands Antilles,Honda,Hatchback,2020,25kmpl,EV,Automatic,153,1663,USD,False,2022-05-09
-17,Romania,Maruti Suzuki,Sedan,2024,17kmpl,Petrol,Automatic,190,4061,USD,False,2023-06-25
+Vehicle ID,Country,Make,Model,Year,Mileage,Fuel,Gear Type,Horsepower,Price,Currency,Preowned,Inserted Date
+V4049,El Salvador,Tata Motors,Hatchback,2012,24kmpl,Diesel,Manual,93,2642,Euro,No,2024-10-11
+V4054,Cook Islands,Honda,SUV,2015,25kmpl,EV,Manual,96,3762,Euro,No,2023-11-30
+V4031,Saint Vincent and the Grenadines,Volkswagen,SUV,2024,20kmpl,Petrol,Automatic,196,2164,USD,No,2024-11-22
+V4097,Micronesia,Tata Motors,Hatchback,2010,19kmpl,Petrol,Manual,149,4546,Euro,No,2024-12-25
+V4044,Iraq,Mahindra,Sedan,2016,21kmpl,Diesel,Automatic,156,4661,Euro,No,2024-09-14
+V4065,Gambia,Hyundai,SUV,2020,22kmpl,Diesel,Manual,143,1271,USD,No,2022-02-15
+V4068,Cocos (Keeling) Islands,Volkswagen,Hatchback,2022,20kmpl,Diesel,Automatic,175,2205,Euro,No,2023-04-24
+V4078,Tanzania,Maruti Suzuki,Sedan,2023,22kmpl,EV,Automatic,120,1413,USD,No,2022-11-30
+V4076,Tokelau,Mahindra,SUV,2016,23kmpl,Diesel,Manual,179,2046,USD,No,2023-12-04
+V4094,Algeria,Honda,Hatchback,2020,24kmpl,Petrol,Automatic,93,4301,Euro,No,2024-02-17
+V4036,Canada,Tata Motors,Hatchback,2021,22kmpl,Petrol,Automatic,164,2205,Euro,No,2024-09-14
+V4058,American Samoa,Toyota,Sedan,2011,17kmpl,EV,Manual,211,4949,Euro,Yes,2024-01-04
+V4067,Iraq,Hyundai,SUV,2016,19kmpl,Petrol,Manual,123,1581,USD,No,2022-08-14
+V4084,Tajikistan,Maruti Suzuki,Sedan,2013,22kmpl,EV,Manual,171,2367,USD,Yes,2022-08-01
+V4079,Norway,Toyota,Hatchback,2018,21kmpl,EV,Automatic,94,3193,Euro,Yes,2024-01-06
+V4074,Mauritania,Tata Motors,Sedan,2016,18kmpl,EV,Manual,127,4291,Euro,Yes,2023-04-02
+V4063,Netherlands Antilles,Toyota,Sedan,2015,21kmpl,Diesel,Automatic,129,1486,USD,Yes,2024-12-19
+V4092,Eritrea,Honda,Hatchback,2010,23kmpl,Petrol,Manual,104,1519,Euro,No,2022-11-20
+V4013,Solomon Islands,Tata Motors,SUV,2012,22kmpl,Petrol,Automatic,115,4910,Euro,No,2022-11-12
+V4007,Saint Kitts and Nevis,Maruti Suzuki,Sedan,2014,25kmpl,Diesel,Automatic,110,4387,USD,Yes,2023-12-24
+V4020,Cameroon,Hyundai,Hatchback,2011,22kmpl,Diesel,Manual,128,2118,Euro,No,2024-05-15
+V4011,Lithuania,Tata Motors,Sedan,2021,25kmpl,Diesel,Automatic,179,1236,Euro,No,2024-09-19
+V4098,Christmas Island,Tata Motors,SUV,2011,20kmpl,EV,Manual,88,4013,Euro,Yes,2023-03-26
+V4001,Armenia,Toyota,Hatchback,2021,22kmpl,EV,Automatic,165,2627,Euro,Yes,2025-01-14
+V4025,Dominica,Hyundai,Sedan,2012,17kmpl,Diesel,Automatic,192,3003,Euro,Yes,2022-08-12
+V4029,Gambia,Volkswagen,Hatchback,2017,22kmpl,Petrol,Manual,189,3385,Euro,Yes,2023-10-18
+V4046,Heard Island and McDonald Islands,Volkswagen,Hatchback,2010,23kmpl,EV,Automatic,132,3526,USD,Yes,2023-08-29
+V4034,Israel,Volkswagen,Sedan,2020,18kmpl,Diesel,Automatic,210,2926,Euro,Yes,2024-08-21
+V4087,Ireland,Mahindra,SUV,2023,23kmpl,EV,Automatic,105,1798,Euro,No,2023-01-16
+V4021,Pakistan,Hyundai,SUV,2025,17kmpl,EV,Automatic,82,3746,Euro,No,2025-02-08
+V4077,Isle of Man,Maruti Suzuki,Hatchback,2016,24kmpl,Diesel,Manual,152,3155,USD,Yes,2023-03-21
+V4066,Finland,Mahindra,SUV,2014,25kmpl,EV,Manual,192,2462,Euro,No,2023-11-19
+V4100,Canada,Toyota,Sedan,2013,24kmpl,Petrol,Automatic,160,4980,Euro,No,2024-11-12
+V4039,France,Maruti Suzuki,Hatchback,2023,21kmpl,Diesel,Automatic,81,2008,Euro,Yes,2024-10-18
+V4064,Czech Republic,Volkswagen,Hatchback,2010,18kmpl,EV,Automatic,180,2165,Euro,Yes,2022-12-12
+V4012,United States of America,Hyundai,Sedan,2022,18kmpl,Diesel,Automatic,133,4134,Euro,Yes,2024-07-21
+V4089,British Indian Ocean Territory (Chagos Archipelago),Maruti Suzuki,SUV,2014,18kmpl,Petrol,Manual,99,3001,USD,No,2023-04-05
+V4096,Mongolia,Tata Motors,Hatchback,2010,23kmpl,EV,Manual,135,2459,Euro,Yes,2025-05-11
+V4056,Mauritania,Volkswagen,SUV,2023,25kmpl,Petrol,Manual,192,1451,Euro,Yes,2022-09-10
+V4023,China,Maruti Suzuki,Hatchback,2022,22kmpl,EV,Automatic,204,1413,USD,No,2023-06-23
+V4091,Brunei Darussalam,Maruti Suzuki,Sedan,2010,17kmpl,Diesel,Manual,174,1360,USD,No,2023-04-25
+V4038,Fiji,Honda,SUV,2017,22kmpl,Petrol,Manual,132,4957,USD,Yes,2024-03-31
+V4043,Saint Barthelemy,Tata Motors,Sedan,2019,21kmpl,Diesel,Manual,157,4376,USD,No,2025-05-13
+V4051,Ukraine,Tata Motors,Hatchback,2013,19kmpl,Petrol,Automatic,195,3169,Euro,No,2023-01-02
+V4015,Myanmar,Mahindra,Sedan,2014,18kmpl,EV,Manual,98,2477,USD,No,2024-05-10
+V4047,Jamaica,Volkswagen,Hatchback,2013,24kmpl,Diesel,Automatic,212,3112,Euro,Yes,2023-03-30
+V4016,Aruba,Toyota,Hatchback,2024,25kmpl,Diesel,Automatic,111,1287,Euro,Yes,2024-11-14
+V4006,Burundi,Mahindra,SUV,2010,21kmpl,Diesel,Manual,106,1693,Euro,No,2023-10-28
+V4072,Kyrgyz Republic,Maruti Suzuki,SUV,2020,18kmpl,Petrol,Manual,114,2855,USD,Yes,2024-09-15
+V4010,Albania,Maruti Suzuki,Sedan,2016,25kmpl,Petrol,Automatic,204,4998,Euro,No,2024-05-27
+V4088,Grenada,Maruti Suzuki,SUV,2018,19kmpl,Petrol,Manual,216,4226,Euro,Yes,2024-10-17
+V4035,Spain,Mahindra,Hatchback,2018,17kmpl,EV,Automatic,185,3299,USD,No,2024-08-29
+V4018,Nigeria,Hyundai,Sedan,2012,17kmpl,Diesel,Automatic,138,4194,Euro,Yes,2025-07-29
+V4008,Georgia,Toyota,SUV,2021,25kmpl,Petrol,Automatic,216,2600,Euro,Yes,2024-07-12
+V4027,Hong Kong,Volkswagen,SUV,2014,20kmpl,Petrol,Manual,173,4489,USD,No,2024-08-21
+V4019,Costa Rica,Mahindra,SUV,2017,22kmpl,Petrol,Manual,181,4469,USD,Yes,2023-09-02
+V4052,Tajikistan,Mahindra,Sedan,2022,19kmpl,Diesel,Automatic,118,3715,USD,No,2023-12-05
+V4037,Mexico,Mahindra,SUV,2014,23kmpl,EV,Automatic,190,4024,Euro,Yes,2024-09-11
+V4050,Aruba,Toyota,Hatchback,2016,19kmpl,Petrol,Manual,154,4075,Euro,No,2024-07-22
+V4022,Mozambique,Tata Motors,Hatchback,2015,21kmpl,Diesel,Manual,134,1993,Euro,No,2025-05-07
+V4032,Ecuador,Tata Motors,Sedan,2024,19kmpl,EV,Manual,109,1069,Euro,No,2023-06-10
+V4062,Liberia,Maruti Suzuki,Sedan,2019,17kmpl,Diesel,Automatic,104,4875,Euro,No,2022-11-24
+V4093,Cayman Islands,Volkswagen,Sedan,2010,23kmpl,Diesel,Automatic,125,2316,Euro,No,2023-05-15
+V4014,Mali,Hyundai,Sedan,2019,23kmpl,EV,Manual,113,3791,USD,Yes,2023-01-29
+V4073,Hong Kong,Honda,Hatchback,2012,17kmpl,Petrol,Automatic,181,2203,Euro,Yes,2022-06-15
+V4030,Bangladesh,Toyota,SUV,2012,22kmpl,EV,Automatic,121,1045,Euro,Yes,2022-02-09
+V4003,Samoa,Maruti Suzuki,Sedan,2025,24kmpl,Petrol,Manual,158,3137,Euro,No,2022-01-17
+V4075,Netherlands Antilles,Volkswagen,Sedan,2021,23kmpl,Diesel,Automatic,99,2270,USD,No,2024-10-19
+V4028,Costa Rica,Hyundai,Hatchback,2013,23kmpl,Diesel,Automatic,106,2731,USD,No,2023-03-12
+V4004,Congo,Maruti Suzuki,Hatchback,2021,23kmpl,EV,Automatic,195,4257,USD,No,2024-02-07
+V4086,Belize,Maruti Suzuki,Hatchback,2024,22kmpl,Petrol,Automatic,172,2266,Euro,Yes,2025-06-12
+V4071,Mali,Honda,SUV,2025,22kmpl,Diesel,Manual,180,2434,Euro,No,2024-05-14
+V4009,Mozambique,Toyota,Hatchback,2018,22kmpl,Petrol,Automatic,104,2679,Euro,No,2022-09-15
+V4042,Azerbaijan,Maruti Suzuki,SUV,2021,17kmpl,EV,Manual,201,4062,Euro,Yes,2023-04-19
+V4085,Cyprus,Mahindra,Hatchback,2018,25kmpl,Petrol,Manual,215,2145,USD,Yes,2025-07-25
+V4040,Chile,Hyundai,Hatchback,2020,23kmpl,Petrol,Manual,172,3596,Euro,No,2022-12-31
+V4099,Ukraine,Honda,SUV,2016,25kmpl,Petrol,Manual,150,2501,Euro,Yes,2024-10-28
+V4048,Mexico,Hyundai,SUV,2014,17kmpl,Diesel,Automatic,183,2631,Euro,Yes,2023-08-04
+V4070,Wallis and Futuna,Mahindra,SUV,2010,21kmpl,Petrol,Manual,124,4863,USD,Yes,2024-02-07
+V4069,Croatia,Toyota,Sedan,2015,22kmpl,Petrol,Automatic,171,2983,Euro,Yes,2022-05-21
+V4055,French Southern Territories,Maruti Suzuki,Sedan,2015,18kmpl,Petrol,Manual,213,3124,Euro,Yes,2022-02-18
+V4090,British Indian Ocean Territory (Chagos Archipelago),Maruti Suzuki,SUV,2010,17kmpl,EV,Manual,192,3255,USD,No,2025-03-03
+V4033,Sri Lanka,Maruti Suzuki,Hatchback,2012,21kmpl,Petrol,Automatic,84,2989,USD,No,2023-07-12
+V4080,Mexico,Honda,Sedan,2013,20kmpl,Diesel,Automatic,167,4710,USD,No,2025-02-25
+V4024,Saint Pierre and Miquelon,Maruti Suzuki,SUV,2019,18kmpl,Diesel,Automatic,220,1728,Euro,Yes,2023-11-03
+V4045,Turkey,Hyundai,SUV,2013,18kmpl,EV,Manual,137,3245,Euro,No,2022-05-23
+V4002,Egypt,Mahindra,SUV,2010,18kmpl,EV,Manual,81,2452,USD,Yes,2022-11-15
+V4095,Benin,Toyota,Sedan,2010,19kmpl,Diesel,Automatic,88,3091,Euro,Yes,2024-09-09
+V4026,Georgia,Mahindra,Sedan,2024,17kmpl,Diesel,Automatic,174,4408,USD,No,2023-04-16
+V4059,Mongolia,Volkswagen,SUV,2024,22kmpl,Petrol,Automatic,205,1392,USD,No,2024-12-14
+V4082,Djibouti,Hyundai,Sedan,2012,18kmpl,Petrol,Automatic,129,3731,Euro,Yes,2024-04-15
+V4083,Costa Rica,Volkswagen,Sedan,2011,18kmpl,Petrol,Automatic,147,4046,Euro,Yes,2023-01-03
+V4060,Saint Pierre and Miquelon,Mahindra,Sedan,2017,21kmpl,Petrol,Automatic,216,4233,Euro,Yes,2022-09-25
+V4061,Taiwan,Maruti Suzuki,Hatchback,2020,22kmpl,Diesel,Automatic,118,1721,Euro,Yes,2022-12-05
+V4081,Kuwait,Mahindra,Sedan,2019,21kmpl,EV,Manual,190,3410,USD,Yes,2022-08-16
+V4017,Brunei Darussalam,Hyundai,Sedan,2013,22kmpl,Petrol,Automatic,208,3480,USD,Yes,2024-06-30
+V4005,Hong Kong,Hyundai,Sedan,2013,23kmpl,Diesel,Manual,130,1145,Euro,No,2025-03-17
+V4053,Holy See (Vatican City State),Toyota,SUV,2011,20kmpl,Petrol,Manual,138,1491,USD,No,2022-10-21
+V4041,Martinique,Mahindra,SUV,2010,17kmpl,EV,Manual,194,4442,Euro,Yes,2023-10-11
+V4057,Syrian Arab Republic,Hyundai,Hatchback,2024,23kmpl,Diesel,Manual,148,3859,USD,Yes,2023-10-20
