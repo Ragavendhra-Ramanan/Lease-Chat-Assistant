@@ -40,16 +40,12 @@ export class SignupComponent {
 this.authService.signup(this.user).subscribe({
       next: (res) => {
         console.log('Signup response:',this.user, res);
-        if (res.success) {
+        if (res.value) {
           alert('Signup successful! Please login.');
           this.router.navigate(['/login']);
         } else {
-          alert(res.message || 'Signup failed. Try again.');
+          alert('Signup failed. Try again.');
         }
-      },
-      error: (err) => {
-        console.error('Signup error:', err);
-        alert('Something went wrong during signup.');
       }
     });
   }
