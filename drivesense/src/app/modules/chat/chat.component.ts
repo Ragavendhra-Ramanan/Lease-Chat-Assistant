@@ -1,7 +1,7 @@
-import { Component, ElementRef, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Message } from '../../models/message.model';
+import { ConversationRequest, Message } from '../../models/message.model';
 import { ChatService } from '../../services/chat.services';
 
 @Component({
@@ -11,17 +11,29 @@ import { ChatService } from '../../services/chat.services';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements AfterViewChecked {
-  messages: Message[] = [];
-  message = '';
-
-  conversationId = 'conv-001'; 
-  userId = 'user-123';        
+export class ChatComponent implements AfterViewChecked, OnInit {
+  messages: Message[];
+  message = '';   
+  conversationId = '';
+  userId = '';
 
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
-  constructor(private messageService: ChatService) {}
-
+  constructor(private messageService: ChatService) {
+    this.messages = [];
+  }
+ ngOnInit(): void {
+    this.userId = localStorage.getItem('token') || '';
+    this.messageService.startNewConversation(this.userId).subscribe({
+      next: (response) => {
+        this.conversationId = response.conversationId;
+        this.messages = response.messages;
+      },
+      error: (err) => {
+        console.error('Error starting conversation', err);
+      }
+    });
+ }
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
@@ -36,30 +48,22 @@ export class ChatComponent implements AfterViewChecked {
     if (!this.message.trim()) return;
 
     // Construct user message
-    const userMsg: Message = {
+    var userMsg: ConversationRequest = {
       conversationId: this.conversationId,
       userId: this.userId,
-      text: this.message,
-      sender: 'user',
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      messages: { sender: 'user', message: this.message }
     };
 
-    this.messages.push(userMsg);
+    this.messages.push(userMsg.messages);
 
     // Call backend
     this.messageService.sendMessage(userMsg).subscribe({
       next: (botMsg) => {
-        this.messages.push(botMsg);
+        this.messages.push(botMsg.messages[-1]); 
       },
       error: (err) => {
         console.error('Error sending message', err);
-        this.messages.push({
-          conversationId: this.conversationId,
-          userId: 'system',
-          text: 'Oops! Something went wrong.',
-          sender: 'bot',
-          timestamp: new Date().toISOString()
-        });
       }
     });
 

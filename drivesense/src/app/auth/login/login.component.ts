@@ -32,18 +32,13 @@ console.log('Login response:', this.auth);
     this.authService.login(this.auth).subscribe({
       next: (res) => {
         console.log('Login response:', res);
-
-        if (res?.token) {
-          localStorage.setItem('token', res.token);
+        if (res.userId) {
+          localStorage.setItem('token', res.userId);
           alert('Login successful!');
           this.router.navigate(['/chatlayout']);
         } else {
-          alert(res?.message || 'Invalid credentials');
+          alert('Invalid credentials');
         }
-      },
-      error: (err) => {
-        console.error('Login error:', err);
-        alert('Something went wrong. Please try again.');
       }
     });
   }

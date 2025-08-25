@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Message } from '../models/message.model';
+import { ConversationRequest, ConversationResponse, Message } from '../models/message.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChatService {
-  private apiUrl = 'http://localhost:5000/api/chat'; // adjust backend URL
+  private apiUrl = 'http://localhost:8000/api/chat';
 
   constructor(private http: HttpClient) {}
 
-  sendMessage(message: Message): Observable<Message> {
-    return this.http.post<Message>(`${this.apiUrl}/send`, message);
+  sendMessage(message: ConversationRequest): Observable<ConversationResponse> {
+    return this.http.post<ConversationResponse>(`${this.apiUrl}/sendMessage`, message);
   }
 
   getConversation(userId: string): Observable<Message[]> {
     return this.http.get<Message[]>(`${this.apiUrl}/conversation/${userId}`);
+  }
+
+  startNewConversation(userId: string): Observable<ConversationResponse> {
+    return this.http.post<ConversationResponse>(`${this.apiUrl}/startNewConversation`, { userId });
   }
 }

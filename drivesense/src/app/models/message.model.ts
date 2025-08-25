@@ -1,8 +1,18 @@
-export interface Message {
-  id?: string;
+export interface ConversationRequest {
   conversationId: string;
   userId: string;
-  text: string;
-  sender: 'user' | 'bot';
   timestamp: string; 
+  messages: Message;
 }
+
+export interface ConversationResponse {
+    messages: Message[] 
+    userId: string
+    conversationId: string
+}   
+
+export interface Message{
+   sender: string
+   message: string
+}
+    
