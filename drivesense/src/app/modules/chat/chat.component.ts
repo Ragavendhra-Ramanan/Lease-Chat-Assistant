@@ -60,7 +60,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     // Call backend
     this.messageService.sendMessage(userMsg).subscribe({
       next: (botMsg) => {
-        this.messages.push(botMsg.messages[-1]); 
+        this.messages.push(botMsg.messages[botMsg.messages.length -1]);
       },
       error: (err) => {
         console.error('Error sending message', err);
