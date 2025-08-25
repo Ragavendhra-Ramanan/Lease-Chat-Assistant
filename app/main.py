@@ -2,7 +2,7 @@ from fastapi import FastAPI, Depends
 from contextlib import asynccontextmanager
 from db.vectordb_operations import connection_to_wcs, close_connection
 from utils.secrets import weaviate_api_key, weaviate_url, openai_api_key
-from models.conversation_request import ConversationResponse, ConversationRequest, Message
+from models.conversation_request import ConversationResponse, ConversationRequest, Message, StartConversation
 from router.nodes.router_node import RouteNode
 from models.agent_state import AgentState
 from uuid import uuid4
@@ -11,6 +11,13 @@ from utils.flows import ROUTE_MAP
 from utils.helper_functions import get_data, filter_df
 from models.auth_models import User, SignupResponse, Login, LoginResponse
 import copy
+from fastapi.middleware.cors import CORSMiddleware
+
+origins = [
+    "http://localhost:4200",  # frontend URL
+    "http://127.0.0.1:4200",  # optional
+]
+
 
 client = None
 router = RouteNode()
@@ -40,6 +47,14 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,           # allow specific origins
+    allow_credentials=True,
+    allow_methods=["*"],             # allow POST, GET, OPTIONS, etc.
+    allow_headers=["*"],
+)
+
 @app.post("/api/auth/signup")
 async def signup_user(user_info:User):
     signup_response = SignupResponse(
@@ -56,15 +71,21 @@ async def login_user(login_info : Login):
     return login_response
 
 @app.post("/api/chat/startNewConversation")
-async def start_conversation(request:ConversationResponse,
+async def start_conversation(request:StartConversation,
                        state: AgentState = Depends(get_state)):
     """Start a new conversation and return conversation_id."""
     conversation_id = str(uuid4())
+    welcome = Message(
+        sender="bot",
+        message="Hi, welcome! I will help in product search, vehicle search, contract search and quote generation"
+    )
+    response = ConversationResponse(
+        userId= request.userId,
+        conversationId=conversation_id,
+        messages=[welcome]
+    )
     state.customer_id = request.userId
-    welcome = {"sender": "bot", "message": "Hi, welcome! I will help in product search, vehicle search, contract search and quote generation"}
-    request.conversationId = conversation_id
-    request.messages = welcome 
-    return request
+    return response
 
 
 @app.post("/api/chat/sendMessage")
@@ -137,6 +158,7 @@ async def get_conversation_result(request: ConversationRequest,
                 sender=sender,
                 message=state.final_answer
             ))
+    print(response,"response")
     return response
     
 
