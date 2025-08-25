@@ -1,0 +1,5 @@
+OTHER_SEARCH_PROMPT = """
+"This is a general question unrelated to vehicle, product, or contracts.\n"
+            "User: {query}\n"
+            "Answer directly:"
+"""
