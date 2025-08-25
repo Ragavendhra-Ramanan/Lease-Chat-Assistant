@@ -17,3 +17,6 @@ class ConversationRequest(BaseModel):
     userId: float
     conversationId: str
     timestamp : datetime
+
+class StartConversation(BaseModel):
+    userId : str
