@@ -26,5 +26,4 @@ class AgentState:
     quote_intermediate_results: str = ""
     quote_next_agent: str = ""
     quote_context: str = ""
-    quote_completed: bool = False
     quote_results: str = ""
