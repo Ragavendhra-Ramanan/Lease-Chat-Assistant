@@ -1,20 +1,21 @@
 from models.base_node import BaseNode
+from models.agent_state import AgentState
 
 class QuoteNode(BaseNode):
     """
     Async Quote Node: Calculates vehicle-product quote with adjustments.
     """
-    async def run(self, state):        
+    async def run(self, state: AgentState):        
         # --- Take first vehicle candidate ---
-        chosen_vehicle = state["quote_vehicle_candidates"][0]
-        state["quote_final_vehicle"] = chosen_vehicle
+        chosen_vehicle = state.quote_vehicle_candidates[0]
+        state.quote_final_vehicle = chosen_vehicle
 
         # --- Base vehicle price and tax ---
         base_price = chosen_vehicle.get("Price", 0)
         tax = base_price * 0.1  # 10% tax
 
-        chosen_product = state["quote_product_candidates"][0]
-        state["quote_final_product"] = chosen_product
+        chosen_product = state.quote_product_candidates[0]
+        state.quote_final_product = chosen_product
 
         # --- Lease calculations ---
         lease_term = int(chosen_product.get("Lease Term", 12))  # months
@@ -29,7 +30,7 @@ class QuoteNode(BaseNode):
         total_price = base_price + tax
 
         # --- Update state ---
-        state["quote"] = {
+        state.quote = {
             "vehicle": chosen_vehicle,
             "product": chosen_product,
             "base_price": base_price,
@@ -37,8 +38,8 @@ class QuoteNode(BaseNode):
             "total_price": total_price
         }
 
-        state["quote_step"] = "quotation_end"
-        state["quote_results"] = (
+        state.quote_step = "quotation_end"
+        state.quote_results = (
             f"Here’s your quote:\n"
             f"Vehicle: {chosen_vehicle.get('Make', '')} {chosen_vehicle.get('Model', '')} | "
             f"Base Price={chosen_vehicle.get('Price', 0)}\n"

@@ -1,11 +1,19 @@
 from pydantic import BaseModel
 from typing import List
+from datetime import datetime
+
 
 class Message(BaseModel):
-    role: str
+    sender: str
     message: str
 
-class ConversationRequest(BaseModel):
+class ConversationResponse(BaseModel):
     messages: List[Message]
-    userid: float
-    conversation_id: str
+    userId: float
+    conversationId: str
+
+class ConversationRequest(BaseModel):
+    messages: Message
+    userId: float
+    conversationId: str
+    timestamp : datetime
