@@ -25,14 +25,16 @@ vehicle_df, product_df = get_data()
 quote_filtering_node = ROUTE_MAP["filtering"](vehicle_df, product_df, filter_df)
 quote_update_node = ROUTE_MAP["quote_field_update"]()
 quote_generate_node = ROUTE_MAP["quote"]()
-quote_orchestrator = ROUTE_MAP["quotation"]()
-
 
 # Initialize in main.py
-DEFAULT_STATE: AgentState = AgentState()
-conversations: Dict[str, AgentState] = {}
-def get_state():
-    return copy.deepcopy(DEFAULT_STATE)
+conversations: Dict[str, Dict[str, any]] = {}
+def get_client_state(user_id: str) -> AgentState:
+    if user_id not in conversations:
+        conversations[user_id] = AgentState()
+    return conversations[user_id]
+
+def save_client_state(user_id: str, state: AgentState):
+    conversations[user_id] = state
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -71,9 +73,9 @@ async def login_user(login_info : Login):
     return login_response
 
 @app.post("/api/chat/startNewConversation")
-async def start_conversation(request:StartConversation,
-                       state: AgentState = Depends(get_state)):
+async def start_conversation(request:StartConversation):
     """Start a new conversation and return conversation_id."""
+    state = get_client_state(request.userId)
     conversation_id = str(uuid4())
     welcome = Message(
         sender="bot",
@@ -85,14 +87,14 @@ async def start_conversation(request:StartConversation,
         messages=[welcome]
     )
     state.customer_id = request.userId
+    save_client_state(request.userId, state)
     return response
 
 
 @app.post("/api/chat/sendMessage")
-async def get_conversation_result(request: ConversationRequest,
-                                  state: AgentState = Depends(get_state)):
-    
+async def get_conversation_result(request: ConversationRequest):    
     query = request.messages.message
+    state = get_client_state(request.userId)
     state.query = query
     response = ConversationResponse(
     messages=[request.messages],              # empty list or actual messages
@@ -103,24 +105,23 @@ async def get_conversation_result(request: ConversationRequest,
     response.conversationId = request.conversationId
     response.userId = request.userId
     if "quotation" in state.route:
-        state = await quote_orchestrator.run(state)
+        state = await quote_update_node.run(state)
         if state.quote_next_agent == "filtering":
             state = await quote_filtering_node.run(state)
-            state = await quote_update_node.run(state)
-            state = await quote_orchestrator.run(state)
+            save_client_state(request.userId,state=state)
             response.messages.append(Message(
                 sender=sender,
                 message=state.quote_intermediate_results
 
             ))
             return response
-        
         elif state.quote_next_agent == "quote":
             state = await quote_generate_node.run(state)
             state.route = ""
             state.quote_step = "preowned"
             state.quote_context = ""
             state.quote_next_agent = ""
+            save_client_state(request.userId,state=state)
             response.messages.append(Message(
                 sender=sender,
                 message=state.quote_results
@@ -133,9 +134,8 @@ async def get_conversation_result(request: ConversationRequest,
     state.customer_id = request.userId
     # Pick flow by checking membership
     if "quotation" in routes:
-        flow_instance = ROUTE_MAP["quotation"]()
+        flow_instance = quote_filtering_node
         state.quote_context = "vehicle"
-
     elif "contract" in routes:
         flow_instance = ROUTE_MAP["contract"](client=client)
     elif "product" in routes:
@@ -145,20 +145,22 @@ async def get_conversation_result(request: ConversationRequest,
     else:
         flow_instance = ROUTE_MAP["general"]()
 
-    state = await flow_instance.run(state)
+
+    state: AgentState = await flow_instance.run(state)
     if "quotation" in routes:
-        state = await quote_filtering_node.run(state)
         response.messages.append(Message(
                 sender=sender,
                 message=state.quote_intermediate_results
-
             ))
+        save_client_state(request.userId,state=state)
         return response
     response.messages.append(Message(
                 sender=sender,
                 message=state.final_answer
             ))
-    print(response,"response")
+    save_client_state(request.userId,state=state)
+
+    
     return response
     
 

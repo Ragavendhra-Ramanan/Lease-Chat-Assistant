@@ -36,6 +36,7 @@ class QuoteUserSelectionNode(BaseNode):
 
             elif step == "price":
                 min_p, max_p = df["Price"].min(), df["Price"].max()
+                print(min_p,max_p,"price")
                 ranges = [(int(min_p), int((min_p+max_p)//2)),
                           (int((min_p+max_p)//2)+1, int(max_p))]
                 state.quote_intermediate_results = f"Select a Price Range: {ranges}"
