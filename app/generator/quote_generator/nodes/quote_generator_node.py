@@ -18,7 +18,7 @@ class QuoteNode(BaseNode):
         state.quote_final_product = chosen_product
 
         # --- Lease calculations ---
-        lease_term = int(chosen_product.get("Lease Term", 12))  # months
+        lease_term = int(chosen_product.get("Lease Term", "12 months").split(" ")[0])  # months
         flexi_multiplier = 1.05 if chosen_product.get("Flexi Lease", "No").lower() == "yes" else 1.0
         tax_saving_discount = 0.95 if chosen_product.get("Tax Saving Plan", "No").lower() == "yes" else 1.0
 

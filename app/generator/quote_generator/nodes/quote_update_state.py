@@ -17,10 +17,11 @@ class QuoteUpdateNode(BaseNode):
             if step == "preowned":
                 val = user_choice.strip().lower()
                 if val in ["true", "yes", "y", "1"]:
-                    state.quote_filters["Preowned"] = True
+                    state.quote_filters["Preowned"] = "Yes"
                 elif val in ["false", "no", "n", "0"]:
-                    state.quote_filters["Preowned"] = False
+                    state.quote_filters["Preowned"] = "No"
                 state.quote_step = "make"
+                state.quote_next_agent = "filtering"
 
             elif step == "make":
                 state.quote_filters["Make"] = user_choice
@@ -31,7 +32,7 @@ class QuoteUpdateNode(BaseNode):
                     min_p, max_p = map(int, user_choice.strip("()").split(","))
                     state.quote_filters["Price"] = (min_p, max_p)
                 except:
-                    state.quote_results = "Invalid price range format. Try again like (10000,20000)."
+                    state.quote_intermediate_results = "Invalid price range format. Try again like (10000,20000)."
                 state.quote_step = "country"
 
             elif step == "country":
@@ -48,9 +49,12 @@ class QuoteUpdateNode(BaseNode):
 
             elif step == "vehicle_details":
                 if user_choice.lower() == "yes":
-                    state.quote_step = "done"
+                    state.quote_context = "product"
+                    state.quote_filters = {}
+                    state.quote_step = "product_name"  # start product filtering from first step
+                    state.quote_next_agent = "filtering"
                 else:
-                    state.quote_results = "Okay, search cancelled."
+                    state.quote_intermediate_results = "Okay, search cancelled."
 
         # --- PRODUCT path ---
         elif context == "product":
@@ -80,8 +84,9 @@ class QuoteUpdateNode(BaseNode):
 
             elif step == "product_details":
                 if user_choice.lower() == "yes":
-                    state.quote_step = "done"
+                    state.quote_context = "quote"
+                    state.quote_next_agent = "quote"
                 else:
-                    state.quote_results = "Okay, search cancelled."
+                    state.quote_intermediate_results = "Okay, search cancelled."
 
         return state
