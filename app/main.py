@@ -99,6 +99,11 @@ async def start_conversation(request:StartConversation):
     save_client_state(request.userId, state)
     return response
 
+@app.get("/api/chat/recommendations/{userID}")
+async def recommendations(userID:int):
+    return ["New EV toyoto cars", "Flexi lease term 24 months" , "Ford lesser than $40000"]
+
+
 
 @app.post("/api/chat/sendMessage")
 async def get_conversation_result(request: ConversationRequest):    
