@@ -1,101 +1,101 @@
 Summary,Vehicle ID
-"Country: Austria, Make: Honda, Model: Hatchback, Year: 2016, Mileage: 20 kmpl, Fuel: EV, Gear: Manual, Horsepower: 166, Price: 4589 Euro, Preowned: No, Inserted: 2024-12-24",V4000
-"Country: Lebanon, Make: Hyundai, Model: Sedan, Year: 2010, Mileage: 18 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 159, Price: 2882 USD, Preowned: Yes, Inserted: 2023-02-16",V4001
-"Country: Bouvet Island (Bouvetoya), Make: Honda, Model: SUV, Year: 2025, Mileage: 20 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 132, Price: 1158 USD, Preowned: No, Inserted: 2024-04-13",V4002
-"Country: Holy See (Vatican City State), Make: Maruti Suzuki, Model: Hatchback, Year: 2015, Mileage: 20 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 131, Price: 1850 Euro, Preowned: Yes, Inserted: 2023-10-11",V4003
-"Country: Mongolia, Make: Toyota, Model: SUV, Year: 2015, Mileage: 22 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 216, Price: 2260 USD, Preowned: Yes, Inserted: 2022-05-18",V4004
-"Country: Azerbaijan, Make: Mahindra, Model: Sedan, Year: 2018, Mileage: 17 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 190, Price: 4441 Euro, Preowned: No, Inserted: 2022-08-06",V4005
-"Country: Puerto Rico, Make: Hyundai, Model: Sedan, Year: 2012, Mileage: 19 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 143, Price: 1506 Euro, Preowned: Yes, Inserted: 2023-05-15",V4006
-"Country: Gabon, Make: Mahindra, Model: SUV, Year: 2020, Mileage: 19 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 188, Price: 4721 USD, Preowned: No, Inserted: 2022-06-05",V4007
-"Country: Anguilla, Make: Mahindra, Model: Hatchback, Year: 2017, Mileage: 25 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 173, Price: 3353 USD, Preowned: No, Inserted: 2022-10-25",V4008
-"Country: Mauritania, Make: Volkswagen, Model: Hatchback, Year: 2018, Mileage: 17 kmpl, Fuel: EV, Gear: Manual, Horsepower: 95, Price: 3988 Euro, Preowned: No, Inserted: 2022-08-01",V4009
-"Country: Syrian Arab Republic, Make: Volkswagen, Model: SUV, Year: 2024, Mileage: 19 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 124, Price: 1236 Euro, Preowned: Yes, Inserted: 2022-09-17",V4010
-"Country: Pakistan, Make: Honda, Model: Hatchback, Year: 2020, Mileage: 25 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 110, Price: 3570 USD, Preowned: Yes, Inserted: 2024-08-25",V4011
-"Country: Greece, Make: Tata Motors, Model: Hatchback, Year: 2010, Mileage: 25 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 188, Price: 2335 USD, Preowned: No, Inserted: 2022-12-19",V4012
-"Country: Guadeloupe, Make: Volkswagen, Model: Hatchback, Year: 2015, Mileage: 18 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 117, Price: 3356 Euro, Preowned: Yes, Inserted: 2023-01-09",V4013
-"Country: Belgium, Make: Toyota, Model: Sedan, Year: 2015, Mileage: 19 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 181, Price: 1271 USD, Preowned: No, Inserted: 2022-01-29",V4014
-"Country: Thailand, Make: Tata Motors, Model: Sedan, Year: 2015, Mileage: 18 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 187, Price: 3875 Euro, Preowned: No, Inserted: 2024-10-03",V4015
-"Country: Israel, Make: Tata Motors, Model: SUV, Year: 2022, Mileage: 25 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 173, Price: 2990 Euro, Preowned: No, Inserted: 2022-03-19",V4016
-"Country: Hungary, Make: Tata Motors, Model: Sedan, Year: 2025, Mileage: 24 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 212, Price: 1152 USD, Preowned: No, Inserted: 2023-12-17",V4017
-"Country: Anguilla, Make: Tata Motors, Model: Sedan, Year: 2010, Mileage: 23 kmpl, Fuel: EV, Gear: Manual, Horsepower: 128, Price: 3827 USD, Preowned: No, Inserted: 2024-10-12",V4018
-"Country: Denmark, Make: Mahindra, Model: Hatchback, Year: 2024, Mileage: 20 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 205, Price: 3323 USD, Preowned: Yes, Inserted: 2023-05-12",V4019
-"Country: Haiti, Make: Mahindra, Model: Hatchback, Year: 2017, Mileage: 22 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 139, Price: 2484 USD, Preowned: No, Inserted: 2022-09-26",V4020
-"Country: Iceland, Make: Toyota, Model: Sedan, Year: 2017, Mileage: 23 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 90, Price: 4514 USD, Preowned: No, Inserted: 2022-01-05",V4021
-"Country: Philippines, Make: Volkswagen, Model: SUV, Year: 2022, Mileage: 22 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 214, Price: 2213 USD, Preowned: Yes, Inserted: 2025-02-23",V4022
-"Country: Myanmar, Make: Honda, Model: Hatchback, Year: 2025, Mileage: 21 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 122, Price: 2252 USD, Preowned: Yes, Inserted: 2022-10-18",V4023
-"Country: Spain, Make: Tata Motors, Model: Hatchback, Year: 2020, Mileage: 23 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 84, Price: 4093 Euro, Preowned: No, Inserted: 2023-12-19",V4024
-"Country: Morocco, Make: Hyundai, Model: Hatchback, Year: 2020, Mileage: 25 kmpl, Fuel: EV, Gear: Manual, Horsepower: 190, Price: 2723 USD, Preowned: Yes, Inserted: 2025-05-28",V4025
-"Country: Aruba, Make: Volkswagen, Model: SUV, Year: 2012, Mileage: 18 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 178, Price: 2540 USD, Preowned: No, Inserted: 2024-05-04",V4026
-"Country: Bulgaria, Make: Tata Motors, Model: Sedan, Year: 2020, Mileage: 23 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 148, Price: 3826 USD, Preowned: Yes, Inserted: 2025-04-18",V4027
-"Country: Lithuania, Make: Volkswagen, Model: Hatchback, Year: 2022, Mileage: 17 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 197, Price: 1008 USD, Preowned: Yes, Inserted: 2023-11-22",V4028
-"Country: Denmark, Make: Honda, Model: SUV, Year: 2012, Mileage: 22 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 138, Price: 1410 Euro, Preowned: Yes, Inserted: 2024-04-29",V4029
-"Country: Lebanon, Make: Hyundai, Model: SUV, Year: 2024, Mileage: 25 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 208, Price: 1572 USD, Preowned: No, Inserted: 2023-02-16",V4030
-"Country: India, Make: Honda, Model: Hatchback, Year: 2010, Mileage: 21 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 205, Price: 1327 USD, Preowned: Yes, Inserted: 2022-02-10",V4031
-"Country: Bermuda, Make: Toyota, Model: Sedan, Year: 2012, Mileage: 23 kmpl, Fuel: EV, Gear: Manual, Horsepower: 181, Price: 4342 USD, Preowned: No, Inserted: 2023-03-31",V4032
-"Country: Estonia, Make: Honda, Model: SUV, Year: 2014, Mileage: 19 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 183, Price: 1768 Euro, Preowned: No, Inserted: 2023-12-24",V4033
-"Country: Slovakia (Slovak Republic), Make: Hyundai, Model: Hatchback, Year: 2017, Mileage: 18 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 205, Price: 1174 Euro, Preowned: Yes, Inserted: 2024-02-22",V4034
-"Country: Faroe Islands, Make: Tata Motors, Model: Hatchback, Year: 2017, Mileage: 18 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 93, Price: 1086 Euro, Preowned: Yes, Inserted: 2023-11-25",V4035
-"Country: Yemen, Make: Toyota, Model: Sedan, Year: 2010, Mileage: 20 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 146, Price: 4250 Euro, Preowned: No, Inserted: 2023-04-16",V4036
-"Country: Montserrat, Make: Maruti Suzuki, Model: SUV, Year: 2021, Mileage: 20 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 210, Price: 4856 Euro, Preowned: No, Inserted: 2025-03-02",V4037
-"Country: Malta, Make: Hyundai, Model: Hatchback, Year: 2019, Mileage: 23 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 209, Price: 3486 Euro, Preowned: No, Inserted: 2025-05-18",V4038
-"Country: Costa Rica, Make: Tata Motors, Model: Hatchback, Year: 2024, Mileage: 25 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 176, Price: 4074 Euro, Preowned: No, Inserted: 2022-05-31",V4039
-"Country: Bahamas, Make: Honda, Model: Sedan, Year: 2024, Mileage: 24 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 175, Price: 1564 Euro, Preowned: No, Inserted: 2024-08-20",V4040
-"Country: Nigeria, Make: Hyundai, Model: Hatchback, Year: 2024, Mileage: 24 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 141, Price: 2637 USD, Preowned: No, Inserted: 2025-04-28",V4041
-"Country: Chad, Make: Tata Motors, Model: SUV, Year: 2014, Mileage: 19 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 210, Price: 2380 USD, Preowned: Yes, Inserted: 2023-11-26",V4042
-"Country: Argentina, Make: Maruti Suzuki, Model: SUV, Year: 2018, Mileage: 17 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 183, Price: 3429 USD, Preowned: No, Inserted: 2025-04-17",V4043
-"Country: Spain, Make: Mahindra, Model: SUV, Year: 2015, Mileage: 21 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 218, Price: 3574 Euro, Preowned: Yes, Inserted: 2024-02-26",V4044
-"Country: Aruba, Make: Toyota, Model: SUV, Year: 2016, Mileage: 18 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 160, Price: 3849 Euro, Preowned: Yes, Inserted: 2023-10-21",V4045
-"Country: Solomon Islands, Make: Hyundai, Model: Hatchback, Year: 2014, Mileage: 24 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 177, Price: 3990 USD, Preowned: No, Inserted: 2024-08-13",V4046
-"Country: Japan, Make: Toyota, Model: SUV, Year: 2021, Mileage: 18 kmpl, Fuel: EV, Gear: Manual, Horsepower: 147, Price: 3722 Euro, Preowned: Yes, Inserted: 2025-07-19",V4047
-"Country: Heard Island and McDonald Islands, Make: Mahindra, Model: Hatchback, Year: 2011, Mileage: 19 kmpl, Fuel: EV, Gear: Manual, Horsepower: 188, Price: 1976 USD, Preowned: Yes, Inserted: 2022-09-13",V4048
-"Country: Samoa, Make: Toyota, Model: Hatchback, Year: 2013, Mileage: 17 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 116, Price: 4756 USD, Preowned: No, Inserted: 2022-05-19",V4049
-"Country: Guinea, Make: Hyundai, Model: SUV, Year: 2016, Mileage: 25 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 121, Price: 1779 Euro, Preowned: No, Inserted: 2025-04-07",V4050
-"Country: Solomon Islands, Make: Volkswagen, Model: Sedan, Year: 2020, Mileage: 19 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 184, Price: 4026 USD, Preowned: No, Inserted: 2025-06-20",V4051
-"Country: India, Make: Maruti Suzuki, Model: SUV, Year: 2010, Mileage: 25 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 138, Price: 2910 USD, Preowned: No, Inserted: 2024-07-19",V4052
-"Country: Saint Helena, Make: Toyota, Model: Hatchback, Year: 2021, Mileage: 20 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 120, Price: 1000 USD, Preowned: No, Inserted: 2023-04-06",V4053
-"Country: Suriname, Make: Hyundai, Model: SUV, Year: 2011, Mileage: 20 kmpl, Fuel: EV, Gear: Manual, Horsepower: 204, Price: 2691 USD, Preowned: Yes, Inserted: 2022-11-06",V4054
-"Country: Italy, Make: Hyundai, Model: SUV, Year: 2011, Mileage: 17 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 94, Price: 3637 Euro, Preowned: No, Inserted: 2023-10-14",V4055
-"Country: Taiwan, Make: Toyota, Model: Sedan, Year: 2024, Mileage: 18 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 158, Price: 1231 USD, Preowned: Yes, Inserted: 2022-01-10",V4056
-"Country: Guadeloupe, Make: Toyota, Model: Hatchback, Year: 2015, Mileage: 18 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 206, Price: 2840 Euro, Preowned: Yes, Inserted: 2024-09-03",V4057
-"Country: Niger, Make: Honda, Model: SUV, Year: 2013, Mileage: 18 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 116, Price: 4483 Euro, Preowned: No, Inserted: 2022-09-06",V4058
-"Country: Reunion, Make: Maruti Suzuki, Model: SUV, Year: 2017, Mileage: 21 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 139, Price: 2224 Euro, Preowned: No, Inserted: 2022-07-02",V4059
-"Country: Bosnia and Herzegovina, Make: Honda, Model: Sedan, Year: 2018, Mileage: 19 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 128, Price: 1556 USD, Preowned: Yes, Inserted: 2024-01-16",V4060
-"Country: Myanmar, Make: Tata Motors, Model: Sedan, Year: 2015, Mileage: 20 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 207, Price: 1736 USD, Preowned: No, Inserted: 2024-05-05",V4061
-"Country: Cyprus, Make: Tata Motors, Model: Hatchback, Year: 2024, Mileage: 17 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 150, Price: 1803 USD, Preowned: No, Inserted: 2023-08-07",V4062
-"Country: Japan, Make: Tata Motors, Model: Sedan, Year: 2022, Mileage: 22 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 84, Price: 4105 Euro, Preowned: Yes, Inserted: 2024-04-16",V4063
-"Country: Bangladesh, Make: Maruti Suzuki, Model: Hatchback, Year: 2022, Mileage: 20 kmpl, Fuel: EV, Gear: Manual, Horsepower: 82, Price: 1699 USD, Preowned: No, Inserted: 2023-02-08",V4064
-"Country: Wallis and Futuna, Make: Maruti Suzuki, Model: SUV, Year: 2023, Mileage: 24 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 185, Price: 3079 Euro, Preowned: No, Inserted: 2024-03-03",V4065
-"Country: Korea, Make: Volkswagen, Model: SUV, Year: 2010, Mileage: 17 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 108, Price: 4985 Euro, Preowned: Yes, Inserted: 2023-05-02",V4066
-"Country: Puerto Rico, Make: Hyundai, Model: Hatchback, Year: 2010, Mileage: 17 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 115, Price: 2054 Euro, Preowned: No, Inserted: 2025-06-16",V4067
-"Country: Senegal, Make: Hyundai, Model: Sedan, Year: 2025, Mileage: 24 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 131, Price: 4460 Euro, Preowned: No, Inserted: 2023-10-30",V4068
-"Country: Eritrea, Make: Maruti Suzuki, Model: Sedan, Year: 2023, Mileage: 19 kmpl, Fuel: EV, Gear: Manual, Horsepower: 95, Price: 3950 USD, Preowned: No, Inserted: 2022-02-23",V4069
-"Country: Grenada, Make: Hyundai, Model: Hatchback, Year: 2024, Mileage: 19 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 114, Price: 1656 Euro, Preowned: No, Inserted: 2024-04-13",V4070
-"Country: Namibia, Make: Hyundai, Model: Hatchback, Year: 2022, Mileage: 24 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 129, Price: 2123 USD, Preowned: No, Inserted: 2024-05-09",V4071
-"Country: China, Make: Volkswagen, Model: Sedan, Year: 2020, Mileage: 23 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 102, Price: 3942 Euro, Preowned: No, Inserted: 2023-05-10",V4072
-"Country: Tunisia, Make: Hyundai, Model: Hatchback, Year: 2014, Mileage: 24 kmpl, Fuel: EV, Gear: Manual, Horsepower: 98, Price: 2913 USD, Preowned: No, Inserted: 2024-05-05",V4073
-"Country: Palau, Make: Honda, Model: Hatchback, Year: 2010, Mileage: 17 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 220, Price: 4583 USD, Preowned: No, Inserted: 2022-07-29",V4074
-"Country: Afghanistan, Make: Honda, Model: SUV, Year: 2015, Mileage: 18 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 189, Price: 4916 USD, Preowned: Yes, Inserted: 2023-03-20",V4075
-"Country: Niue, Make: Toyota, Model: Sedan, Year: 2025, Mileage: 24 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 90, Price: 1174 Euro, Preowned: No, Inserted: 2023-02-21",V4076
-"Country: Vanuatu, Make: Toyota, Model: Hatchback, Year: 2016, Mileage: 19 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 169, Price: 3610 Euro, Preowned: Yes, Inserted: 2024-01-09",V4077
-"Country: Thailand, Make: Honda, Model: Hatchback, Year: 2023, Mileage: 17 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 136, Price: 3302 USD, Preowned: No, Inserted: 2023-02-26",V4078
-"Country: Thailand, Make: Mahindra, Model: Hatchback, Year: 2023, Mileage: 20 kmpl, Fuel: EV, Gear: Manual, Horsepower: 171, Price: 2006 USD, Preowned: No, Inserted: 2023-06-01",V4079
-"Country: Jersey, Make: Honda, Model: Hatchback, Year: 2024, Mileage: 22 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 200, Price: 3679 USD, Preowned: No, Inserted: 2025-01-28",V4080
-"Country: Botswana, Make: Toyota, Model: SUV, Year: 2010, Mileage: 19 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 123, Price: 2519 Euro, Preowned: No, Inserted: 2025-04-16",V4081
-"Country: Senegal, Make: Tata Motors, Model: Sedan, Year: 2011, Mileage: 20 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 177, Price: 1317 USD, Preowned: No, Inserted: 2023-02-06",V4082
-"Country: Bolivia, Make: Maruti Suzuki, Model: Hatchback, Year: 2025, Mileage: 21 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 101, Price: 2646 USD, Preowned: Yes, Inserted: 2023-11-17",V4083
-"Country: Djibouti, Make: Tata Motors, Model: Hatchback, Year: 2016, Mileage: 22 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 187, Price: 3572 USD, Preowned: Yes, Inserted: 2022-06-05",V4084
-"Country: Burkina Faso, Make: Toyota, Model: Sedan, Year: 2010, Mileage: 17 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 161, Price: 2377 USD, Preowned: No, Inserted: 2024-10-20",V4085
-"Country: Mauritius, Make: Toyota, Model: Hatchback, Year: 2018, Mileage: 25 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 169, Price: 1542 Euro, Preowned: No, Inserted: 2022-03-12",V4086
-"Country: Congo, Make: Hyundai, Model: Sedan, Year: 2024, Mileage: 25 kmpl, Fuel: EV, Gear: Manual, Horsepower: 213, Price: 2668 USD, Preowned: No, Inserted: 2024-12-14",V4087
-"Country: Luxembourg, Make: Maruti Suzuki, Model: Hatchback, Year: 2016, Mileage: 25 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 124, Price: 2381 Euro, Preowned: Yes, Inserted: 2024-11-17",V4088
-"Country: Ireland, Make: Toyota, Model: SUV, Year: 2024, Mileage: 23 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 186, Price: 4473 USD, Preowned: Yes, Inserted: 2022-06-22",V4089
-"Country: China, Make: Hyundai, Model: Sedan, Year: 2016, Mileage: 19 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 80, Price: 1829 USD, Preowned: No, Inserted: 2023-08-05",V4090
-"Country: Turkey, Make: Hyundai, Model: Hatchback, Year: 2023, Mileage: 24 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 96, Price: 2694 Euro, Preowned: No, Inserted: 2025-03-17",V4091
-"Country: Montserrat, Make: Mahindra, Model: Sedan, Year: 2013, Mileage: 20 kmpl, Fuel: EV, Gear: Manual, Horsepower: 161, Price: 2214 Euro, Preowned: No, Inserted: 2025-02-23",V4092
-"Country: Cambodia, Make: Maruti Suzuki, Model: SUV, Year: 2020, Mileage: 25 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 202, Price: 1249 USD, Preowned: Yes, Inserted: 2024-10-09",V4093
-"Country: Ghana, Make: Honda, Model: Hatchback, Year: 2024, Mileage: 22 kmpl, Fuel: EV, Gear: Manual, Horsepower: 189, Price: 4806 Euro, Preowned: Yes, Inserted: 2023-08-21",V4094
-"Country: Estonia, Make: Maruti Suzuki, Model: SUV, Year: 2011, Mileage: 20 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 122, Price: 2068 Euro, Preowned: No, Inserted: 2025-04-11",V4095
-"Country: Georgia, Make: Tata Motors, Model: Hatchback, Year: 2018, Mileage: 24 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 110, Price: 3772 Euro, Preowned: Yes, Inserted: 2025-05-26",V4096
-"Country: Ukraine, Make: Toyota, Model: Hatchback, Year: 2024, Mileage: 19 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 92, Price: 1247 USD, Preowned: No, Inserted: 2024-09-27",V4097
-"Country: Tajikistan, Make: Hyundai, Model: Hatchback, Year: 2022, Mileage: 17 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 113, Price: 1076 Euro, Preowned: Yes, Inserted: 2022-10-29",V4098
-"Country: Kuwait, Make: Hyundai, Model: Hatchback, Year: 2018, Mileage: 19 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 218, Price: 4552 Euro, Preowned: Yes, Inserted: 2023-11-29",V4099
+"Country: Faroe Islands, Make: Hyundai, Model: Kona, Year: 2018, Mileage: 20.3 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 450, Price: 79745 EUR, Preowned: Yes",V1000
+"Country: Montenegro, Make: Nissan, Model: Maxima, Year: 2007, Mileage: 5.6 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 183, Price: 4498 INR, Preowned: No",V1001
+"Country: Northern Mariana Islands, Make: Ford, Model: F-150 Lightning (EV), Year: 2007, Mileage: 3.5 kmpl, Fuel: EV, Gear: Manual, Horsepower: 210, Price: 55880 INR, Preowned: No",V1002
+"Country: Tokelau, Make: Audi, Model: A4, Year: 2018, Mileage: 7.5 kmpl, Fuel: EV, Gear: Manual, Horsepower: 204, Price: 46611 EUR, Preowned: Yes",V1003
+"Country: Iraq, Make: Nissan, Model: Leaf (EV), Year: 2024, Mileage: 6.5 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 252, Price: 24905 EUR, Preowned: No",V1004
+"Country: Sudan, Make: Nissan, Model: Rogue, Year: 2010, Mileage: 7.4 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 364, Price: 5079 GBP, Preowned: No",V1005
+"Country: Bulgaria, Make: Tesla, Model: Model X, Year: 2014, Mileage: 10.6 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 234, Price: 5841 EUR, Preowned: Yes",V1006
+"Country: Trinidad and Tobago, Make: Audi, Model: A4, Year: 2007, Mileage: 6.3 kmpl, Fuel: EV, Gear: Manual, Horsepower: 292, Price: 4260 EUR, Preowned: Yes",V1007
+"Country: Moldova, Make: Volkswagen, Model: ID.4 (EV), Year: 2006, Mileage: 4.1 kmpl, Fuel: EV, Gear: Manual, Horsepower: 406, Price: 62369 GBP, Preowned: No",V1008
+"Country: Puerto Rico, Make: Honda, Model: Fit, Year: 2006, Mileage: 6.9 kmpl, Fuel: EV, Gear: Manual, Horsepower: 505, Price: 64233 EUR, Preowned: No",V1009
+"Country: Guernsey, Make: Toyota, Model: RAV4, Year: 2023, Mileage: 16.5 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 184, Price: 35028 EUR, Preowned: Yes",V1010
+"Country: Heard Island and McDonald Islands, Make: Toyota, Model: Prius, Year: 2008, Mileage: 7.9 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 235, Price: 37876 EUR, Preowned: No",V1011
+"Country: Mali, Make: Toyota, Model: RAV4, Year: 2011, Mileage: 18.7 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 199, Price: 35911 EUR, Preowned: No",V1012
+"Country: Anguilla, Make: Honda, Model: Civic, Year: 2017, Mileage: 6.3 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 497, Price: 66972 EUR, Preowned: Yes",V1013
+"Country: Libyan Arab Jamahiriya, Make: BMW, Model: 5 Series, Year: 2011, Mileage: 20.3 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 332, Price: 54362 EUR, Preowned: Yes",V1014
+"Country: Serbia, Make: Volkswagen, Model: Golf, Year: 2019, Mileage: 6.1 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 193, Price: 30612 EUR, Preowned: No",V1015
+"Country: Russian Federation, Make: Hyundai, Model: Ioniq 5 (EV), Year: 2017, Mileage: 5.1 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 552, Price: 25057 GBP, Preowned: Yes",V1016
+"Country: Western Sahara, Make: Toyota, Model: RAV4, Year: 2022, Mileage: 10.2 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 218, Price: 67693 INR, Preowned: Yes",V1017
+"Country: Iceland, Make: Audi, Model: Q5, Year: 2005, Mileage: 4.4 kmpl, Fuel: EV, Gear: Manual, Horsepower: 257, Price: 27642 INR, Preowned: Yes",V1018
+"Country: Bermuda, Make: Honda, Model: Accord, Year: 2007, Mileage: 21.1 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 296, Price: 32827 EUR, Preowned: Yes",V1019
+"Country: Malta, Make: Volkswagen, Model: Golf, Year: 2013, Mileage: 21.1 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 133, Price: 46706 GBP, Preowned: Yes",V1020
+"Country: Japan, Make: Hyundai, Model: Ioniq 5 (EV), Year: 2023, Mileage: 4.8 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 470, Price: 41799 GBP, Preowned: No",V1021
+"Country: Iraq, Make: Audi, Model: A4, Year: 2024, Mileage: 3.3 kmpl, Fuel: EV, Gear: Manual, Horsepower: 321, Price: 38101 EUR, Preowned: No",V1022
+"Country: Senegal, Make: Toyota, Model: Corolla, Year: 2007, Mileage: 5.6 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 461, Price: 78858 INR, Preowned: No",V1023
+"Country: Guinea, Make: Volkswagen, Model: Golf, Year: 2021, Mileage: 14.5 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 417, Price: 42129 GBP, Preowned: No",V1024
+"Country: British Indian Ocean Territory (Chagos Archipelago), Make: Toyota, Model: RAV4, Year: 2015, Mileage: 17.7 kmpl, Fuel: Hybrid, Gear: Automatic, Horsepower: 311, Price: 39325 INR, Preowned: Yes",V1025
+"Country: India, Make: Honda, Model: Fit, Year: 2019, Mileage: 16.1 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 183, Price: 62898 GBP, Preowned: No",V1026
+"Country: Bosnia and Herzegovina, Make: Audi, Model: Q5, Year: 2013, Mileage: 6.6 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 243, Price: 43534 USD, Preowned: Yes",V1027
+"Country: Guinea-Bissau, Make: Volkswagen, Model: ID.4 (EV), Year: 2014, Mileage: 4.3 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 463, Price: 67263 EUR, Preowned: No",V1028
+"Country: Madagascar, Make: Volkswagen, Model: ID.4 (EV), Year: 2024, Mileage: 6.0 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 227, Price: 24420 GBP, Preowned: Yes",V1029
+"Country: Bouvet Island (Bouvetoya), Make: Tesla, Model: Model X, Year: 2015, Mileage: 8.1 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 81, Price: 14706 USD, Preowned: No",V1030
+"Country: Namibia, Make: Hyundai, Model: Sonata, Year: 2010, Mileage: 23.7 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 151, Price: 25883 INR, Preowned: Yes",V1031
+"Country: Liechtenstein, Make: Tesla, Model: Model 3, Year: 2022, Mileage: 3.3 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 512, Price: 59331 USD, Preowned: Yes",V1032
+"Country: Togo, Make: Ford, Model: Focus, Year: 2019, Mileage: 3.9 kmpl, Fuel: EV, Gear: Manual, Horsepower: 554, Price: 67733 GBP, Preowned: Yes",V1033
+"Country: Cameroon, Make: Ford, Model: Mustang, Year: 2015, Mileage: 17.8 kmpl, Fuel: Hybrid, Gear: Automatic, Horsepower: 303, Price: 60853 GBP, Preowned: No",V1034
+"Country: Guinea-Bissau, Make: Tesla, Model: Model Y, Year: 2024, Mileage: 13.5 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 141, Price: 24881 INR, Preowned: No",V1035
+"Country: Burkina Faso, Make: Volkswagen, Model: Golf, Year: 2014, Mileage: 5.9 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 377, Price: 76552 USD, Preowned: No",V1036
+"Country: Palau, Make: Audi, Model: A3, Year: 2020, Mileage: 17.6 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 413, Price: 54798 INR, Preowned: Yes",V1037
+"Country: Madagascar, Make: Honda, Model: Accord, Year: 2020, Mileage: 23.2 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 89, Price: 41003 INR, Preowned: Yes",V1038
+"Country: Azerbaijan, Make: Audi, Model: Q5, Year: 2008, Mileage: 5.0 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 324, Price: 62281 EUR, Preowned: Yes",V1039
+"Country: Tokelau, Make: Ford, Model: F-150 Lightning (EV), Year: 2006, Mileage: 5.9 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 143, Price: 44228 INR, Preowned: Yes",V1040
+"Country: Saint Vincent and the Grenadines, Make: Audi, Model: A4, Year: 2019, Mileage: 6.8 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 377, Price: 73133 USD, Preowned: No",V1041
+"Country: Moldova, Make: Audi, Model: A4, Year: 2015, Mileage: 19.1 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 266, Price: 72488 GBP, Preowned: Yes",V1042
+"Country: British Indian Ocean Territory (Chagos Archipelago), Make: Honda, Model: Accord, Year: 2015, Mileage: 6.3 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 94, Price: 12082 USD, Preowned: Yes",V1043
+"Country: Argentina, Make: Tesla, Model: Model 3, Year: 2008, Mileage: 13.1 kmpl, Fuel: Hybrid, Gear: Automatic, Horsepower: 366, Price: 28527 GBP, Preowned: Yes",V1044
+"Country: Australia, Make: Tesla, Model: Model S, Year: 2007, Mileage: 4.4 kmpl, Fuel: EV, Gear: Manual, Horsepower: 201, Price: 49814 GBP, Preowned: Yes",V1045
+"Country: Ecuador, Make: Honda, Model: Civic, Year: 2010, Mileage: 6.2 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 426, Price: 78780 GBP, Preowned: Yes",V1046
+"Country: Madagascar, Make: Hyundai, Model: Ioniq 5 (EV), Year: 2013, Mileage: 7.7 kmpl, Fuel: EV, Gear: Manual, Horsepower: 224, Price: 5499 EUR, Preowned: No",V1047
+"Country: Kazakhstan, Make: Toyota, Model: Camry, Year: 2010, Mileage: 19.3 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 181, Price: 33692 INR, Preowned: Yes",V1048
+"Country: China, Make: Toyota, Model: Camry, Year: 2021, Mileage: 24.7 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 114, Price: 46582 USD, Preowned: Yes",V1049
+"Country: Morocco, Make: Ford, Model: Mustang, Year: 2012, Mileage: 5.1 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 128, Price: 23044 EUR, Preowned: Yes",V1050
+"Country: Trinidad and Tobago, Make: Nissan, Model: Rogue, Year: 2010, Mileage: 13.2 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 396, Price: 49220 USD, Preowned: Yes",V1051
+"Country: Netherlands, Make: Hyundai, Model: Kona, Year: 2021, Mileage: 22.9 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 349, Price: 45562 GBP, Preowned: No",V1052
+"Country: Botswana, Make: Ford, Model: Focus, Year: 2012, Mileage: 4.1 kmpl, Fuel: EV, Gear: Manual, Horsepower: 471, Price: 69114 EUR, Preowned: Yes",V1053
+"Country: Jordan, Make: Audi, Model: A4, Year: 2024, Mileage: 6.5 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 521, Price: 28384 USD, Preowned: Yes",V1054
+"Country: El Salvador, Make: Ford, Model: F-150 Lightning (EV), Year: 2018, Mileage: 4.4 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 319, Price: 60106 INR, Preowned: Yes",V1055
+"Country: Gambia, Make: Ford, Model: F-150 Lightning (EV), Year: 2008, Mileage: 5.1 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 566, Price: 29480 INR, Preowned: Yes",V1056
+"Country: Macao, Make: Honda, Model: Civic, Year: 2017, Mileage: 9.5 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 445, Price: 33963 GBP, Preowned: No",V1057
+"Country: United States Virgin Islands, Make: Volkswagen, Model: Tiguan, Year: 2014, Mileage: 17.5 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 113, Price: 29952 INR, Preowned: No",V1058
+"Country: Cyprus, Make: Audi, Model: A3, Year: 2014, Mileage: 3.4 kmpl, Fuel: EV, Gear: Manual, Horsepower: 376, Price: 9437 EUR, Preowned: No",V1059
+"Country: Japan, Make: BMW, Model: i3 (EV), Year: 2011, Mileage: 4.3 kmpl, Fuel: EV, Gear: Manual, Horsepower: 279, Price: 9125 USD, Preowned: No",V1060
+"Country: South Africa, Make: BMW, Model: X3, Year: 2010, Mileage: 8.6 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 347, Price: 18889 GBP, Preowned: No",V1061
+"Country: Montserrat, Make: Honda, Model: Accord, Year: 2019, Mileage: 5.9 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 201, Price: 71612 EUR, Preowned: No",V1062
+"Country: Bouvet Island (Bouvetoya), Make: Toyota, Model: Camry, Year: 2016, Mileage: 3.0 kmpl, Fuel: EV, Gear: Manual, Horsepower: 406, Price: 32217 EUR, Preowned: No",V1063
+"Country: Trinidad and Tobago, Make: Nissan, Model: Maxima, Year: 2021, Mileage: 11.3 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 406, Price: 31694 EUR, Preowned: No",V1064
+"Country: Paraguay, Make: Ford, Model: Fusion, Year: 2019, Mileage: 9.3 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 196, Price: 77849 EUR, Preowned: No",V1065
+"Country: South Georgia and the South Sandwich Islands, Make: Volkswagen, Model: Golf, Year: 2013, Mileage: 7.1 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 583, Price: 31943 INR, Preowned: No",V1066
+"Country: Central African Republic, Make: Tesla, Model: Model S, Year: 2013, Mileage: 20.6 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 274, Price: 57817 USD, Preowned: No",V1067
+"Country: New Zealand, Make: Audi, Model: A4, Year: 2023, Mileage: 23.5 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 208, Price: 35549 USD, Preowned: No",V1068
+"Country: Ghana, Make: BMW, Model: X3, Year: 2010, Mileage: 5.8 kmpl, Fuel: EV, Gear: Manual, Horsepower: 310, Price: 57512 EUR, Preowned: Yes",V1069
+"Country: Brunei Darussalam, Make: Volkswagen, Model: ID.4 (EV), Year: 2006, Mileage: 7.2 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 324, Price: 50571 GBP, Preowned: Yes",V1070
+"Country: Brunei Darussalam, Make: Volkswagen, Model: Golf, Year: 2009, Mileage: 12.6 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 225, Price: 42647 USD, Preowned: No",V1071
+"Country: French Polynesia, Make: BMW, Model: 3 Series, Year: 2007, Mileage: 6.9 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 333, Price: 60971 INR, Preowned: No",V1072
+"Country: Wallis and Futuna, Make: Honda, Model: Fit, Year: 2016, Mileage: 6.2 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 132, Price: 66388 EUR, Preowned: Yes",V1073
+"Country: Iceland, Make: Nissan, Model: Maxima, Year: 2021, Mileage: 4.3 kmpl, Fuel: EV, Gear: Manual, Horsepower: 551, Price: 54735 USD, Preowned: Yes",V1074
+"Country: Latvia, Make: Hyundai, Model: Sonata, Year: 2016, Mileage: 10.3 kmpl, Fuel: Hybrid, Gear: Automatic, Horsepower: 221, Price: 40908 GBP, Preowned: Yes",V1075
+"Country: El Salvador, Make: Tesla, Model: Model Y, Year: 2016, Mileage: 5.6 kmpl, Fuel: EV, Gear: Manual, Horsepower: 288, Price: 23761 EUR, Preowned: No",V1076
+"Country: Malawi, Make: BMW, Model: 5 Series, Year: 2015, Mileage: 23.8 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 357, Price: 56452 GBP, Preowned: No",V1077
+"Country: Micronesia, Make: Hyundai, Model: Kona, Year: 2011, Mileage: 11.5 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 280, Price: 19598 USD, Preowned: Yes",V1078
+"Country: Guam, Make: Volkswagen, Model: Golf, Year: 2008, Mileage: 19.5 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 87, Price: 50554 GBP, Preowned: No",V1079
+"Country: Saint Pierre and Miquelon, Make: Hyundai, Model: Kona, Year: 2021, Mileage: 6.6 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 417, Price: 64007 GBP, Preowned: Yes",V1080
+"Country: Suriname, Make: Audi, Model: e-tron (EV), Year: 2020, Mileage: 4.5 kmpl, Fuel: EV, Gear: Manual, Horsepower: 166, Price: 41484 EUR, Preowned: No",V1081
+"Country: Holy See (Vatican City State), Make: Volkswagen, Model: ID.4 (EV), Year: 2021, Mileage: 7.7 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 280, Price: 38192 USD, Preowned: No",V1082
+"Country: Bhutan, Make: Nissan, Model: Altima, Year: 2016, Mileage: 6.0 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 338, Price: 79391 USD, Preowned: Yes",V1083
+"Country: Madagascar, Make: Toyota, Model: Prius, Year: 2021, Mileage: 3.8 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 254, Price: 13848 USD, Preowned: Yes",V1084
+"Country: Liechtenstein, Make: Ford, Model: F-150 Lightning (EV), Year: 2005, Mileage: 3.7 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 201, Price: 67970 EUR, Preowned: No",V1085
+"Country: Ghana, Make: Hyundai, Model: Elantra, Year: 2014, Mileage: 21.3 kmpl, Fuel: Hybrid, Gear: Automatic, Horsepower: 233, Price: 34353 INR, Preowned: No",V1086
+"Country: Taiwan, Make: BMW, Model: X3, Year: 2016, Mileage: 11.3 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 344, Price: 54631 EUR, Preowned: Yes",V1087
+"Country: Gambia, Make: Honda, Model: Fit, Year: 2010, Mileage: 21.6 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 326, Price: 14960 USD, Preowned: Yes",V1088
+"Country: Heard Island and McDonald Islands, Make: Toyota, Model: RAV4, Year: 2023, Mileage: 14.0 kmpl, Fuel: Hybrid, Gear: Automatic, Horsepower: 347, Price: 38394 INR, Preowned: Yes",V1089
+"Country: Antigua and Barbuda, Make: Hyundai, Model: Kona, Year: 2016, Mileage: 21.0 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 428, Price: 64443 EUR, Preowned: Yes",V1090
+"Country: Egypt, Make: Tesla, Model: Model 3, Year: 2009, Mileage: 6.3 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 289, Price: 32513 GBP, Preowned: No",V1091
+"Country: Korea, Make: Ford, Model: Mustang, Year: 2015, Mileage: 9.0 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 193, Price: 44623 GBP, Preowned: Yes",V1092
+"Country: Paraguay, Make: BMW, Model: i3 (EV), Year: 2008, Mileage: 3.1 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 135, Price: 39055 INR, Preowned: Yes",V1093
+"Country: Mongolia, Make: Honda, Model: CR-V, Year: 2018, Mileage: 16.0 kmpl, Fuel: Petrol, Gear: Manual, Horsepower: 321, Price: 44250 USD, Preowned: Yes",V1094
+"Country: Marshall Islands, Make: Toyota, Model: Camry, Year: 2009, Mileage: 11.8 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 371, Price: 24303 EUR, Preowned: No",V1095
+"Country: Russian Federation, Make: Honda, Model: Accord, Year: 2009, Mileage: 16.1 kmpl, Fuel: Diesel, Gear: Automatic, Horsepower: 135, Price: 18367 EUR, Preowned: Yes",V1096
+"Country: North Macedonia, Make: Honda, Model: CR-V, Year: 2009, Mileage: 9.5 kmpl, Fuel: Hybrid, Gear: Automatic, Horsepower: 149, Price: 27453 EUR, Preowned: Yes",V1097
+"Country: Tuvalu, Make: Honda, Model: CR-V, Year: 2013, Mileage: 9.4 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 175, Price: 22153 EUR, Preowned: No",V1098
+"Country: Pitcairn Islands, Make: Nissan, Model: Maxima, Year: 2015, Mileage: 22.2 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 134, Price: 16895 GBP, Preowned: No",V1099

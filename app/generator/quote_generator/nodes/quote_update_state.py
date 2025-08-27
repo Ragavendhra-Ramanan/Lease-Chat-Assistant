@@ -63,7 +63,7 @@ class QuoteUpdateNode(BaseNode):
                 state.quote_step = "lease_term"
 
             elif step == "lease_term":
-                state.quote_filters["Lease Term"] = user_choice
+                state.quote_filters["Lease Term"] = int(user_choice)
                 state.quote_step = "flexi_lease"
 
             elif step == "flexi_lease":

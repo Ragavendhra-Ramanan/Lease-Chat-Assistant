@@ -21,7 +21,7 @@ origins = [
 
 client = None
 router = RouteNode()
-vehicle_df, product_df = get_data()
+vehicle_df, product_df,contract_df = get_data()
 quote_filtering_node = ROUTE_MAP["filtering"](vehicle_df, product_df, filter_df)
 quote_update_node = ROUTE_MAP["quote_field_update"]()
 quote_generate_node = ROUTE_MAP["quote"]()
@@ -68,7 +68,7 @@ async def signup_user(user_info:User):
 @app.post("/api/auth/login")
 async def login_user(login_info : Login):
     login_response = LoginResponse(
-        userId="1807"
+        userId="1016"
     )
     return login_response
 
@@ -95,6 +95,7 @@ async def start_conversation(request:StartConversation):
 async def get_conversation_result(request: ConversationRequest):    
     query = request.messages.message
     state = get_client_state(request.userId)
+    state.trace = [[]]
     state.query = query
     response = ConversationResponse(
     messages=[request.messages],              # empty list or actual messages
@@ -137,7 +138,7 @@ async def get_conversation_result(request: ConversationRequest):
         flow_instance = quote_filtering_node
         state.quote_context = "vehicle"
     elif "contract" in routes:
-        flow_instance = ROUTE_MAP["contract"](client=client)
+        flow_instance = ROUTE_MAP["contract"](client=client,df=contract_df)
     elif "product" in routes:
         flow_instance = ROUTE_MAP["product"](client=client)
     elif "vehicle" in routes:
@@ -159,7 +160,7 @@ async def get_conversation_result(request: ConversationRequest):
                 message=state.final_answer
             ))
     save_client_state(request.userId,state=state)
-
+    print(state,"state")
     
     return response
     

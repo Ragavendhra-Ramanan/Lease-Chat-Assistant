@@ -14,21 +14,34 @@ if(client):
 
 
 async def run_sample():
-    sample_query = "Honda Hatchback 2016"
-    filters = "vehicleID"
+    # sample_query = "Honda Hatchback 2016"
+    # filters = "vehicleID"
+    # filter_value = ["V4000"]  # optional, can include multiple IDs
+    # vehicle_collection = client.collections.get("Vehicle")
+    # results = await async_query(vehicle_collection,
+    #                              query=sample_query,
+    #                              alpha=0.75, 
+    #                              filters=filters,
+    #                              filter_val=filter_value,
+    #                              limit=3)
+    # for obj in results.objects:
+    #     print("VehicleID:", obj.properties.get("vehicleID"))
+    #     print("Summary:", obj.properties.get("summary"))
+    #     print("---")
+    sample_query = "Contract ending nextt week"
+    filters = "leaseExpiryDate"
+    from datetime import datetime
+    from weaviate.classes.query import Filter
+    another_query_date = datetime(2028, 6, 15, 12, 0, 0) 
+    print(another_query_date,"date")
     filter_value = ["V4000"]  # optional, can include multiple IDs
-    vehicle_collection = client.collections.get("Vehicle")
+    vehicle_collection = client.collections.get("Contract")
     results = await async_query(vehicle_collection,
                                  query=sample_query,
                                  alpha=0.75, 
-                                 filters=filters,
-                                 filter_val=filter_value,
+                                 where=Filter.by_property("leaseExpiryDate").greater_or_equal(another_query_date),
                                  limit=3)
-    for obj in results.objects:
-        print("VehicleID:", obj.properties.get("vehicleID"))
-        print("Summary:", obj.properties.get("summary"))
-        print("---")
-
+    print(results)
 
 if __name__ == "__main__":
     asyncio.run(run_sample())

@@ -27,3 +27,4 @@ class AgentState:
     quote_next_agent: str = ""
     quote_context: str = ""
     quote_results: str = ""
+    is_ev: str =""
