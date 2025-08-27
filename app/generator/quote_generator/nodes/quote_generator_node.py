@@ -40,7 +40,7 @@ class QuoteNode(BaseNode):
 
         state.quote_step = "quotation_end"
         state.quote_results = (
-            f"Here’s your quote:\n"
+            f"Here's your quote:\n"
             f"Vehicle: {chosen_vehicle.get('Make', '')} {chosen_vehicle.get('Model', '')} | "
             f"Base Price={chosen_vehicle.get('Price', 0)}\n"
             f"Product: {chosen_product.get('Product Name', 'None')}\n"
