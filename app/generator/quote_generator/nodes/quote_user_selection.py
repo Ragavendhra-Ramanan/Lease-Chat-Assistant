@@ -68,6 +68,7 @@ class QuoteUserSelectionNode(BaseNode):
             df = self.filter_df_func(self.product_df.copy(), state.quote_filters)
             
             step = state.quote_step
+            print(df.shape,"products")
             if len(df) == 1:
                 state.quote_step = "product_details"
                 step = state.quote_step
