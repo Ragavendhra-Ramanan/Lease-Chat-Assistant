@@ -69,4 +69,3 @@ def filter_contract_data(filter_dict, df, customer_id):
     
     # Convert filtered rows to list of dictionaries
     return filtered_df.to_dict(orient="records")
-

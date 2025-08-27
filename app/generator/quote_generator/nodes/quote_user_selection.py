@@ -22,9 +22,12 @@ class QuoteUserSelectionNode(BaseNode):
 
         # --- VEHICLE filtering ---
         if context == "vehicle":
-            df = self.filter_df_func(self.vehicle_df.copy(), state.quote_filters)
-            
+            df = self.filter_df_func(self.vehicle_df.copy(), state.quote_filters)            
             step = state.quote_step
+
+            if len(df) == 1:
+                state.quote_step = "vehicle_details"
+                step = state.quote_step
 
             if step == "preowned":
                 options = df["Preowned"].unique().tolist()
@@ -65,6 +68,9 @@ class QuoteUserSelectionNode(BaseNode):
             df = self.filter_df_func(self.product_df.copy(), state.quote_filters)
             
             step = state.quote_step
+            if len(df) == 1:
+                state.quote_step = "product_details"
+                step = state.quote_step
 
             if step == "product_name":
                 options = df["Product Name"].unique().tolist()

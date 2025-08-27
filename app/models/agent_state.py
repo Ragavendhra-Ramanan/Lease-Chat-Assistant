@@ -5,6 +5,8 @@ from typing import List, Dict, Any, Optional
 @dataclass
 class AgentState:
     query: str = ""
+    previous_query: str = ""
+    retrieval_mode: str = ""
     route: List[str] = field(default_factory=list)
     product_vector_result: str = ""
     vehicle_vector_result: str = ""

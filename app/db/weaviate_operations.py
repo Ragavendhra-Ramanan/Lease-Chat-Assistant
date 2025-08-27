@@ -6,12 +6,6 @@ import asyncio
 from weaviate.classes.query import MetadataQuery
 
 
-vectorizer_config = Configure.Vectors.text2vec_openai(
-    model="text-embedding-3-small",  # embedding model
-    type_="text",                     # type of input (text)
-)
-
-
 def connection_to_wcs(weaviate_url,weaviate_api_key,openai_api_key):
     try:
         client = weaviate.connect_to_weaviate_cloud(
@@ -136,7 +130,7 @@ import asyncio
 from weaviate.classes.query import Filter
 
 async def async_query(collection, query=None, filters=None,filter_val=None,where=[],
-                       limit=5,alpha: float = 0):
+                       limit=5,alpha: float = 0.5):
     # Build filter object if filters are provided
     filter_to_apply = None
     if (filters!=None):

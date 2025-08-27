@@ -8,9 +8,10 @@ from db.weaviate_operations import async_query
 from models.agent_state import AgentState
 from utils.numeric_filters import extract_filters
 class ProductNode(BaseNode):
-    def __init__(self,client):
+    def __init__(self,client, limit):
         self.client = client
-        
+        self.limit = limit
+
     async def run(self, state:AgentState):
         product_query = inject_filters(state.rewritten_query, state.product_filters, "product")
         where_filters = extract_filters(state.product_filters)
@@ -19,7 +20,7 @@ class ProductNode(BaseNode):
                                  query=product_query,
                                  alpha=0.9, 
                                  where=where_filters,
-                                 limit=5)   
+                                 limit=self.limit)   
         product_summary = []  
         for obj in context:
             product_summary.append(obj.get("summary"))  

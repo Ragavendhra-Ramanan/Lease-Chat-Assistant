@@ -8,12 +8,12 @@ from db.weaviate_operations import async_query
 from models.agent_state import AgentState
 from utils.numeric_filters import extract_filters
 class VehicleNode(BaseNode):
-    def __init__(self, client):
+    def __init__(self, client, limit):
         self.client = client
+        self.limit = limit
     async def run(self, state:AgentState):
         is_ev = state.vehicle_filters  
         where_filters=extract_filters(state.vehicle_filters)
-          
         vehicle_query = inject_filters(state.rewritten_query, state.vehicle_filters, "vehicles")
         # search
         vehicle_collection = self.client.collections.get("Car")
@@ -21,20 +21,17 @@ class VehicleNode(BaseNode):
             collection=vehicle_collection,
                                  query=vehicle_query,
                                  filter= where_filters,
-                                 alpha=0.6, 
-                                 limit=5)
+                                 alpha=0.75, 
+                                 limit=self.limit)
         if not is_ev:
             ev_context = await self._call_llm(state=state,
                 collection=vehicle_collection,
                                  query=vehicle_query+"with EV",
                                  filter= where_filters,
-                                 alpha=0.6, 
+                                 alpha=0.75, 
                                  limit=2)
             context.extend(ev_context)
-
-        print(context)    
         vehicle_summary_str = "\n\n".join(f"{i+1}. {ctx}" for i, ctx in enumerate(context))
-
         vehicle_prompt = PromptTemplate(
             template=VEHICLE_SEARCH_PROMPT,
             input_variables=["context","query"],
