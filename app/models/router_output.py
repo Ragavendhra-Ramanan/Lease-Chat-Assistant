@@ -10,3 +10,4 @@ class RouterOutput(BaseModel):
     product_filters: str = Field(description="The product related filter")
     route: List[str] = Field(description="The chosen route: vehicle, product, contract, general, quotation")
     is_ev: str = Field(description="Flag to indicate whether the query is related to electric vehicle or not")
+    retrieval_mode: str = Field(description="Retrieval method : MMR | SIMILARITY") 

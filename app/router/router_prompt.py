@@ -21,7 +21,7 @@ Your job is to take any user query in natural language and turn it into:
 - lease_expiry_date (date)
 - road_assistance (Yes/No)
 - maintenance (Yes/No)
-- discount_applied (Yes/ No)
+- discount_applied (Yes/No)
 - preferred_customer (Yes/No)
 
 **Vehicle fields**:
@@ -59,26 +59,53 @@ Your job is to take any user query in natural language and turn it into:
      - "starting in next N days/months" → `lease_start_date >= <calculated date>`
      - "expiring in next N days/months" → `lease_expiry_date <= <calculated date>`
    - Expand short questions into complete sentences if needed.
+   - Explicitly handle exclusions:  
+     - “not Tesla” → `make != Tesla`  
+     - “except EV” → `fuel != EV`
    - Keep the rewritten query user-friendly but explicit.
 
 2. **Extract filters**
    - Identify fields implied by the query.
+   - Support **inclusion and exclusion filters**:
+     - `make: Ford` → include Ford only
+     - `make: != Tesla` → exclude Tesla
    - For dates, always output exact date values in `YYYY-MM-DD` or RFC3339 format.
    - Examples:
      - “my SUV contracts” → Vehicle filter `model: SUV`
+     - “not Tesla” → Vehicle filter `make: != Tesla`
      - “maintenance included” → Contract filter `maintenance: Yes`
      - “flexi lease” → Product filter `flexi_lease: Yes`
      - “quotation” → route includes `"quotation"`
 
 3. **Routing decision**
-   - Include `"contract"` if the query mentions contracts or agreements.
-   - Include `"vehicle"` if query mentions vehicle details (make, model, fuel, mileage, horsepower).
-   - Include `"product"` if query mentions lease plans, flexi lease, tax saving, EMI, renewal, or maintenance.
-   - Include `"quotation"` if the user wants a lease quote.
+   - Include `"contract"` if the query mentions contracts, agreements, customers, or payments.
+   - Include `"vehicle"` if query mentions make, model, country, fuel, mileage, horsepower, price.
+   - Include `"product"` if query mentions lease plans, flexi lease, EMI, tax saving, renewal, or maintenance types.
+   - Include `"quotation"` if the user requests a lease quote.
 
 4. **Electric Vehicle detection**
-   - If query is about EVs, battery-powered cars, zero-emission, set `"is_ev": "yes"`.
+   - If query is about EVs, battery-powered cars, or zero-emission, set `"is_ev": "yes"`.
    - Otherwise set `"is_ev": "no"`.
+   - If query explicitly excludes EVs, set `"is_ev": "no"` and add exclusion filter.
+
+5. **Retrieval Ranking Strategy**
+    - If the query is **exploratory, open-ended, or asks for lists, variety, options, or comparisons**, set `"retrieval_mode": "MMR"`.
+      Examples: "list cars under 30k", "show me different SUVs", "compare options", "recommend vehicles".
+    - If the query is **fact-based, specific, or asks for exact details**, set `"retrieval_mode": "SIMILARITY"`.
+      Examples: "lease price of Audi A4 2019", "contract for customer 1001", "monthly EMI of contract C1234".
+    - Always include this field.
+
+---
+
+### Memory Context Rules
+
+- You will receive:
+    - `Current Query`: the query the user just sent
+    - `Previous Query`: the last query issued by the same user (if any)
+- If the **Current Query is missing details** like `customer_id`, `vehicle_make`, or `product_id`, you **may inherit them from Previous Query**, but **only if the Current Query is semantically related** to the Previous Query.
+- Do not include Previous Query fields if the Current Query explicitly overrides them or if the queries are unrelated.
+- Merge memory fields individually into the filters (not as a single dict).
+- If exclusion filters are present, they override any inherited inclusions.
 
 ---
 
@@ -88,11 +115,12 @@ Return valid JSON only:
 
 {{
   "rewritten_query": "<rewritten natural language query>",
-  "contract_filters": <contract_field>: <value>, ... ,
-  "vehicle_filters": <vehicle_field>: <value>, ... ,
-  "product_filters": <product_field>: <value>, ... ,
-  "route": ["contract", "vehicle", "product","quotation"],
-  "is_ev": "yes/no"
+  "contract_filters": "<contract_field>: <value or condition>, ...",
+  "vehicle_filters": "<vehicle_field>: <value or condition>, ...",
+  "product_filters": "<product_field>: <value or condition>, ...",
+  "route": ["contract", "vehicle", "product", "quotation"],
+  "is_ev": "yes/no",
+  "retrieval_mode": "MMR" | "SIMILARITY"
 }}
 
 ---
@@ -107,44 +135,79 @@ Output:
   "vehicle_filters": "model: SUV",
   "product_filters": "",
   "route": ["contract", "vehicle"],
-  "is_ev": "no"
+  "is_ev": "no",
+  "retrieval_mode": "MMR"
+
 }}
 
-User: "Which contracts are still active?"
+User: "Show expired contracts in same make"
+Previous Query: "Show my Ford contracts"
 Output:
 {{
-  "rewritten_query": "Show contracts where lease_expiry_date >= 2025-08-26.",
-  "contract_filters": "lease_expiry_date: >= 2025-08-26",
+  "rewritten_query": "Show contracts where lease_expiry_date < 2025-08-26 and vehicle make is Ford.",
+  "contract_filters": "lease_expiry_date: < 2025-08-26",
+  "vehicle_filters": "make: Ford",
+  "product_filters": "",
+  "route": ["contract", "vehicle"],
+  "is_ev": "no",
+  "retrieval_mode": "SIMILARITY"
+}}
+
+User: "Show contracts expiring next month"
+Previous Query: "Show my Toyota contracts"
+Output:
+{{
+  "rewritten_query": "Show contracts where lease_expiry_date <= 2025-09-26 for customer ID 1001 and vehicle make is Toyota.",
+  "contract_filters": "lease_expiry_date: <= 2025-09-26, customer_id: 1001",
+  "vehicle_filters": "make: Toyota",
+  "product_filters": "",
+  "route": ["contract", "vehicle"],
+  "is_ev": "no",
+  "retrieval_mode": "SIMILARITY"
+}}
+
+User: "Show expired Toyota contracts"
+Previous Query: "Show my Ford contracts"
+Output:
+{{
+  "rewritten_query": "Show contracts where lease_expiry_date < 2025-08-26 and vehicle make is Toyota.",
+  "contract_filters": "lease_expiry_date: < 2025-08-26",
+  "vehicle_filters": "make: Toyota",
+  "product_filters": "",
+  "route": ["contract", "vehicle"],
+  "is_ev": "no",
+  "retrieval_mode": "SIMILARITY"
+
+}}
+
+User: "Show all expired contracts"
+Previous Query: "Show maintenance plans for my Tesla"
+Output:
+{{
+  "rewritten_query": "Show contracts where lease_expiry_date < 2025-08-26.",
+  "contract_filters": "lease_expiry_date: < 2025-08-26",
   "vehicle_filters": "",
   "product_filters": "",
   "route": ["contract"],
-  "is_ev": "no"
+  "is_ev": "no",
+  "retrieval_mode": "SIMILARITY"
 }}
 
-User: "Do I have a flexi lease plan for my Toyota?"
+User: "Show me cars not Tesla and not EV"
 Output:
 {{
-  "rewritten_query": "Show contracts with flexi lease enabled for vehicle make Toyota.",
+  "rewritten_query": "Show vehicles where make is not Tesla and fuel is not EV.",
   "contract_filters": "",
-  "vehicle_filters": "make: Toyota",
-  "product_filters": "flexi_lease: Yes",
-  "route": ["contract", "vehicle", "product"],
-  "is_ev": "no"
-}}
-
-User: "I want a new quotation for an electric vehicle lease"
-Output:
-{{
-  "rewritten_query": "Provide a leasing quotation for an electric vehicle.",
-  "contract_filters": "",
-  "vehicle_filters": "fuel: EV",
+  "vehicle_filters": "make: != Tesla, fuel: != EV",
   "product_filters": "",
-  "route": ["vehicle", "quotation"],
-  "is_ev": "yes"
+  "route": ["vehicle"],
+  "is_ev": "no",
+  "retrieval_mode": "MMR"
 }}
 
-### User Query 
-Query: {input}
+### User Input
+Current Query: {query}
+Previous Query: {previous_query}
 
 {format_instructions}
 """

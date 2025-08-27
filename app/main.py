@@ -10,8 +10,8 @@ from typing import Dict
 from utils.flows import ROUTE_MAP
 from utils.helper_functions import get_data, filter_df
 from models.auth_models import User, SignupResponse, Login, LoginResponse
-import copy
 from fastapi.middleware.cors import CORSMiddleware
+from memory.memory_store import get_recent_memory, add_short_term_memory_from_dict
 
 origins = [
     "http://localhost:4200",  # frontend URL
@@ -35,6 +35,15 @@ def get_client_state(user_id: str) -> AgentState:
 
 def save_client_state(user_id: str, state: AgentState):
     conversations[user_id] = state
+
+def get_last_query(user_id: str) -> str:
+    """
+    Returns the last user query from memory, or empty string if none.
+    """
+    recent_memory = get_recent_memory(user_id)
+    if not recent_memory:
+        return ""
+    return recent_memory[-1]["query"]
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -96,7 +105,16 @@ async def get_conversation_result(request: ConversationRequest):
     query = request.messages.message
     state = get_client_state(request.userId)
     state.trace = [[]]
+    state.previous_query = get_last_query(state.customer_id)
     state.query = query
+
+    # #memory context
+    # memory_text = ""
+    # if is_relevant_to_memory(state.customer_id, state.query):
+    #     memory_entries = get_recent_memory(state.customer_id)
+    #     memory_text = "\n".join([f"User: {m['query']} | Bot: {m['response']}" for m in memory_entries])
+
+
     response = ConversationResponse(
     messages=[request.messages],              # empty list or actual messages
     userId= request.userId  ,     # string
@@ -133,16 +151,19 @@ async def get_conversation_result(request: ConversationRequest):
     routes = state.route
     flow_instance = None
     state.customer_id = request.userId
+
+        
+    limit = 5
     # Pick flow by checking membership
     if "quotation" in routes:
         flow_instance = quote_filtering_node
         state.quote_context = "vehicle"
     elif "contract" in routes:
-        flow_instance = ROUTE_MAP["contract"](client=client,df=contract_df)
+        flow_instance = ROUTE_MAP["contract"](client=client,df=contract_df,limit=limit)
     elif "product" in routes:
-        flow_instance = ROUTE_MAP["product"](client=client)
+        flow_instance = ROUTE_MAP["product"](client=client,limit=limit)
     elif "vehicle" in routes:
-        flow_instance = ROUTE_MAP["vehicle"](client=client)
+        flow_instance = ROUTE_MAP["vehicle"](client=client,limit=limit)
     else:
         flow_instance = ROUTE_MAP["general"]()
 
@@ -160,9 +181,6 @@ async def get_conversation_result(request: ConversationRequest):
                 message=state.final_answer
             ))
     save_client_state(request.userId,state=state)
-    print(state,"state")
-    
+    add_short_term_memory_from_dict(user_id=state.customer_id, query=state.rewritten_query,response=state.final_answer)
+    print(state,"agent")
     return response
-    
-
-

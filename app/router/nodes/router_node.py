@@ -12,7 +12,7 @@ class RouteNode(BaseNode):
         parser = PydanticOutputParser(pydantic_object=RouterOutput)
         router_prompt = PromptTemplate(
             template=ROUTER_PROMPT,
-            input_variables=["input"],
+            input_variables=["query","previous_query","date_field"],
             partial_variables={"format_instructions": parser.get_format_instructions()},
         )
 
@@ -23,7 +23,9 @@ class RouteNode(BaseNode):
         )
 
         # Use asyncio to run sync invoke in thread if LLM is sync
-        response = await router_chain.ainvoke({"input": state.query,"date_field":datetime.datetime.now()})
+        response = await router_chain.ainvoke({"query": state.query,
+                                               "previous_query": state.previous_query,
+                                               "date_field":datetime.datetime.now()})
 
         decision = response["text"].route
         state.route = decision
@@ -32,5 +34,6 @@ class RouteNode(BaseNode):
         state.vehicle_filters = response['text'].vehicle_filters
         state.contract_filters = response['text'].contract_filters
         state.is_ev = response['text'].is_ev
+        state.retrieval_mode = response['text'].retrieval_mode
         state.trace.append(["ROUTER", f"Query='{state.query}' → Route='{decision}'"])
         return state

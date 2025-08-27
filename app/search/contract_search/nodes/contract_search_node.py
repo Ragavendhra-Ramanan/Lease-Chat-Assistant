@@ -10,9 +10,10 @@ from utils.numeric_filters import extract_filters
 from utils.contract_filter import parse_contract_string, filter_contract_data
 
 class ContractNode(BaseNode):
-    def __init__(self, client,df):
+    def __init__(self, client,df,limit):
         self.client = client
         self.contract_df = df
+        self.limit = limit
     async def run(self, state:AgentState):
 
         results = {"contract": [], "vehicle": [], "product": []}
@@ -46,7 +47,7 @@ class ContractNode(BaseNode):
                                  filter_val=vehicle_ids,
                                  where=vehicle_filters,
                                  alpha=0.6, 
-                                 limit=5)
+                                 limit=self.limit)
             results["vehicle"] = vehicle_results
             state.trace.append(["CONTRACT VEHICLE VECTOR", f"Retrieved {len(results['vehicle'])} docs"])
 
@@ -61,7 +62,7 @@ class ContractNode(BaseNode):
                                  filters="product_id",
                                  filter_val=product_ids ,
                                  where=product_filters,
-                                 limit=5) 
+                                 limit=self.limit) 
             results["product"] = product_results
             state.trace.append(["CONTRACT PRODUCT VECTOR", f"Retrieved {len(results['product'])} docs"])
 
