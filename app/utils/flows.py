@@ -5,6 +5,7 @@ from search.other_search.nodes.other_search_node import GeneralSearchNode
 from generator.quote_generator.nodes.quote_user_selection import QuoteUserSelectionNode
 from generator.quote_generator.nodes.quote_update_state import QuoteUpdateNode
 from generator.quote_generator.nodes.quote_generator_node import QuoteNode
+
 ROUTE_MAP = {
     "contract": ContractNode,
     "product": ProductNode,

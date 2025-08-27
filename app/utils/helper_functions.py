@@ -12,7 +12,9 @@ def inject_filters(query: str, filters: str, entity: str) -> str:
 def get_data():
     vehicle_df = pd.read_csv(os.path.join(base_dir,"../data/vehicle_data.csv"))  # your dataset
     product_df = pd.read_csv(os.path.join(base_dir,"../data/leasing_data.csv"))  # your dataset
-    return vehicle_df, product_df
+    contract_df = pd.read_csv(os.path.join(base_dir,"../data/contract_data.csv"))  # your dataset
+
+    return vehicle_df, product_df, contract_df
 def filter_df(df: pd.DataFrame, filters: Dict[str, Any]) -> pd.DataFrame:
     for key, value in filters.items():
         if isinstance(value, tuple):  # numeric range
@@ -20,3 +22,6 @@ def filter_df(df: pd.DataFrame, filters: Dict[str, Any]) -> pd.DataFrame:
         else:
             df = df[df[key] == value]
     return df
+
+
+

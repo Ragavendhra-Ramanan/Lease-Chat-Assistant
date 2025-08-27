@@ -6,30 +6,53 @@ from langchain.prompts import PromptTemplate
 from ..vehicle_search_prompt import VEHICLE_SEARCH_PROMPT
 from db.weaviate_operations import async_query
 from models.agent_state import AgentState
-
+from utils.numeric_filters import extract_filters
 class VehicleNode(BaseNode):
     def __init__(self, client):
         self.client = client
     async def run(self, state:AgentState):
+        is_ev = state.vehicle_filters  
+        where_filters=extract_filters(state.vehicle_filters)
+          
         vehicle_query = inject_filters(state.rewritten_query, state.vehicle_filters, "vehicles")
         # search
-        vehicle_collection = self.client.collections.get("Vehicle")
-        context = await async_query(collection=vehicle_collection,
+        vehicle_collection = self.client.collections.get("Car")
+        context = await self._call_llm(state=state,
+            collection=vehicle_collection,
                                  query=vehicle_query,
-                                 alpha=0.75, 
+                                 filter= where_filters,
+                                 alpha=0.6, 
                                  limit=5)
-        vehicle_summary = []  
-        for obj in context:
-            vehicle_summary.append(obj.get("summary"))  
+        if not is_ev:
+            ev_context = await self._call_llm(state=state,
+                collection=vehicle_collection,
+                                 query=vehicle_query+"with EV",
+                                 filter= where_filters,
+                                 alpha=0.6, 
+                                 limit=2)
+            context.extend(ev_context)
 
-        state.vehicle_vector_result = vehicle_summary
-        state.trace.append(["VEHICLE VECTOR", f"Retrieved {len(vehicle_summary)} docs"])
+        print(context)    
+        vehicle_summary_str = "\n\n".join(f"{i+1}. {ctx}" for i, ctx in enumerate(context))
+
         vehicle_prompt = PromptTemplate(
             template=VEHICLE_SEARCH_PROMPT,
             input_variables=["context","query"],
         )
         chain = LLMChain(llm=model, prompt=vehicle_prompt)
-        result = await chain.ainvoke({"context": vehicle_summary, "query": vehicle_query})
-        state.final_answer = result["text"]
+        result = await chain.ainvoke({"context": vehicle_summary_str, "query": vehicle_query})
         state.trace.append(["VEHICLE ANSWER", result["text"][:80] + ("..." if len(result["text"]) > 80 else "")])
+        state.final_answer = result["text"]
         return state
+    async def _call_llm(self,state,collection, query, alpha, limit,filter):
+        context = await async_query(collection=collection,
+                                 query=query,
+                                 alpha=alpha, 
+                                 where=filter,
+                                 limit=limit)
+        vehicle_summary = []  
+        for obj in context:
+            vehicle_summary.append(obj.get("summary"))  
+        state.vehicle_vector_result = vehicle_summary
+        state.trace.append(["VEHICLE VECTOR", f"Retrieved {len(vehicle_summary)} docs"])
+        return vehicle_summary

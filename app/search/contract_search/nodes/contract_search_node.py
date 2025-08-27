@@ -6,52 +6,61 @@ from langchain.prompts import PromptTemplate
 from ..contract_search_prompt import CONTRACT_SEARCH_PROMPT
 from db.weaviate_operations import async_query
 from models.agent_state import AgentState
+from utils.numeric_filters import extract_filters
+from utils.contract_filter import parse_contract_string, filter_contract_data
 
 class ContractNode(BaseNode):
-    def __init__(self, client):
+    def __init__(self, client,df):
         self.client = client
+        self.contract_df = df
     async def run(self, state:AgentState):
-        customer_id = state.customer_id
-        results = {"contract": [], "vehicle": [], "product": []}
 
+        results = {"contract": [], "vehicle": [], "product": []}
+        vehicle_filters = extract_filters(state.vehicle_filters)
+        product_filters = extract_filters(state.product_filters)
+        #contract_filters = extract_filters(state.contract_filters)
         # --- Contract search ---
         if "contract" in state.route:
-            contract_query = inject_filters(state.rewritten_query, state.contract_filters, "contract")
-            contract_collection = self.client.collections.get("Contract")
-            contract_results = await async_query(contract_collection,
-                                 query=contract_query,
-                                 alpha=0.75, 
-                                 filters="customerID",
-                                 filter_val=customer_id,
-                                 limit=5)
+            # contract_query = inject_filters(state.rewritten_query, state.contract_filters, "contract")
+            # contract_collection = self.client.collections.get("Contract")
+            # contract_results = await async_query(contract_collection,
+            #                      query=contract_query,
+            #                      alpha=0.75, 
+            #                      filters="customerID",
+            #                      filter_val=customer_id,
+            #                      where=contract_filters,
+            #                      limit=0)
+            print(state,"inner")
+            parsed_contract_filter = parse_contract_string(state.contract_filters)
+            contract_results = filter_contract_data(filter_dict=parsed_contract_filter,df=self.contract_df,customer_id=state.customer_id)
             results["contract"] = contract_results
-            print(len(results["contract"]))
             state.trace.append(["CONTRACT VECTOR", f"Retrieved {len(results['contract'])} docs"])
-
         # Vehicle IDs from contracts
-        vehicle_ids = [c.get("vehicleID") for c in results["contract"] if c.get("vehicleID")]
-        if "vehicle" in state.route and (state.vehicle_filters or vehicle_ids):
+        if "vehicle" in state.route and (state.vehicle_filters or vehicle_ids) and len(contract_results)>0:
+            vehicle_ids = [c.get("Vehicle ID") for c in results["contract"] if c.get("Vehicle ID")]
             vehicle_query = inject_filters(state.rewritten_query, state.vehicle_filters, "vehicle")
-            vehicle_collection = self.client.collections.get("Vehicle")
+            vehicle_collection = self.client.collections.get("Car")
             vehicle_results = await async_query(collection=vehicle_collection,
                                  query=vehicle_query,
-                                 filters="vehicleID",
+                                 filters="vehicle_id",
                                  filter_val=vehicle_ids,
-                                 alpha=0.75, 
+                                 where=vehicle_filters,
+                                 alpha=0.6, 
                                  limit=5)
             results["vehicle"] = vehicle_results
             state.trace.append(["CONTRACT VEHICLE VECTOR", f"Retrieved {len(results['vehicle'])} docs"])
 
         # Product IDs from contracts
-        product_ids = [c.get("product_id") for c in results["contract"] if c.get("product_id")]
-        if "product" in state.route and (state.product_filters or product_ids):
+        if "product" in state.route and (state.product_filters or product_ids) and len(contract_results)>0:
+            product_ids = [c.get("Product ID") for c in results["contract"] if c.get("Product ID")]
             product_query = inject_filters(state.rewritten_query, state.product_filters, "product")
             product_collection = self.client.collections.get("Product")
             product_results = await async_query(collection=product_collection,
                                  query=product_query,
-                                 alpha=0.75,
-                                 filters="productID",
+                                 alpha=0.6,
+                                 filters="product_id",
                                  filter_val=product_ids ,
+                                 where=product_filters,
                                  limit=5) 
             results["product"] = product_results
             state.trace.append(["CONTRACT PRODUCT VECTOR", f"Retrieved {len(results['product'])} docs"])

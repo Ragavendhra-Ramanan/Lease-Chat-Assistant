@@ -6,7 +6,7 @@ from ..router_prompt import ROUTER_PROMPT
 from models.base_llm import model
 from models.router_output import RouterOutput
 from models.agent_state import AgentState
-
+import datetime
 class RouteNode(BaseNode):
     async def run(self, state: AgentState):
         parser = PydanticOutputParser(pydantic_object=RouterOutput)
@@ -23,7 +23,7 @@ class RouteNode(BaseNode):
         )
 
         # Use asyncio to run sync invoke in thread if LLM is sync
-        response = await router_chain.ainvoke({"input": state.query})
+        response = await router_chain.ainvoke({"input": state.query,"date_field":datetime.datetime.now()})
 
         decision = response["text"].route
         state.route = decision
@@ -31,5 +31,6 @@ class RouteNode(BaseNode):
         state.product_filters = response['text'].product_filters
         state.vehicle_filters = response['text'].vehicle_filters
         state.contract_filters = response['text'].contract_filters
+        state.is_ev = response['text'].is_ev
         state.trace.append(["ROUTER", f"Query='{state.query}' → Route='{decision}'"])
         return state

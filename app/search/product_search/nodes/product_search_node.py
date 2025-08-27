@@ -6,17 +6,19 @@ from langchain.prompts import PromptTemplate
 from ..product_search_prompt import PRODUCT_SEARCH_PROMPT
 from db.weaviate_operations import async_query
 from models.agent_state import AgentState
-
+from utils.numeric_filters import extract_filters
 class ProductNode(BaseNode):
     def __init__(self,client):
         self.client = client
         
     async def run(self, state:AgentState):
         product_query = inject_filters(state.rewritten_query, state.product_filters, "product")
+        where_filters = extract_filters(state.product_filters)
         product_collection = self.client.collections.get("Product")
         context = await async_query(collection=product_collection,
                                  query=product_query,
-                                 alpha=0.75, 
+                                 alpha=0.9, 
+                                 where=where_filters,
                                  limit=5)   
         product_summary = []  
         for obj in context:

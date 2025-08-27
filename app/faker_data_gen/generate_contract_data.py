@@ -1,83 +1,108 @@
 import pandas as pd
 from faker import Faker
 from datetime import timedelta
-from random import choice,randint
+import random
 
 fake= Faker()
-def generate_contract_data(vehicles_df, products_df, num_records=100):
-    # Get actual IDs from the provided datasets
-    vehicle_ids = vehicles_df["Vehicle ID"].tolist()
-    product_ids = products_df["Product ID"].tolist()
-
+def generate_contracts_df(vehicle_data, product_data, n=20):
     contracts = []
-    data_records = []
-    used_new_customers = set()
-    existing_customer_pool = [fake.unique.random_int(min=1000, max=2000) for _ in range(100)]
+    customer_pool = [f"{1000+i}" for i in range(1, 21)]  # 20 customers
+    customer_contracts = {}
 
-    for i in range(1, num_records + 1):
-        # Customer logic
-        if randint(1, 100) <= 60:
-            customer_id = choice(existing_customer_pool)
-            existing_customer = "yes"
-        else:
-            while True:
-                customer_id = fake.unique.random_int(min=2001, max=5000)
-                if customer_id not in used_new_customers:
-                    used_new_customers.add(customer_id)
-                    break
-            existing_customer = "no"
+    for i in range(n):
+        contract_id = f"C{i+1:04d}"
+        customer_id = random.choice(customer_pool)
+        existing_customer = "Yes" if customer_id in customer_contracts else "No"
 
-        # Lease info
-        lease_start = fake.date_between(start_date="-2y", end_date="today")
-        lease_term_months = choice([12, 24, 36, 48])
-        lease_expiry = lease_start + timedelta(days=lease_term_months * 30)
+        vehicle = vehicle_data.sample(1).iloc[0]
+        product = product_data.sample(1).iloc[0]
 
-        # Foreign key IDs picked from real tables
-        vehicle_id = choice(vehicle_ids)
-        product_id = choice(product_ids)
+        # Lease term & EMI calculation
+        lease_term = int(product["Lease Term"])
+        base_price = vehicle["Price"]
+        emi = round((base_price / lease_term) * random.uniform(1.05, 1.15), 2)
 
-        # Build contract
-        contract = {
-            "Contract ID": i,
-            "Customer ID": customer_id,
-            "Existing Customer": existing_customer,
-            "Vehicle ID": vehicle_id,   # FK → Vehicles
-            "Product ID": product_id,   # FK → Products
-            "Monthly EMI": randint(300, 1000),
-            "Lease Start Date": lease_start,
-            "Lease Expiry Date": lease_expiry,
-            "Road Assistance": choice(["yes", "no"]),
-            "Maintenance": choice(["yes", "no"]),
-            "Discount Applied": "yes" if existing_customer == "yes" and randint(1,100) <= 30 else "no",
-            "Preferred Customer": "yes" if existing_customer == "yes" and randint(1,100) <= 20 else "no"
-        }
-        contracts.append(contract)
+        # Start & expiry dates
+        start_date = fake.date_between(start_date="-3y", end_date="today")
+        expiry_date = start_date + timedelta(days=30 * lease_term)
 
-        # Summary for vector DB
+        # Maintenance & assistance
+        maintenance = "Yes" if product["Maintenance Type"] in ["Garage", "Roadside"] else "No"
+        road_assist = "Yes" if product["Maintenance Type"] == "Roadside" else "No"
+
+        # Discounts & Preferred
+        discount = "Yes" if existing_customer == "Yes" and random.random() < 0.3 else "No"
+        preferred = "Yes" if existing_customer == "Yes" else "No"
+
+        # Natural language summary
         summary = (
-            f"Contract {i}: Lease of Vehicle {vehicle_id} under Product {product_id} "
-            f"with Lease Start: {lease_start}, Expiry: {lease_expiry}, "
-            f"EMI {contract['Monthly EMI']} USD, Road Assistance: {contract['Road Assistance']}, "
-            f"Maintenance: {contract['Maintenance']}, Existing Customer: {existing_customer}, "
-            f"Discount: {contract['Discount Applied']}"
+            f"Contract {contract_id} for {customer_id} leasing Vehicle {vehicle['Vehicle ID']} "
+            f"under Product {product['Product ID']} with a monthly EMI of €{emi}. "
+            f"Lease runs from {start_date} to {expiry_date}. "
+            f"Road Assistance: {road_assist}, Maintenance: {maintenance}, "
+            f"Discount Applied: {discount}, Preferred Customer: {preferred}."
         )
 
-        data_records.append({
-            "Summary": summary,
-            "Contract ID": i,
+        contract = {
+            "Contract ID": contract_id,
             "Customer ID": customer_id,
-            "Vehicle ID": vehicle_id,
-            "Product ID": product_id
-        })
+            "Existing Customer": existing_customer,
+            "Vehicle ID": vehicle["Vehicle ID"],
+            "Product ID": product["Product ID"],
+            "Monthly EMI": emi,
+            "Lease Start Date": start_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "Lease Expiry Date": expiry_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "Road Assistance": road_assist,
+            "Maintenance": maintenance,
+            "Discount Applied": discount,
+            "Preferred Customer": preferred,
+            "Summary": summary
+        }
 
-    return pd.DataFrame(contracts), pd.DataFrame(data_records)
+        contracts.append(contract)
+
+        # Track customer contracts
+        customer_contracts[customer_id] = customer_contracts.get(customer_id, 0) + 1
+
+    df = pd.DataFrame(contracts)
+    return df
 
 if __name__ == "__main__":
     num_records = 500
     vehicles_df = pd.read_csv("../data/vehicle_data.csv")
     products_df = pd.read_csv("../data/leasing_data.csv")
-    df_contracts, customer_contract_data = generate_contract_data(num_records=num_records,vehicles_df=vehicles_df,products_df=products_df)
+    df_contracts = generate_contracts_df(n=num_records,vehicle_data=vehicles_df,product_data=products_df)
     df_contracts.to_csv("../data/contract_data.csv", index=False)
-    customer_contract_data.to_csv("../data/customer_contract_data.csv", index=False)
     print(df_contracts.head())
-    print(customer_contract_data.head())
+
+"""
+🔹 Logic for Realistic Contract Data
+
+Contract ID → Unique (C0001, C0002 …).
+
+Customer ID → Random (CUST-1234). Ensure some are Existing Customers.
+
+Existing Customer → If repeat Customer ID, mark as "Yes", else "No".
+
+Vehicle ID → Pick from Vehicle collection.
+
+Product ID → Pick from Product collection (must match valid leasing plans).
+
+Monthly EMI →
+
+Derived from Vehicle.Price and Product.Lease Term.
+
+Formula: EMI ≈ (Price / Lease Term) + 5–10% interest.
+
+Lease Start Date → Random realistic past dates (2022–2025).
+
+Lease Expiry Date → Start Date + Lease Term months.
+
+Road Assistance → "Yes" if Maintenance Type = "Roadside" in product.
+
+Maintenance → "Yes" if product includes garage/roadside services.
+
+Discount Applied → "Yes" for loyal or existing customers (20–30% chance).
+
+Preferred Customer → Mark "Yes" if contract is 2nd+ for same customer.
+"""
