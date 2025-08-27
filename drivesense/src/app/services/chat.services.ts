@@ -22,4 +22,8 @@ export class ChatService {
   startNewConversation(userId: string): Observable<ConversationResponse> {
     return this.http.post<ConversationResponse>(`${this.apiUrl}/startNewConversation`, { userId });
   }
+
+  getRecommendations(userId: string) {
+  return this.http.get<string[]>(`${this.apiUrl}/recommendations/${userId}`);
+}
 }

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ConversationRequest, Message } from '../../models/message.model';
 import { ChatService } from '../../services/chat.services';
+import { marked } from 'marked';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-chat',
@@ -13,13 +15,16 @@ import { ChatService } from '../../services/chat.services';
 })
 export class ChatComponent implements AfterViewChecked, OnInit {
   messages: Message[];
+  recommendations: string[] = [];
   message = '';   
   conversationId = '';
   userId = '';
+  isBotTyping = false;
+
 
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
 
-  constructor(private messageService: ChatService) {
+  constructor(private messageService: ChatService, private sanitizer: DomSanitizer) {
     this.messages = [];
   }
  ngOnInit(): void {
@@ -33,11 +38,30 @@ export class ChatComponent implements AfterViewChecked, OnInit {
         console.error('Error starting conversation', err);
       }
     });
+
+    this.messageService.getRecommendations(this.userId).subscribe({
+    next: (recs) => {
+      if (recs && recs.length > 0) {
+        this.recommendations = recs;
+      }
+    },
+    error: (err) => {
+      console.error('Error fetching recommendations', err);
+    }
+  });
  }
+ onRecommendationClick(reco: string) {
+  this.recommendations = []; // Hide cards
+  this.message = reco;
+  this.sendMessage(); // Send like normal message
+}
   ngAfterViewChecked() {
     this.scrollToBottom();
   }
-
+  getMessageContent(message: Message): SafeHtml {
+  var html = marked.parse(message.message) as string ; // convert markdown → HTML
+  return this.sanitizer.bypassSecurityTrustHtml(html); // make it safe
+}
   scrollToBottom(): void {
     if (this.scrollContainer) {
       this.scrollContainer.nativeElement.scrollTop = this.scrollContainer.nativeElement.scrollHeight;
@@ -46,7 +70,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
   sendMessage() {
     if (!this.message.trim()) return;
-
+    this.isBotTyping = true;
     // Construct user message
     var userMsg: ConversationRequest = {
       conversationId: this.conversationId,
@@ -60,7 +84,9 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     // Call backend
     this.messageService.sendMessage(userMsg).subscribe({
       next: (botMsg) => {
-        this.messages.push(botMsg.messages[botMsg.messages.length -1]);
+        this.isBotTyping = false;
+         const fullText = botMsg.messages[botMsg.messages.length - 1].message;
+         this.simulateTyping(fullText, 'bot');
       },
       error: (err) => {
         console.error('Error sending message', err);
@@ -69,4 +95,18 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
     this.message = '';
   }
+  simulateTyping(fullText: string, sender: 'bot' | 'user') {
+  let index = 0;
+  const typingMsg: Message = { sender, message: '' };
+  this.messages.push(typingMsg);
+
+  const interval = setInterval(() => {
+    typingMsg.message += fullText[index];
+    index++;
+
+    if (index === fullText.length) {
+      clearInterval(interval);
+    }
+  }, 30); // typing speed (ms per char)
+}
 }
