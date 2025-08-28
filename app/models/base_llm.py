@@ -3,7 +3,7 @@ from utils.secrets import openai_api_key
 
 #Define LLM
 model = ChatOpenAI(
-    model="gpt-4o",
+    model="gpt-4o-mini",
     temperature=0.4,
     max_tokens=None,
     timeout=None,

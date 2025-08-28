@@ -1,7 +1,10 @@
 from typing import Dict, Any
 import pandas as pd
 import os
+import csv
+
 base_dir = os.path.dirname(os.path.abspath(__file__))
+USER_CSV_FILE = os.path.join(base_dir,"../data/user_data.csv")
 
 def inject_filters(query: str, filters: str, entity: str) -> str:
         """Turn natural-language filters into query modifiers."""
@@ -23,5 +26,9 @@ def filter_df(df: pd.DataFrame, filters: Dict[str, Any]) -> pd.DataFrame:
             df = df[df[key] == value]
     return df
 
-
+def load_user_data():
+    # Ensure header is written only once
+    if not os.path.exists(USER_CSV_FILE):
+        df = pd.DataFrame(columns=["userId", "firstName", "lastName", "email", "mobile", "password", "country"])
+        df.to_csv(USER_CSV_FILE, index=False)
 
