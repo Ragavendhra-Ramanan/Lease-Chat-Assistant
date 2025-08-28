@@ -5,49 +5,43 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './signup.component.html',
-  styleUrls: ['./signup.component.scss']
+  styleUrls: ['./signup.component.scss'],
 })
 export class SignupComponent {
-  user:User ={
-    firstName:'',
-    lastName:'',
-    email:'',
-    mobile:'',
-    password:''
+  user: User = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    mobile: '',
+    country: '',
+    password: '',
   };
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private toastr: ToastrService
+  ) {}
 
-  constructor(private router: Router,private authService: AuthService) {
-  }
-
-  signup() {
-    console.log('Login successful:', this.user)
-    if (!this.user.firstName || !this.user.password) {
-      alert('Name and password are required');
+  signup(form : any) {
+    if (form.invalid || (!this.user.email && !this.user.mobile)) {
       return;
     }
-
-    if (!this.user.email && !this.user.mobile) {
-      alert('Please provide at least email or mobile number');
-      return;
-    }
-
-this.authService.signup(this.user).subscribe({
+    this.authService.signup(this.user).subscribe({
       next: (res) => {
-        console.log('Signup response:',this.user, res);
         if (res.value) {
-          alert('Signup successful! Please login.');
-          this.router.navigate(['/login']);
+          this.toastr.success('Signup successful!');
+          this.router.navigate(['/login']);       
         } else {
-          alert('Signup failed. Try again.');
+          this.toastr.error('Signup failed!');
         }
-      }
+      },
     });
   }
 }
-

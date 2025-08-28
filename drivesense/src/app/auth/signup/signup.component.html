@@ -1,11 +1,80 @@
 <div class="login-container">
   <h2 class="header">sign up</h2>
-  <form (ngSubmit)="signup()">
-    <input [(ngModel)]="user.firstName" name="firstName" placeholder="first name" required />
-    <input [(ngModel)]="user.lastName" name="lastName" placeholder="last name" />
-    <input [(ngModel)]="user.email" name="email" type="email" placeholder="email Id" />
-    <input [(ngModel)]="user.mobile" name="mobile" type="tel" placeholder="mobile number" />
-    <input [(ngModel)]="user.password" name="password" type="password" placeholder="password" required />
+  <form #signupForm="ngForm" (ngSubmit)="signup(signupForm)">
+    <input
+      [(ngModel)]="user.firstName"
+      name="firstName"
+      placeholder="first name"
+      required
+      #firstName="ngModel"
+    />
+    <div
+      *ngIf="firstName.invalid && (firstName.touched || signupForm.submitted)"
+      class="error"
+    >
+      First name is required
+    </div>
+    <input
+      [(ngModel)]="user.lastName"
+      name="lastName"
+      placeholder="last name"
+      #lastName="ngModel"
+      required
+    />
+    <div
+      *ngIf="lastName.invalid && (lastName.touched || signupForm.submitted)"
+      class="error"
+    >
+      Last name is required
+    </div>
+    <input
+      [(ngModel)]="user.email"
+      name="email"
+      type="email"
+      placeholder="email Id"
+      #email="ngModel"
+    />
+    <input
+      [(ngModel)]="user.mobile"
+      name="mobile"
+      type="tel"
+      placeholder="mobile number"
+      #mobile="ngModel"
+    />
+    <div
+      *ngIf="!user.email && !user.mobile && signupForm.submitted"
+      class="error"
+    >
+      Either Email or Mobile is required
+    </div>
+    <input
+      [(ngModel)]="user.country"
+      name="country"
+      type="country"
+      placeholder="country"
+      required
+      #country="ngModel"
+    />
+    <div
+      *ngIf="country.invalid && (country.touched || signupForm.submitted)"
+      class="error"
+    >
+      Country is required
+    </div>
+    <input
+      [(ngModel)]="user.password"
+      name="password"
+      type="password"
+      placeholder="set a password"
+      required
+      #password="ngModel"
+    />
+    <div
+      *ngIf="password.invalid && (password.touched || signupForm.submitted)"
+      class="error"
+    >
+      Password is required
+    </div>
     <button type="submit">sign up</button>
   </form>
 

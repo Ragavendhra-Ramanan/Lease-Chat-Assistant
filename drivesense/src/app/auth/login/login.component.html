@@ -1,7 +1,13 @@
 <div class="login-container">
-  <form (ngSubmit)="login()">
-    <input type="text" placeholder="email or phone number" [(ngModel)]="auth.userName" name="username" required />
-    <input type="password" placeholder="password" [(ngModel)]="auth.password" name="password" required />
+  <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <input type="text" placeholder="email or phone number" [(ngModel)]="auth.userName" name="username" required  #username="ngModel" />
+    <div *ngIf="username.invalid && (username.touched || loginForm.submitted)" class="error">
+      email or phone number required
+    </div>
+    <input type="password" placeholder="password" [(ngModel)]="auth.password" name="password" required #password="ngModel"/>
+    <div *ngIf="password.invalid && (password.touched || loginForm.submitted)" class="error">
+      Password required
+    </div>
     <button type="submit">login</button>
   </form>
   <p>

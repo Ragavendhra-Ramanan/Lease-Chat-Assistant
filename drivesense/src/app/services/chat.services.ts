@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ConversationRequest, ConversationResponse, Message } from '../models/message.model';
+import { ConversationRequest, ConversationResponse } from '../models/message.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,15 +15,15 @@ export class ChatService {
     return this.http.post<ConversationResponse>(`${this.apiUrl}/sendMessage`, message);
   }
 
-  getConversation(userId: string): Observable<Message[]> {
-    return this.http.get<Message[]>(`${this.apiUrl}/conversation/${userId}`);
+  getConversations(userId: string): Observable<ConversationResponse[]> {
+    return this.http.get<ConversationResponse[]>(`${this.apiUrl}/getConversations/${userId}`);
   }
 
   startNewConversation(userId: string): Observable<ConversationResponse> {
     return this.http.post<ConversationResponse>(`${this.apiUrl}/startNewConversation`, { userId });
   }
 
-  getRecommendations(userId: string) {
+  getRecommendations(userId: string): Observable<string[]> {
   return this.http.get<string[]>(`${this.apiUrl}/recommendations/${userId}`);
 }
 }
