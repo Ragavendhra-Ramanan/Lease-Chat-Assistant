@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
 from db.vectordb_operations import connection_to_wcs, close_connection
 from utils.secrets import weaviate_api_key, weaviate_url, openai_api_key
@@ -14,6 +14,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from memory.memory_store import get_recent_memory, add_short_term_memory_from_dict
 from decomposition.nodes.decomposition_node import DecompositionNode
 from decomposition.nodes.decomposition_result_node import DecompositionResultNode
+from utils.helper_functions import USER_CSV_FILE, load_user_data
+
+import pandas as pd 
 
 origins = [
     "http://localhost:4200",  # frontend URL
@@ -69,9 +72,33 @@ app.add_middleware(
     allow_methods=["*"],             # allow POST, GET, OPTIONS, etc.
     allow_headers=["*"],
 )
-
+load_user_data()
 @app.post("/api/auth/signup")
-async def signup_user(user_info:User):
+async def signup_user(user:User):
+    df = pd.read_csv(USER_CSV_FILE)
+
+    # Check for duplicate email/mobile
+    if ((df["email"] == user.email).any()) or ((df["mobile"] == user.mobile).any()):
+        raise HTTPException(status_code=400, detail="User already exists")
+
+    # Create new user with UUID
+    if df.empty:
+        user_id = 1000
+    else:
+        user_id = df["userId"].max() + 1
+
+    new_user = {
+        "userId": user_id,
+        "firstName": user.firstName,
+        "lastName": user.lastName,
+        "email": user.email,
+        "mobile": user.mobile,
+        "password": user.password,
+        "country": user.country
+    }
+
+    df = pd.concat([df, pd.DataFrame([new_user])], ignore_index=True)
+    df.to_csv(USER_CSV_FILE, index=False)
     signup_response = SignupResponse(
         value=True
     )
@@ -79,11 +106,24 @@ async def signup_user(user_info:User):
 
 
 @app.post("/api/auth/login")
-async def login_user(login_info : Login):
+async def login_user(credentials : Login):
+    df = pd.read_csv(USER_CSV_FILE)
+    # Check user by email or mobile + password
+    user_row = df[
+        ((df["email"] == credentials.userName) | (df["mobile"] == credentials.userName)) &
+        (df["password"] == credentials.password)
+    ]
+
+    if user_row.empty:
+        raise HTTPException(status_code=401, detail="Invalid username or password")
+
+    # Convert row to dict and remove password
+    user_data = user_row.iloc[0].to_dict()
     login_response = LoginResponse(
-        userId="1016"
-    )
+                userId= str(user_data['userId'])
+            )
     return login_response
+
 
 @app.post("/api/chat/startNewConversation")
 async def start_conversation(request:StartConversation):

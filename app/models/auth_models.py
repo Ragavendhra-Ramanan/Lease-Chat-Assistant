@@ -6,6 +6,7 @@ class User(BaseModel):
   email: str
   mobile: str
   password: str
+  country: str
 
 class Login(BaseModel):
   userName: str
