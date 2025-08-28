@@ -35,6 +35,11 @@ button {
   cursor: pointer;
   margin:10px 0;
 }
+
+button:hover:not(:disabled) {
+  background: #4048a3; 
+}
+
 h2, p{
   width:300px;
   text-align: center;
@@ -43,3 +48,8 @@ h2, p{
  color:aliceblue;
 }
  
+
+.error {
+  color: red;
+  font-size: 12px;
+}

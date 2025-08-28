@@ -1,25 +1,32 @@
 <!-- chat-window.component.html -->
 <div class="chat-window">
-    <div *ngIf="recommendations.length > 0" class="recommendations">
-    <div *ngFor="let reco of recommendations"
-         class="reco-card"
-         (click)="onRecommendationClick(reco)">
+  <div *ngIf="recommendations.length > 0" class="recommendations">
+    <div
+      *ngFor="let reco of recommendations"
+      class="reco-card"
+      (click)="onRecommendationClick(reco)"
+    >
       {{ reco }}
     </div>
   </div>
 
   <div #scrollContainer class="messages">
-    <div *ngFor="let message of messages" 
-     class="message" 
-     [ngClass]="message.sender"
-     [innerHTML]="getMessageContent(message)">
+    <div
+      *ngFor="let message of messages"
+      class="message"
+      [ngClass]="message.sender"
+      [innerHTML]="getMessageContent(message)"
+    ></div>
+    <div *ngIf="isBotTyping" class="message bot typing-loader">
+      <span></span><span></span><span></span>
+    </div>
   </div>
-  <div *ngIf="isBotTyping" class="message bot typing-loader">
-    <span></span><span></span><span></span>
-  </div>
-   </div>
   <div class="input-box">
-    <input [(ngModel)]="message" placeholder="Send a message..." (keyup.enter)="sendMessage()" />
+    <input
+      [(ngModel)]="message"
+      placeholder="Send a message..."
+      (keyup.enter)="sendMessage()"
+    />
     <button (click)="sendMessage()">➤</button>
   </div>
 </div>
