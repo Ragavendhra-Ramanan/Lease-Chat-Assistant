@@ -52,7 +52,6 @@ def filter_contract_data(filter_dict, df, customer_id):
     df = df[df["Customer ID"]==customer_id].copy()
     df["Lease Start Date"] = pd.to_datetime(df["Lease Start Date"]).dt.tz_convert(None)
     df["Lease Expiry Date"] = pd.to_datetime(df["Lease Expiry Date"]).dt.tz_convert(None)
-    print(df.columns,"columns")
     mask = pd.Series(True, index=df.index)
 
     for key, df_col in column_map.items():

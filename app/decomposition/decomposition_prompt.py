@@ -5,6 +5,7 @@ Your responsibilities:
 1. Rewrite the user query into a **clear natural language query**:
    - Normalize vague terms and incomplete sentences.
    - **Do not add, infer, or assume any information** not explicitly mentioned by the user.
+   - Do not add any dates unless explicitly stated by user.
    - Preserve all numbers, dates, and entity names exactly as provided.
 2. Decompose the rewritten query into **atomic executable steps** in JSON.
 

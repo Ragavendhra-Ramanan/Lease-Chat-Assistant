@@ -105,7 +105,7 @@ async def start_conversation(request:StartConversation):
 
 @app.get("/api/chat/recommendations/{userID}")
 async def recommendations(userID:int):
-    return ["New EV toyoto cars", "Flexi lease term 24 months" , "Ford lesser than $40000"]
+    return ["Toyota cars", "Flexi lease term 24 months" , "quote generation"]
 
 @app.post("/api/chat/sendMessage")
 async def decompose_tasks(request: ConversationRequest):
@@ -116,17 +116,27 @@ async def decompose_tasks(request: ConversationRequest):
     if "quotation" not in state.route:
         decomposition_values, rewritten_query = await decomposition.run(query)
         flag = False
+        print("\nTasks To do\n")
+        print(decomposition_values)
         for task, retriever in decomposition_values:
             if retriever: 
                 flag = True
                 request.messages.message = task
                 task_response , query_retrieved = await get_conversation_result(request=request)
+                if "quotation" in state.route:
+                    return task_response
+                print("\nResponse\n")
+                print(state.final_answer)
                 questions.append(query_retrieved)
                 context.append([f"{task} : {state.final_answer}"])
+            else:
+                questions.append(task)
         if flag:
             if len(questions) == 0:
-                questions.append(rewritten_query)  
+                questions.append(rewritten_query)
+            print("\nFinal Combined result\n")      
             final_answer = await decomposition_result.run(context=context,questions=questions)
+            print(final_answer)
             response = ConversationResponse(
                 messages=[request.messages],              # empty list or actual messages
                 userId= request.userId  ,     # string
@@ -142,7 +152,7 @@ async def decompose_tasks(request: ConversationRequest):
         add_short_term_memory_from_dict(user_id=request.userId,query=",".join(questions),response=response)
 
     else:
-        response = await get_conversation_result(request=request)
+        response,query = await get_conversation_result(request=request)
     return response
 async def get_conversation_result(request: ConversationRequest):    
     query = request.messages.message
@@ -191,8 +201,9 @@ async def get_conversation_result(request: ConversationRequest):
     routes = state.route
     flow_instance = None
     state.customer_id = request.userId
-
-        
+    print("\nCurrent task\n")
+    print(state.rewritten_query)
+    print(routes,"route")    
     limit = 5
     # Pick flow by checking membership
     if "quotation" in routes:

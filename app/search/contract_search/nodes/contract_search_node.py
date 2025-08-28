@@ -31,13 +31,12 @@ class ContractNode(BaseNode):
             #                      filter_val=customer_id,
             #                      where=contract_filters,
             #                      limit=0)
-            print(state,"inner")
             parsed_contract_filter = parse_contract_string(state.contract_filters)
             contract_results = filter_contract_data(filter_dict=parsed_contract_filter,df=self.contract_df,customer_id=state.customer_id)
             results["contract"] = contract_results
             state.trace.append(["CONTRACT VECTOR", f"Retrieved {len(results['contract'])} docs"])
         # Vehicle IDs from contracts
-        if "vehicle" in state.route and (state.vehicle_filters or vehicle_ids) and len(contract_results)>0:
+        if "vehicle" in state.route and len(contract_results)>0:
             vehicle_ids = [c.get("Vehicle ID") for c in results["contract"] if c.get("Vehicle ID")]
             vehicle_query = inject_filters(state.rewritten_query, state.vehicle_filters, "vehicle")
             vehicle_collection = self.client.collections.get("Car")
@@ -52,7 +51,7 @@ class ContractNode(BaseNode):
             state.trace.append(["CONTRACT VEHICLE VECTOR", f"Retrieved {len(results['vehicle'])} docs"])
 
         # Product IDs from contracts
-        if "product" in state.route and (state.product_filters or product_ids) and len(contract_results)>0:
+        if "product" in state.route and len(contract_results)>0:
             product_ids = [c.get("Product ID") for c in results["contract"] if c.get("Product ID")]
             product_query = inject_filters(state.rewritten_query, state.product_filters, "product")
             product_collection = self.client.collections.get("Product")

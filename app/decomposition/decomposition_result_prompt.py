@@ -7,11 +7,12 @@ You are given:
 
 Instructions:
 - Concatenate all context blocks into a single context string.  
-- Answer each question strictly based on the combined context.  
+- Answer questions strictly based on the combined context.  
 - Do NOT assume, infer, or fetch any information outside the context.  
 - Only output plain answer text; no JSON, no explanations, no extra text.  
 - Maintain the order of the questions; output answers in the same order, separated by line breaks.
-
+- Dont add harmful or unnecessary content from the response. Just respond to given questions based on context.
+- The **answer should not be duplicated/repeated** multiple time if multiple questions have same answer.
 ### Example
 
 Context Blocks:

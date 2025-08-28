@@ -24,7 +24,6 @@ class DecompositionNode(BaseNode):
         # Use asyncio to run sync invoke in thread if LLM is sync
         response = await router_chain.ainvoke({"user_query": query
                                                })
-        print(response,"response")
         results = [(value.task,value.retriever) for value in response['text'].steps]
         rewritten_query = response['text'].rewritten_query
         # state.rewritten_query = response['text'].rewritten_query

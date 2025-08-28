@@ -65,5 +65,4 @@ def extract_filters(query: str):
             result_filters.append(filters[0])
         else:
             result_filters.append(Filter.all_of(filters))
-    print(result_filters,"filterss")
     return result_filters
