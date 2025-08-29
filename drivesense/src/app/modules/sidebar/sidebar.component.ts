@@ -45,22 +45,24 @@ export class SidebarComponent implements OnInit {
   }
 
   startNewConversation(isFirstLoad = false) {
-    // Prevent duplicate empty convos: skip if current convo only has bot greeting
-    if (!isFirstLoad && this.activeConvoHasOnlyBotGreeting) {
-      return;
-    }
-
-    this.messageService.startNewConversation(this.userId).subscribe((response) => {
-      const convo = response;
-
-      // refresh conversations list from backend
-      this.messageService.getConversations(this.userId).subscribe((res) => {
-        this.conversations = res || [];
-        this.conversations.unshift(convo);
-        this.setActiveConversation(convo);
-      });
-    });
+  // Only skip if the current active conversation has only the bot greeting
+  if (!isFirstLoad && this.activeConvoHasOnlyBotGreeting) {
+    return;
   }
+
+  this.messageService.startNewConversation(this.userId).subscribe((convo) => {
+    // Only add conversation if it will eventually have at least 2 messages
+    // But we still fetch updated list from backend
+    this.messageService.getConversations(this.userId).subscribe((res) => {
+      // Filter only conversations with at least 2 messages
+      this.conversations = (res || []).filter(c => c.messages.length >= 2);
+
+      // Set the newly created conversation as active
+      this.setActiveConversation(convo);
+    });
+  });
+}
+
 
   openConversation(convo: ConversationResponse) {
     this.setActiveConversation(convo);

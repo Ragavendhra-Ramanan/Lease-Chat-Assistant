@@ -7,11 +7,11 @@
     </button>
 
     <ul>
-      <li *ngFor="let convo of conversations" (click)="openConversation(convo)">
-        <div class="convo-message">
-          {{ convo.messages[1]?.message || convo.messages[0]?.message || "No messages yet" }}
-        </div>
-      </li>
-    </ul>
+  <li *ngFor="let convo of conversations" (click)="openConversation(convo)">
+    <div class="convo-message">
+      {{ convo.messages[1]?.message || "No messages yet" }}
+    </div>
+  </li>
+</ul>
   </div>
 </aside>
