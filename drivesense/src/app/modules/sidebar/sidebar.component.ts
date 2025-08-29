@@ -45,31 +45,25 @@ ngOnInit(): void {
     this.collapsed = !this.collapsed;
   }
 
- startNewConversation(isFirstLoad = false) {
-  // Skip creating another convo if the active one is just bot greeting
-  if (!isFirstLoad && this.activeConvoHasOnlyBotGreeting) {
-    return;
-  }
-
-  this.messageService.startNewConversation(this.userId).subscribe((convo) => {
-    // Fetch updated list from backend
+startNewConversation(isFirstLoad = false) {
+  this.messageService.startNewConversation(this.userId).subscribe((newConvo) => {
+    // Refresh conversations
     this.messageService.getConversations(this.userId).subscribe((res) => {
-      let allConvos = res || [];
+      this.conversations = res || [];
 
-      if (isFirstLoad) {
-        // First login → allow the bot-greeting-only conversation
-        this.conversations = allConvos;
-      } else {
-        // Later → show only convos with at least 2 messages
-        this.conversations = allConvos.filter(c => c.messages.length >= 2);
+      // Avoid duplicates
+      const alreadyExists = this.conversations.some(
+        (c) => c.conversationId === newConvo.conversationId
+      );
+      if (!alreadyExists) {
+        this.conversations.unshift(newConvo);
       }
 
-      // Always set the newly created conversation active
-      this.setActiveConversation(convo);
+      // Switch to the new conversation immediately
+      this.setActiveConversation(newConvo);
     });
   });
 }
-
 
   openConversation(convo: ConversationResponse) {
     this.setActiveConversation(convo);
