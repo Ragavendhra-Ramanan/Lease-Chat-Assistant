@@ -1,7 +1,6 @@
 export interface ConversationRequest {
   conversationId: string;
   userId: string;
-  timestamp: string; 
   messages: Message;
 }
 
@@ -14,5 +13,6 @@ export interface ConversationResponse {
 export interface Message{
    sender: string
    message: string
+   timestamp: string; 
 }
     

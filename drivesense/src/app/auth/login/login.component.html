@@ -1,17 +1,87 @@
 <div class="login-container">
-  <form #loginForm="ngForm" (ngSubmit)="login(loginForm)">
-    <input type="text" placeholder="email or phone number" [(ngModel)]="auth.userName" name="username" required  #username="ngModel" />
-    <div *ngIf="username.invalid && (username.touched || loginForm.submitted)" class="error">
+  <div *ngIf="loginMode!='user'&& loginMode!='guest'">
+  <div class="login-mode-buttons" >
+    <button type="button" (click)="setLoginMode('user')" [class.active]="loginMode==='user'">
+      User login
+    </button>
+    <button type="button" (click)="setLoginMode('guest')" [class.active]="loginMode==='guest'">
+      Guest login
+    </button>
+  </div>
+  </div>
+<div *ngIf="loginMode==='user'">
+  <form  #loginForm="ngForm" (ngSubmit)="login(loginForm)">
+    <input
+      type="text"
+      placeholder="email or phone number"
+      [(ngModel)]="auth.userName"
+      name="username"
+      required
+      #username="ngModel"
+    />
+    <div
+      *ngIf="username.invalid && (username.touched || loginForm.submitted)"
+      class="error"
+    >
       email or phone number required
     </div>
-    <input type="password" placeholder="password" [(ngModel)]="auth.password" name="password" required #password="ngModel"/>
-    <div *ngIf="password.invalid && (password.touched || loginForm.submitted)" class="error">
+    <input
+      type="password"
+      placeholder="password"
+      [(ngModel)]="auth.password"
+      name="password"
+      required
+      #password="ngModel"
+    />
+    <div
+      *ngIf="password.invalid && (password.touched || loginForm.submitted)"
+      class="error"
+    >
       Password required
     </div>
     <button type="submit">login</button>
   </form>
   <p>
-    Don’t have an account? 
+    Don’t have an account?
     <a routerLink="/signup">sign up here</a>
   </p>
+</div>
+<div     *ngIf="loginMode==='guest'">
+  <form
+    #guestLoginForm="ngForm"
+    (ngSubmit)="guestLogin(guestLoginForm)"
+  >
+    <input
+      type="text"
+      placeholder="Your Name"
+      [(ngModel)]="guest.name"
+      name="guestName"
+      required
+      #guestName="ngModel"
+    />
+    <div
+      *ngIf="guestName.invalid && (guestName.touched || guestLoginForm.submitted)"
+      class="error"
+    >
+      Name is required
+    </div>
+
+    <input
+      type="text"
+      placeholder="Email or Phone"
+      [(ngModel)]="guest.contact"
+      name="guestContact"
+      required
+      #guestContact="ngModel"
+    />
+    <div
+      *ngIf="guestContact.invalid && (guestContact.touched || guestLoginForm.submitted)"
+      class="error"
+    >
+      Contact (Email or Phone) is required
+    </div>
+
+    <button type="submit">Guest Login</button>
+  </form>
+  </div>
 </div>

@@ -1,29 +1,82 @@
-/* chat-sidebar.component.scss */
+/* Sidebar */
 .sidebar {
   width: 250px;
   background: #3a4780;
   color: white;
-  height: 100%;
+  height: -webkit-fill-available;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   overflow-y: auto;
   transition: width 0.3s;
   overflow-x: hidden;
+  padding: 10px;
 }
+
 .sidebar.collapsed {
-  width: 50px;
+  width: 35px;
 }
-button{
+
+/* Toggle Button */
+button {
   background: transparent;
   border: none;
   color: white;
   font-size: 20px;
   cursor: pointer;
-  margin: 10px;
+  margin: 10px 0;
 }
-ul{
+
+/* New Conversation Button */
+.new-convo-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0 20px 0;
+  background: #5c6bc0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.new-convo-btn:hover {
+  background: #7986cb;
+}
+
+/* Conversation List */
+ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
-li{
-  padding:10px;
+
+/* Conversation Card */
+li {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+li:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+/* Conversation text */
+.convo-header {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.convo-message {
+  font-size: 13px;
+  color: #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
