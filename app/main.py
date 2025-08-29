@@ -1,8 +1,8 @@
 from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
 from db.vectordb_operations import connection_to_wcs, close_connection
-from utils.secrets import weaviate_api_key, weaviate_url, openai_api_key
-from models.conversation_request import ConversationResponse, ConversationRequest, Message, StartConversation
+from utils.secrets import weaviate_api_key, weaviate_url, openai_api_key, mongo_uri
+from models.conversation_request import ConversationResponse, ConversationRequest, Message, StartConversation, conversation_helper
 from router.nodes.router_node import RouteNode
 from models.agent_state import AgentState
 from uuid import uuid4
@@ -17,6 +17,10 @@ from decomposition.nodes.decomposition_result_node import DecompositionResultNod
 from utils.helper_functions import USER_CSV_FILE, load_user_data
 
 import pandas as pd 
+from datetime import datetime
+from typing import List
+from motor.motor_asyncio import AsyncIOMotorClient
+import asyncio
 
 origins = [
     "http://localhost:4200",  # frontend URL
@@ -32,6 +36,10 @@ vehicle_df, product_df,contract_df = get_data()
 quote_filtering_node = ROUTE_MAP["filtering"](vehicle_df, product_df, filter_df)
 quote_update_node = ROUTE_MAP["quote_field_update"]()
 quote_generate_node = ROUTE_MAP["quote"]()
+
+message_buffer: List[ConversationResponse] = []
+MAX_BATCH_SIZE = 20
+buffer_lock = asyncio.Lock()
 
 # Initialize in main.py
 conversations: Dict[str, Dict[str, any]] = {}
@@ -55,13 +63,34 @@ def get_last_query(user_id: str) -> str:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global client
+    global conversations_collection
     # startup
     client = connection_to_wcs(weaviate_url=weaviate_url,
                                weaviate_api_key=weaviate_api_key,
                                openai_api_key=openai_api_key)
-    yield
-    # shutdown
-    close_connection(client=client)
+    
+    # MongoDB setup
+    mongo_client = AsyncIOMotorClient(mongo_uri)
+    db = mongo_client["chat_db"]
+    conversations_collection = db["conversations"]
+    flush_task = asyncio.create_task(periodic_flush_task())
+    
+    try:
+        yield
+    finally:
+        # Optionally flush remaining messages before shutdown
+        async with buffer_lock:
+            if message_buffer:
+                await flush_buffer_to_db()
+
+        # shutdown
+        mongo_client.close()
+        close_connection(client=client)
+        flush_task.cancel()        
+        try:
+            await flush_task
+        except asyncio.CancelledError:
+            print("[Shutdown] Flush task cancelled cleanly.")
 
 app = FastAPI(lifespan=lifespan)
 
@@ -124,6 +153,104 @@ async def login_user(credentials : Login):
             )
     return login_response
 
+
+# GET: Retrieve all conversation by userId
+@app.get("/api/chat/getConversations", response_model=List[ConversationResponse])
+async def get_conversation(userId: str):
+    try:
+        convo = await conversations_collection.find({"userId": userId}).to_list()
+        if not convo:
+            raise HTTPException(status_code=404, detail="Conversation not found")
+        return [conversation_helper(c) for c in convo]
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+    
+# POST: Add a message to a conversation (create new conversation if needed)
+@app.post("/api/chat/sendMessage", response_model=ConversationResponse)
+async def add_message(message: ConversationRequest = ...):
+    try:
+        # Check if conversation exists
+        conversationId = message.conversationId
+        userId = message.userId
+        convo = await conversations_collection.find_one({"userId":userId,"conversationId": conversationId})
+                
+        message_data = [msg.model_dump() for msg in message.messages]
+        now = datetime.now().isoformat(timespec='seconds') #.strftime("%Y-%m-%dT%H:%M:%S.%fZ")
+
+        if convo:
+            # Validate userId matches
+            if convo["userId"] != message.userId:
+                raise HTTPException(status_code=400, detail="userId does not match conversation owner")
+            
+            convo_doc = {
+                "userId": message.userId,
+                "conversationId": conversationId,
+                "messages": message_data
+            }
+            
+            async with buffer_lock:
+                message_buffer.append(convo_doc)
+
+                if len(message_buffer) >= MAX_BATCH_SIZE:
+                    # Flush the buffer to MongoDB
+                    await flush_buffer_to_db()
+
+            return {"status": "queued", "queued_at": now}
+
+        else:
+            # Create new conversation document
+            convo_doc = {
+                "userId": message.userId,
+                "conversationId": conversationId,
+                "messages": message_data,
+            }
+            await conversations_collection.insert_one(convo_doc)
+
+        # Return updated conversation
+        updated_convo = await conversations_collection.find_one({"userId":userId,"conversationId": conversationId})
+        if not updated_convo:
+            raise HTTPException(status_code=500, detail="Failed to retrieve updated conversation")
+
+        return conversation_helper(updated_convo)
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+async def flush_buffer_to_db():
+    global message_buffer
+    if not message_buffer:
+        return
+
+    buffer_copy = message_buffer.copy()
+    message_buffer.clear()
+
+    try:
+        for msg in buffer_copy:
+            await conversations_collection.update_one(
+                {
+                    "userId": msg.get("userId"),
+                    "conversationId": msg.get("conversationId")
+                },
+                {
+                    "$push": {"messages": { "$each": msg.get("messages") }}
+                },
+                upsert=True
+            )
+        #print(f"Inserted {len(buffer_copy)} messages to DB.")
+    except Exception as e:
+        print(f"[Error] Failed to insert batch: {e}")
+
+async def periodic_flush_task():
+    while True:
+        await asyncio.sleep(10*60)  # every 10mins
+        async with buffer_lock:
+            if message_buffer:
+                await flush_buffer_to_db()
 
 @app.post("/api/chat/startNewConversation")
 async def start_conversation(request:StartConversation):

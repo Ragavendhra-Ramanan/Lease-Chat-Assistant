@@ -9,3 +9,4 @@ faiss-cpu
 tabulate
 weaviate-client
 fastapi[standard]
+motor
