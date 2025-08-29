@@ -44,7 +44,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
         this.messages = convo.messages;
       }
     });
-
+    this.userId = localStorage.getItem('token') || '';
     this.messageService.getRecommendations(this.userId).subscribe((recs) => {
       if (recs && recs.length > 0) {
         this.recommendations = recs;
