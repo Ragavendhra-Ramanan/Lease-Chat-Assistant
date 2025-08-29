@@ -37,21 +37,27 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   ) {
     this.messages = [];
   }
- ngOnInit(): void {
+ngOnInit(): void {
+  this.userId = localStorage.getItem('token') || '';
+
   this.conversationService.activeConversation$.subscribe((convo) => {
     if (convo) {
       this.conversationId = convo.conversationId;
-      this.messages = convo.messages || []; // fresh convo → empty array
+      this.messages = convo.messages || [];
+
+      // ✅ Show recommendations only for fresh conversation
+      if (!this.messages || this.messages.length === 0) {
+        this.messageService.getRecommendations(this.userId).subscribe((recs) => {
+          this.recommendations = recs || [];
+        });
+      } else {
+        // ✅ Hide recommendations for ongoing conversation
+        this.recommendations = [];
+      }
     } else {
       this.conversationId = '';
       this.messages = [];
-    }
-  });
-
-  this.userId = localStorage.getItem('token') || '';
-  this.messageService.getRecommendations(this.userId).subscribe((recs) => {
-    if (recs && recs.length > 0) {
-      this.recommendations = recs;
+      this.recommendations = [];
     }
   });
 }
