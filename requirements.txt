@@ -5,7 +5,7 @@ langchain-openai
 langchain-community
 pandas
 faker
-faiss-cpu
 tabulate
 weaviate-client
 fastapi[standard]
+scikit-learn
