@@ -44,12 +44,15 @@ h2, p{
   width:300px;
   text-align: center;
 }
-.header{
- color:aliceblue;
-}
  
 
 .error {
-  color: red;
+  color: rgb(0, 0, 0);
   font-size: 12px;
+}
+
+.login-mode-buttons {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 15px;
 }

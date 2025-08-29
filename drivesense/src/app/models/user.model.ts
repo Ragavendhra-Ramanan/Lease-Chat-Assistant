@@ -11,3 +11,8 @@ export interface Login{
   userName: string;
   password:string;
 }
+
+export interface GuestLogin{
+  name: string;
+  contact: string;
+}

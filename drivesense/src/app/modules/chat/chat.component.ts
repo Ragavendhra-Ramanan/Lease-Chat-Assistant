@@ -11,6 +11,7 @@ import { ConversationRequest, Message } from '../../models/message.model';
 import { ChatService } from '../../services/chat.services';
 import { marked } from 'marked';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ConversationService } from '../../services/conversation.service';
 
 @Component({
   selector: 'app-chat',
@@ -31,18 +32,18 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
   constructor(
     private messageService: ChatService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private conversationService: ConversationService
   ) {
     this.messages = [];
   }
   ngOnInit(): void {
-    this.userId = localStorage.getItem('token') || '';
-    this.messageService
-      .startNewConversation(this.userId)
-      .subscribe((response) => {
-        this.conversationId = response.conversationId;
-        this.messages = response.messages;
-      });
+       this.conversationService.activeConversation$.subscribe(convo => {
+      if (convo) {
+        this.conversationId = convo.conversationId;
+        this.messages = convo.messages;
+      }
+    });
 
     this.messageService.getRecommendations(this.userId).subscribe((recs) => {
       if (recs && recs.length > 0) {
@@ -75,9 +76,8 @@ export class ChatComponent implements AfterViewChecked, OnInit {
 
     var userMsg: ConversationRequest = {
       conversationId: this.conversationId,
-      userId: this.userId,
-      timestamp: new Date().toISOString(),
-      messages: { sender: 'user', message: this.message },
+      userId: this.userId,  
+      messages: { sender: 'user', message: this.message, timestamp: new Date().toISOString() },
     };
 
     this.messages.push(userMsg.messages);
@@ -91,7 +91,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   }
   simulateTyping(fullText: string, sender: 'bot' | 'user') {
     let index = 0;
-    const typingMsg: Message = { sender, message: '' };
+    const typingMsg: Message = { sender, message: '' , timestamp: ''};
     this.messages.push(typingMsg);
 
     const interval = setInterval(() => {

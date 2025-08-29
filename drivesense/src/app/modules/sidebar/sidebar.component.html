@@ -1,7 +1,20 @@
-<!-- chat-sidebar.component.html -->
 <aside class="sidebar" [class.collapsed]="collapsed">
   <button (click)="toggleSidebar()">☰</button>
-  <ul *ngIf="!collapsed">
-    <li *ngFor="let convo of conversations">{{ convo.title }}</li>
-  </ul>
+
+  <div *ngIf="!collapsed">
+    <button class="new-convo-btn" (click)="startNewConversation()">
+      New Conversation
+    </button>
+
+    <ul>
+      <li *ngFor="let convo of conversations" (click)="openConversation(convo)">
+        <div class="convo-header">
+          Conversation {{ convo.conversationId }}
+        </div>
+        <div class="convo-message">
+          {{ convo.messages[1]?.message || convo.messages[0]?.message || "No messages yet" }}
+        </div>
+      </li>
+    </ul>
+  </div>
 </aside>
