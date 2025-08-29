@@ -23,45 +23,53 @@ export class SidebarComponent implements OnInit {
     private conversationService: ConversationService
   ) {}
 
-  ngOnInit(): void {
-    this.userId = localStorage.getItem('token') || '';
+ngOnInit(): void {
+  this.userId = localStorage.getItem('token') || '';
 
-    // Load conversations
-    this.messageService.getConversations(this.userId).subscribe((response) => {
-      this.conversations = response || [];
+  // Always start a fresh conversation after login
+  this.messageService.startNewConversation(this.userId).subscribe((newConvo) => {
+    // Fetch updated list
+    this.messageService.getConversations(this.userId).subscribe((res) => {
+      this.conversations = res || [];
 
-      if (this.conversations.length === 0) {
-        //If no conversations exist → always create a fresh one with bot’s greeting
-        this.startNewConversation(true);
-      } else {
-        // auto-open the latest one
-        this.openConversation(this.conversations[0]);
-      }
+      // Put newest conversation on top
+      this.conversations.unshift(newConvo);
+
+      // Open the new one immediately
+      this.setActiveConversation(newConvo);
     });
-  }
+  });
+}
 
   toggleSidebar() {
     this.collapsed = !this.collapsed;
   }
 
-  startNewConversation(isFirstLoad = false) {
-  // Only skip if the current active conversation has only the bot greeting
+ startNewConversation(isFirstLoad = false) {
+  // Skip creating another convo if the active one is just bot greeting
   if (!isFirstLoad && this.activeConvoHasOnlyBotGreeting) {
     return;
   }
 
   this.messageService.startNewConversation(this.userId).subscribe((convo) => {
-    // Only add conversation if it will eventually have at least 2 messages
-    // But we still fetch updated list from backend
+    // Fetch updated list from backend
     this.messageService.getConversations(this.userId).subscribe((res) => {
-      // Filter only conversations with at least 2 messages
-      this.conversations = (res || []).filter(c => c.messages.length >= 2);
+      let allConvos = res || [];
 
-      // Set the newly created conversation as active
+      if (isFirstLoad) {
+        // First login → allow the bot-greeting-only conversation
+        this.conversations = allConvos;
+      } else {
+        // Later → show only convos with at least 2 messages
+        this.conversations = allConvos.filter(c => c.messages.length >= 2);
+      }
+
+      // Always set the newly created conversation active
       this.setActiveConversation(convo);
     });
   });
 }
+
 
   openConversation(convo: ConversationResponse) {
     this.setActiveConversation(convo);
