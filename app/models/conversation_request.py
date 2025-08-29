@@ -9,12 +9,12 @@ class Message(BaseModel):
     timestamp : datetime
 
 class ConversationResponse(BaseModel):
-    userId: float
+    userId: str
     conversationId: str
     messages: List[Message]
     
 class ConversationRequest(BaseModel):
-    userId: float
+    userId: str
     conversationId: str
     messages: Message
 
