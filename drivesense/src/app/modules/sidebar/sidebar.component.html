@@ -8,9 +8,6 @@
 
     <ul>
       <li *ngFor="let convo of conversations" (click)="openConversation(convo)">
-        <div class="convo-header">
-          Conversation {{ convo.conversationId }}
-        </div>
         <div class="convo-message">
           {{ convo.messages[1]?.message || convo.messages[0]?.message || "No messages yet" }}
         </div>
