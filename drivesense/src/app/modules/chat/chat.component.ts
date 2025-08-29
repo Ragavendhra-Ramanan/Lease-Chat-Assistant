@@ -44,14 +44,11 @@ ngOnInit(): void {
     if (convo) {
       this.conversationId = convo.conversationId;
       this.messages = convo.messages || [];
-
-      // ✅ Show recommendations only for fresh conversation
-      if (!this.messages || this.messages.length === 0) {
+      if (!this.messages || this.messages.length === 1) {
         this.messageService.getRecommendations(this.userId).subscribe((recs) => {
           this.recommendations = recs || [];
         });
       } else {
-        // ✅ Hide recommendations for ongoing conversation
         this.recommendations = [];
       }
     } else {
