@@ -41,12 +41,12 @@ export class LoginComponent {
     }
     this.authService.login(this.auth).subscribe(res => {
         if (res.userId) {
-          localStorage.setItem('token', res.userId);
-          this.toastr.success('login successful!');
+          localStorage.setItem('token', res.userId);      
           this.router.navigate(['/chatlayout']);
+          this.toastr.success('login successful!');
         } else {
-          this.toastr.error('login failed!');        
-      }
+         this.toastr.error('login failed!');        
+     }
     });
   }
 
