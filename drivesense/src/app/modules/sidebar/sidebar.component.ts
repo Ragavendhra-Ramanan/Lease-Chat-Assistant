@@ -63,7 +63,6 @@ export class SidebarComponent implements OnInit {
   });
 }
 
-
   openConversation(convo: ConversationResponse) {
     this.setActiveConversation(convo);
   }
@@ -74,7 +73,6 @@ export class SidebarComponent implements OnInit {
       convo.messages &&
       convo.messages.length === 1 &&
       convo.messages[0].sender === 'bot';
-
     this.conversationService.setActiveConversation(convo);
   }
 }
