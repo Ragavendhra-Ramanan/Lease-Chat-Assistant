@@ -24,7 +24,7 @@ export class SidebarComponent implements OnInit {
   ) {}
 
 ngOnInit(): void {
-  this.userId = sessionStorage.getItem('token') || '';
+  this.userId = sessionStorage.getItem('userId') || '';
 
   // Always start a fresh conversation after login
   this.messageService.startNewConversation(this.userId).subscribe((newConvo) => {

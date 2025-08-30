@@ -53,7 +53,7 @@ export class LoginComponent {
   private handleLoginResponse(res: any, userName?: string) {
     if (res.userId) {
       sessionStorage.setItem('userId', res.userId);
-      sessionStorage.setItem('username', userName ?? res.userName ?? '');
+      sessionStorage.setItem('username', userName ?? res.userName);
       this.toastr.success('login successful!');
       this.router.navigate(['/chatlayout']);
     } else {
