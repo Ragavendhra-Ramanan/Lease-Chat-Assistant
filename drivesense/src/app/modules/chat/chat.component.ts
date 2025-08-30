@@ -88,7 +88,7 @@ ngOnInit(): void {
     var userMsg: ConversationRequest = {
       conversationId: this.conversationId,
       userId: this.userId,  
-      messages: { sender: 'user', message: this.message, timestamp: new Date().toISOString() },
+      messages: { sender: 'user', message: this.message, timestamp: new Date().toISOString(), fileStream: '' },
     };
 
     this.messages.push(userMsg.messages);

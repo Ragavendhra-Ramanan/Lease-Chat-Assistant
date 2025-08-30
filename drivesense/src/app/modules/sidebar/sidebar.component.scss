@@ -31,9 +31,9 @@ button {
   width: 100%;
   padding: 10px;
   margin: 10px 0 20px 0;
-  background: white;
-  color: #222d5c;
-  border: none;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.253);
+  color: white;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
@@ -42,7 +42,8 @@ button {
 
 .new-convo-btn:hover {
   background: #222d5c;
-  color:white
+  color:white;
+  border:none;
 }
 
 /* Conversation List */
