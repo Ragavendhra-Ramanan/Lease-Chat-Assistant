@@ -1,9 +1,10 @@
 header {
   height: 50px;
-  background: #222d5c;
+  background: #222d5c80;
+  border-bottom: #3a4780 solid 1px;
   color: white;
   display: flex;
-  justify-content: space-between; /* left vs right */
+  justify-content: space-between; 
   align-items: center;
   padding: 0 15px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -11,7 +12,7 @@ header {
 }
 
 .left p {
-  margin: 0; /* removes extra spacing */
+  margin: 0; 
   font-weight: bold;
 }
 
@@ -19,7 +20,7 @@ header {
   display: flex;
   align-items: center;
   font-size: 16px;
-  gap: 15px; /* space between name and button */
+  gap: 15px; 
 }
 
 button {
@@ -29,7 +30,6 @@ button {
   color: white;
   padding: 5px 10px;
   cursor: pointer;
-  
 }
 
 button:hover {
