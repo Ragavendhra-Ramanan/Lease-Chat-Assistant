@@ -7,12 +7,16 @@ from ..vehicle_search_prompt import VEHICLE_SEARCH_PROMPT
 from db.weaviate_operations import async_query
 from models.agent_state import AgentState
 from utils.numeric_filters import extract_filters
+from conversation_intents.extract_conversation_intent import append_preference, save_all_to_file
 class VehicleNode(BaseNode):
     def __init__(self, client, limit):
         self.client = client
         self.limit = limit
     async def run(self, state:AgentState):
-        is_ev = state.vehicle_filters  
+
+        append_preference(user_id=state.customer_id,preference_string=state.vehicle_filters,types="vehicle")
+        save_all_to_file(types="vehicle")
+        is_ev = state.is_ev  
         where_filters=extract_filters(state.vehicle_filters)
         vehicle_query = inject_filters(state.rewritten_query, state.vehicle_filters, "vehicles")
         # search

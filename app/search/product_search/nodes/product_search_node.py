@@ -7,12 +7,16 @@ from ..product_search_prompt import PRODUCT_SEARCH_PROMPT
 from db.weaviate_operations import async_query
 from models.agent_state import AgentState
 from utils.numeric_filters import extract_filters
+from conversation_intents.extract_conversation_intent import append_preference,save_all_to_file
 class ProductNode(BaseNode):
     def __init__(self,client, limit):
         self.client = client
         self.limit = limit
 
     async def run(self, state:AgentState):
+        print(state.product_filters,"filter")
+        append_preference(user_id=state.customer_id,preference_string=state.product_filters,types="product")
+        save_all_to_file(types="product")
         product_query = inject_filters(state.rewritten_query, state.product_filters, "product")
         where_filters = extract_filters(state.product_filters)
         product_collection = self.client.collections.get("Product")
