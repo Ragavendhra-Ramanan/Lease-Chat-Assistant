@@ -77,4 +77,11 @@ startNewConversation(isFirstLoad = false) {
       convo.messages[0].sender === 'bot';
     this.conversationService.setActiveConversation(convo);
   }
+
+  getPreviewMessage(convo: any): string {
+  if (!convo.messages || convo.messages.length === 0) {
+    return ''; // safety check, though you said first msg always exists
+  }
+  return convo.messages[1]?.message || convo.messages[0].message;
+}
 }
