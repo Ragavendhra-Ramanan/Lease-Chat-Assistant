@@ -13,6 +13,10 @@ export interface Login{
 }
 
 export interface GuestLogin{
-  name: string;
   contact: string;
+}
+
+export interface AuthResponse{
+  userId: string;
+  userName?: string;
 }

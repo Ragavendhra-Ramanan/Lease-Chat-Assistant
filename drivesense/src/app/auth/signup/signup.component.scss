@@ -1,53 +1,18 @@
+@use 'auth-form' as *;
+
 .login-container {
-  display: flex;
-  flex-direction: column;
-  align-items:end;
-  justify-content: center;
-  height: 100vh;
-  background: url('../../../assets/login-bg.png') no-repeat center center;
-  background-size: cover;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding-right: 10%;
+  @extend .auth-container;
 }
 
 form {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
+  @extend .auth-form;
 }
 
-input {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size:18px;
-  margin: 10px 0;
-  padding: 10px;
-  border: none;
-  background: #f9f3ef;
-}
-
-button {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size:18px;
-  background: #2f367c;
-  color: white;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
-  margin:10px 0;
-}
-button:hover:not(:disabled) {
-  background: #4048a3; 
+.header {
+  @extend .signup-header;
 }
 
 h2, p{
   width:300px;
   text-align: center;
-}
-.header{
- color:aliceblue;
-}
- 
-.error {
-  color: rgb(0, 0, 0);
-  font-size: 12px;
 }

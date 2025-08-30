@@ -1,30 +1,4 @@
-.login-container {
-  display: flex;
-  flex-direction: column;
-  align-items:end;
-  justify-content: center;
-  height: 100vh;
-  background: url('../../../assets/login-bg.PNG') no-repeat center center;
-  background-size: cover;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding-right: 10%;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-}
-
-input {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size:18px;
-  margin: 10px 0;
-  padding: 10px;
-  border: none;
-  background: #f9f3ef;
-}
-
+@use 'auth-form' as *;
 button {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size:18px;
@@ -39,20 +13,14 @@ button {
 button:hover:not(:disabled) {
   background: #4048a3; 
 }
+.login-container {
+  @extend .auth-container;
+}
 
-h2, p{
+form {
+  @extend .auth-form;
+}
+p{
   width:300px;
   text-align: center;
-}
- 
-
-.error {
-  color: rgb(0, 0, 0);
-  font-size: 12px;
-}
-
-.login-mode-buttons {
-  display: flex;
-  gap: 30px;
-  margin-bottom: 15px;
 }

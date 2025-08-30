@@ -15,53 +15,49 @@ import { ToastrService } from 'ngx-toastr';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent {
-   loginMode: string='';
+  loginMode: string = '';
   auth: Login = {
     userName: '',
     password: '',
   };
 
-  guest :GuestLogin={
-    name:'',
-    contact:''
-  }
+  guest: GuestLogin = {
+    contact: '',
+  };
 
   constructor(
     private router: Router,
     private authService: AuthService,
     private toastr: ToastrService
   ) {}
-   setLoginMode(mode: 'user' | 'guest') {
+  setLoginMode(mode: 'user' | 'guest') {
     this.loginMode = mode;
   }
 
   login(form: any) {
-    if (form.invalid) {
-      return;
-    }
-    this.authService.login(this.auth).subscribe(res => {
-        if (res.userId) {
-          localStorage.setItem('token', res.userId);      
-          this.router.navigate(['/chatlayout']);
-          this.toastr.success('login successful!');
-        } else {
-         this.toastr.error('login failed!');        
-     }
+    if (form.invalid) return;
+
+    this.authService.login(this.auth).subscribe((res) => {
+      this.handleLoginResponse(res);
     });
   }
 
-    guestLogin(form: any) {
-     if (form.invalid) {
-      return;
-    }
-    this.authService.guestLogin(this.guest).subscribe(res => {
-        if (res.userId) {
-          localStorage.setItem('token', res.userId);
-          this.toastr.success('login successful!');
-          this.router.navigate(['/chatlayout']);
-        } else {
-          this.toastr.error('login failed!');        
-      }
+  guestLogin(form: any) {
+    if (form.invalid) return;
+
+    this.authService.guestLogin(this.guest).subscribe((res) => {
+      this.handleLoginResponse(res, 'guest user');
     });
+  }
+
+  private handleLoginResponse(res: any, userName?: string) {
+    if (res.userId) {
+      sessionStorage.setItem('userId', res.userId);
+      sessionStorage.setItem('username', userName ?? res.userName ?? '');
+      this.toastr.success('login successful!');
+      this.router.navigate(['/chatlayout']);
+    } else {
+      this.toastr.error('login failed!');
+    }
   }
 }

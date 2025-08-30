@@ -1,5 +1,5 @@
 // chat-header.component.ts
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
@@ -10,11 +10,15 @@ import { Router } from '@angular/router';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent {
-
+export class HeaderComponent implements OnInit {
+  userName: string | null = null;
   constructor(private router: Router) {}
+  ngOnInit(): void {
+     this.userName = sessionStorage.getItem('username');
+  }
 
   logout() {
+      sessionStorage.clear();
       this.router.navigate(['/login']);
     }
 }

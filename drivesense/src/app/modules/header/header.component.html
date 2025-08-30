@@ -1,5 +1,10 @@
 <!-- chat-header.component.html -->
 <header>
-  <p>drivesense</p>
-  <button (click)="logout()">logout</button>
+  <div class="left">
+    <p>drivesense</p>
+  </div>
+  <div class="right">
+    <span *ngIf="userName"> {{ userName }} !</span>
+    <button (click)="logout()">logout</button>
+  </div>
 </header>

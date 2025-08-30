@@ -53,21 +53,6 @@
   >
     <input
       type="text"
-      placeholder="Your Name"
-      [(ngModel)]="guest.name"
-      name="guestName"
-      required
-      #guestName="ngModel"
-    />
-    <div
-      *ngIf="guestName.invalid && (guestName.touched || guestLoginForm.submitted)"
-      class="error"
-    >
-      Name is required
-    </div>
-
-    <input
-      type="text"
       placeholder="Email or Phone"
       [(ngModel)]="guest.contact"
       name="guestContact"
