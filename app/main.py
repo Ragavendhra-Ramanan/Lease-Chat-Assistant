@@ -165,17 +165,15 @@ async def guest_user(credentials : GuestLogin):
     user_row = df[(df["contact"] == contact)]   
     if user_row.empty:
         guser_id = str(random.randint(5000,9999))
+        guest_user = {
+        "userId": guser_id,
+        "contact": contact
+        }    
+        df = pd.concat([df, pd.DataFrame([guest_user])], ignore_index=True)
+        df.to_csv(GUEST_USER_CSV_FILE, index=False)
     else:
         user_data = user_row.iloc[0].to_dict()  
         guser_id =  user_data["userId"] 
-
-    guest_user = {
-        "userId": guser_id,
-        "contact": contact
-    }    
-
-    df = pd.concat([df, pd.DataFrame([guest_user])], ignore_index=True)
-    df.to_csv(GUEST_USER_CSV_FILE, index=False)
         
     guest_login_response = GuestLoginResponse(
                 userId=guser_id,

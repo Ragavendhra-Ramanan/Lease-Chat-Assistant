@@ -32,4 +32,7 @@ def load_user_data():
     if not os.path.exists(USER_CSV_FILE):
         df = pd.DataFrame(columns=["userId", "firstName", "lastName", "email", "mobile", "password", "country"])
         df.to_csv(USER_CSV_FILE, index=False)
-
+    
+    if not os.path.exists(GUEST_USER_CSV_FILE):
+        df = pd.DataFrame(columns=["userId", "contact"])
+        df.to_csv(GUEST_USER_CSV_FILE, index=False)
