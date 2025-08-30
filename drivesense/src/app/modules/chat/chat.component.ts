@@ -38,7 +38,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     this.messages = [];
   }
 ngOnInit(): void {
-  this.userId = sessionStorage.getItem('token') || '';
+  this.userId = sessionStorage.getItem('userId') || '';
 
   this.conversationService.activeConversation$.subscribe((convo) => {
     if (convo) {
