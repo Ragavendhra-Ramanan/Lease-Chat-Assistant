@@ -176,7 +176,7 @@ async def guest_user(credentials : GuestLogin):
         guser_id =  user_data["userId"] 
         
     guest_login_response = GuestLoginResponse(
-                userId=guser_id,
+                userId=str(guser_id),
     )
     return guest_login_response
 
