@@ -23,6 +23,9 @@ from collections import Counter
 from typing import List
 from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
+import base64
+from io import BytesIO
+from fpdf import FPDF
 
 origins = [
     "http://localhost:4200",  # frontend URL
@@ -232,7 +235,7 @@ async def decompose_tasks(request: ConversationRequest):
    
     # Check if conversation exists
     conversationId = request.conversationId
-    userId = request.userId
+    userId = request.userId      
             
     message_data = request.messages.model_dump()
     convo_doc = {
@@ -302,8 +305,57 @@ async def decompose_tasks(request: ConversationRequest):
     }
     message_buffer.append(convo_doc)
     return response
-    
-    
+
+    """""" #PDF generation
+    now = datetime.now().isoformat(timespec='seconds')  
+    quote_info = """     1. Country: Guernsey, Make: Toyota, Model: RAV4, Year: 2023, Mileage: 16.5 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 184, Price: 35028 EUR, Preowned: Yes
+    2. Country: Kazakhstan, Make: Toyota, Model: Camry, Year: 2010, Mileage: 19.3 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 181, Price: 33692 INR, Preowned: Yes
+    3. Country: Bouvet Island (Bouvetoya), Make: Toyota, Model: Camry, Year: 2016, Mileage: 3.0 kmpl, Fuel: EV, Gear: Manual, Horsepower: 406, Price: 32217 EUR, Preowned: No
+    4. Country: China, Make: Toyota, Model: Camry, Year: 2021, Mileage: 24.7 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 114, Price: 46582 USD, Preowned: Yes
+    5. Country: Senegal, Make: Toyota, Model: Corolla, Year: 2007, Mileage: 5.6 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 461, Price: 78858 INR, Preowned: No"""
+    fileStream = text_to_pdf_base64(quote_info)  
+    pdf_test = Message(
+        sender="bot",
+        message="Quote generated",
+        timestamp=now,
+        fileStream=fileStream
+    )
+    pdf_response = ConversationResponse(
+        userId=userId,
+        conversationId=conversationId,
+        messages=[pdf_test],        
+    )
+    return pdf_response
+    """"""
+
+def text_to_pdf_base64(text: str) -> str:
+    # Create a PDF object
+    pdf = FPDF()
+    pdf.add_page()
+
+    # Title styling
+    pdf.set_font("Arial", "B", 16)
+    pdf.set_text_color(47, 54, 124)
+    pdf.cell(0, 10, "GENERATED QUOTE INFORMATION", ln=True, align='C')
+    pdf.ln(10)
+
+    # Body text styling
+    pdf.set_font("Arial", "", 12)
+    pdf.set_text_color(50, 50, 50)
+    pdf.set_font("Arial", size=12)
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.set_x(pdf.l_margin)
+
+    # Split the text into lines and write each line
+    for line in text.splitlines():
+        pdf.multi_cell(0, 10, txt=line)    
+        pdf.ln(2)
+
+    # Get the PDF as a string (bytes) instead of saving to file
+    pdf_out = pdf.output(dest='S').encode('latin1')  # FPDF returns str in 'latin1'
+    base64_pdf = base64.b64encode(pdf_out).decode('utf-8')
+
+    return base64_pdf  
     
 async def flush_buffer_to_db():
     global message_buffer
