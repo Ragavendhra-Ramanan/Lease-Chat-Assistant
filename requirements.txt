@@ -10,3 +10,4 @@ tabulate
 weaviate-client
 fastapi[standard]
 motor
+scikit-learn

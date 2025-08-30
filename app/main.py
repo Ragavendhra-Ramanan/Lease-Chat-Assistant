@@ -9,14 +9,15 @@ from uuid import uuid4
 from typing import Dict
 from utils.flows import ROUTE_MAP
 from utils.helper_functions import get_data, filter_df
-from models.auth_models import User, SignupResponse, Login, LoginResponse
+from models.auth_models import User, SignupResponse, Login, LoginResponse, GuestLogin, GuestLoginResponse
 from fastapi.middleware.cors import CORSMiddleware
 from memory.memory_store import get_recent_memory, add_short_term_memory_from_dict
 from decomposition.nodes.decomposition_node import DecompositionNode
 from decomposition.nodes.decomposition_result_node import DecompositionResultNode
-from utils.helper_functions import USER_CSV_FILE, load_user_data
+from utils.helper_functions import USER_CSV_FILE, load_user_data, GUEST_USER_CSV_FILE
 
 import pandas as pd 
+import random
 from datetime import datetime
 from collections import Counter
 from typing import List
@@ -150,10 +151,36 @@ async def login_user(credentials : Login):
     # Convert row to dict and remove password
     user_data = user_row.iloc[0].to_dict()
     login_response = LoginResponse(
-                userId= str(user_data['userId'])
+                userId= str(user_data['userId']),
+                userName= str(user_data['firstName']) + " "+ str(user_data['lastName']) 
             )
     return login_response
 
+@app.post("/api/auth/guestLogin")
+async def guest_user(credentials : GuestLogin):
+    df = pd.read_csv(GUEST_USER_CSV_FILE)
+    contact = credentials.contact
+    
+    # Check user by email or mobile
+    user_row = df[(df["contact"] == contact)]   
+    if user_row.empty:
+        guser_id = str(random.randint(5000,9999))
+    else:
+        user_data = user_row.iloc[0].to_dict()  
+        guser_id =  user_data["userId"] 
+
+    guest_user = {
+        "userId": guser_id,
+        "contact": contact
+    }    
+
+    df = pd.concat([df, pd.DataFrame([guest_user])], ignore_index=True)
+    df.to_csv(GUEST_USER_CSV_FILE, index=False)
+        
+    guest_login_response = GuestLoginResponse(
+                userId=guser_id,
+    )
+    return guest_login_response
 
 # GET: Retrieve all conversation by userId
 @app.get("/api/chat/getConversations/{userId}", response_model=List[ConversationResponse])
@@ -177,19 +204,21 @@ async def start_conversation(request:StartConversation):
     welcome = Message(
         sender="bot",
         message="Hi, welcome! I will help in product search, vehicle search, contract search and quote generation",
-        timestamp=now
+        timestamp=now,
+        fileStream=""
     )
 
     response = ConversationResponse(
         userId= request.userId,
         conversationId=conversation_id,
-        messages=[welcome]
+        messages=[welcome],
+        
     )    
 
     convo_doc = {
         "userId": request.userId,
         "conversationId": conversation_id,
-        "messages": [welcome.model_dump()]
+        "messages": welcome.model_dump()
     }
     message_buffer.append(convo_doc)
     state.customer_id = request.userId
@@ -207,7 +236,7 @@ async def decompose_tasks(request: ConversationRequest):
     conversationId = request.conversationId
     userId = request.userId
             
-    message_data = [request.messages.model_dump()] #[msg.model_dump() for msg in message.messages]
+    message_data = request.messages.model_dump()
     convo_doc = {
             "userId": userId,
             "conversationId": conversationId,
@@ -258,7 +287,8 @@ async def decompose_tasks(request: ConversationRequest):
             response.messages.append(Message(
                 sender="bot",
                 message=final_answer,
-                timestamp=now
+                timestamp=now,
+                fileStream=""
             ))
         else:
             response,query_retrieved= await get_conversation_result(request=request)
@@ -270,7 +300,7 @@ async def decompose_tasks(request: ConversationRequest):
     convo_doc = {
     "userId": request.userId,
     "conversationId": request.conversationId,
-    "messages": [response.messages[-1].model_dump()]
+    "messages": response.messages[-1].model_dump()
     }
     message_buffer.append(convo_doc)
     return response
@@ -300,7 +330,7 @@ async def flush_buffer_to_db():
                         "conversationId": msg.get("conversationId")
                     },
                     {
-                        "$push": {"messages": { "$each": msg.get("messages") }}
+                        "$push": {"messages": msg.get("messages")}
                     },
                     upsert=True
                 )
@@ -343,7 +373,8 @@ async def get_conversation_result(request: ConversationRequest):
             response.messages.append(Message(
                 sender=sender,
                 message=state.quote_intermediate_results,
-                timestamp=now
+                timestamp=now,
+                fileStream=""
             ))
             return response,state.rewritten_query
         elif state.quote_next_agent == "quote":
@@ -357,7 +388,8 @@ async def get_conversation_result(request: ConversationRequest):
             response.messages.append(Message(
                 sender=sender,
                 message=state.quote_results,
-                timestamp=now
+                timestamp=now,
+                fileStream=""
             )) 
             return response,state.rewritten_query
 
@@ -389,7 +421,8 @@ async def get_conversation_result(request: ConversationRequest):
         response.messages.append(Message(
                 sender=sender,
                 message=state.quote_intermediate_results,
-                timestamp=now
+                timestamp=now,
+                fileStream=""
             ))
         save_client_state(request.userId,state=state)
         return response,state.rewritten_query
@@ -397,7 +430,8 @@ async def get_conversation_result(request: ConversationRequest):
     response.messages.append(Message(
                 sender=sender,
                 message=state.final_answer,
-                timestamp=now
+                timestamp=now,
+                fileStream=""
             ))
     save_client_state(request.userId,state=state)
     add_short_term_memory_from_dict(user_id=float(state.customer_id), query=state.rewritten_query,response=state.final_answer)

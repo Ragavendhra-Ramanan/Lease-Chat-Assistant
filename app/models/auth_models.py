@@ -12,9 +12,15 @@ class Login(BaseModel):
   userName: str
   password: str
 
-
 class SignupResponse(BaseModel):
   value: bool
 
 class LoginResponse(BaseModel):
+  userId : str
+  userName: str
+
+class GuestLogin(BaseModel):
+  contact: str
+  
+class GuestLoginResponse(BaseModel):
   userId : str

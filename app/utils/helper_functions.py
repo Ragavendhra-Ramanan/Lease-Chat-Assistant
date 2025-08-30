@@ -5,6 +5,7 @@ import csv
 
 base_dir = os.path.dirname(os.path.abspath(__file__))
 USER_CSV_FILE = os.path.join(base_dir,"../data/user_data.csv")
+GUEST_USER_CSV_FILE = os.path.join(base_dir,"../data/guest_user_data.csv")
 
 def inject_filters(query: str, filters: str, entity: str) -> str:
         """Turn natural-language filters into query modifiers."""

@@ -1,5 +1,5 @@
 from typing import List, Dict
-from langchain.embeddings import OpenAIEmbeddings
+from langchain_community.embeddings import OpenAIEmbeddings
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 # from utils.secrets import openai_api_key

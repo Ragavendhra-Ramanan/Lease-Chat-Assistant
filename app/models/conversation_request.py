@@ -7,6 +7,7 @@ class Message(BaseModel):
     sender: str
     message: str
     timestamp : datetime
+    fileStream: str
 
 class ConversationResponse(BaseModel):
     userId: str
@@ -23,13 +24,14 @@ class StartConversation(BaseModel):
 
 def conversation_helper(doc) -> dict:
     return {
-        "userId": doc["userId"],
-        "conversationId": doc["conversationId"],
+        "userId": doc.get("userId"),
+        "conversationId": doc.get("conversationId"),
         "messages": [
             {
-                "sender": m["sender"],
-                "message": m["message"],
-                "timestamp": m["timestamp"].isoformat() if isinstance(m["timestamp"], datetime) else m["timestamp"]
+                "sender": m.get("sender"),
+                "message": m.get("message"),
+                "timestamp": m.get("timestamp").isoformat(timespec='seconds') if isinstance(m.get("timestamp"), datetime) else m.get("timestamp"),
+                "fileStream": m.get("fileStream")
             } for m in doc.get("messages", [])
         ]
     }
