@@ -7,9 +7,12 @@
 .chat-area {
   display: flex;
   flex: 1;
-  background: url('../../../assets/log.png') no-repeat center center;
-  background-size: cover;
   flex-direction: column;
   min-height: 0;
   height:calc(100vh - 50px);
+}
+
+.container{
+ background: url('../../../assets/log.png') no-repeat center center;
+  background-size: cover;
 }

@@ -14,5 +14,6 @@ export interface Message{
    sender: string
    message: string
    timestamp: string; 
+   fileStream?: string;
 }
     

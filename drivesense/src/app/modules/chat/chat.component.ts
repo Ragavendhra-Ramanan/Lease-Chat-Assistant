@@ -68,6 +68,10 @@ ngOnInit(): void {
   }
   getMessageContent(message: Message): SafeHtml {
     var html = marked.parse(message.message) as string;
+
+    if (message.fileStream) {
+    html += ` <a href="${message.fileStream}" target="_blank">📄 Quote </a>`;
+  }
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
   scrollToBottom(): void {
@@ -91,8 +95,24 @@ ngOnInit(): void {
 
     this.messageService.sendMessage(userMsg).subscribe((botMsg) => {
       this.isBotTyping = false;
-      const fullText = botMsg.messages[botMsg.messages.length - 1].message;
-      this.simulateTyping(fullText, 'bot');
+
+      const lastMsg = botMsg.messages[botMsg.messages.length - 1];
+
+       if (lastMsg.fileStream) {
+      // ✅ Convert to URL only when needed
+      const pdfUrl = this.createPdfUrl(lastMsg.fileStream);
+        this.messages.push({
+        sender: 'bot',
+        message: lastMsg.message || '📄 Click to open PDF',
+        fileStream: pdfUrl,
+        timestamp: new Date().toISOString()
+      });
+    } else {
+      this.simulateTyping(lastMsg.message, 'bot');
+    }
+
+      // const fullText = botMsg.messages[botMsg.messages.length - 1].message;
+      // this.simulateTyping(fullText, 'bot');
     });
     this.message = '';
   }
@@ -110,4 +130,15 @@ ngOnInit(): void {
       }
     }, 30);
   }
+
+  private createPdfUrl(base64: string): string {
+  const byteChars = atob(base64);
+  const byteNumbers = new Array(byteChars.length);
+  for (let i = 0; i < byteChars.length; i++) {
+    byteNumbers[i] = byteChars.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: 'application/pdf' });
+  return URL.createObjectURL(blob);
+}
 }
