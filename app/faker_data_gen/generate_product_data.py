@@ -20,33 +20,21 @@ product_templates = [
         "flexi_allowed": False
     },
     {
-        "name": "Flexi Lease",
+        "name": "Dynamic Lease",
         "desc": "Flexible lease with upgrade or exit options after mid-term, ideal for dynamic users.",
         "tax_saving": "No",
         "flexi_allowed": True
     },
     {
-        "name": "Corporate Saver",
-        "desc": "Business-focused lease offering tax deductions, bundled insurance, and priority servicing.",
-        "tax_saving": "Yes",
+        "name": "Value Lease",
+        "desc": "Affordable leasing for small cars with lower monthly costs and basic maintenance.",
+        "tax_saving": "No",
         "flexi_allowed": False
     },
     {
-        "name": "Premium EV Lease",
-        "desc": "Exclusive EV lease with charging benefits, subsidies, and zero-emission perks.",
+        "name": "Corporate Saver",
+        "desc": "Business-focused lease offering tax deductions, bundled insurance, and priority servicing.",
         "tax_saving": "Yes",
-        "flexi_allowed": True
-    },
-    {
-        "name": "Startup Flexi",
-        "desc": "Short-term flexible lease for startups with minimal lock-in and scalable options.",
-        "tax_saving": "Yes",
-        "flexi_allowed": True
-    },
-    {
-        "name": "Luxury Drive",
-        "desc": "Premium leasing for high-end cars with concierge service, garage maintenance, and roadside support.",
-        "tax_saving": "No",
         "flexi_allowed": False
     },
     {
@@ -56,23 +44,17 @@ product_templates = [
         "flexi_allowed": True
     },
     {
-        "name": "Family Plan",
+        "name": "Premium EV Lease",
+        "desc": "Exclusive EV lease with charging benefits, subsidies, and zero-emission perks.",
+        "tax_saving": "Yes",
+        "flexi_allowed": True
+    },    
+    {
+        "name": "FamilyRide Lease",
         "desc": "Designed for family cars with long-term stability, garage maintenance, and roadside cover.",
         "tax_saving": "No",
         "flexi_allowed": False
-    },
-    {
-        "name": "Compact Saver",
-        "desc": "Affordable leasing for small cars with lower monthly costs and basic maintenance.",
-        "tax_saving": "No",
-        "flexi_allowed": False
-    },
-    {
-        "name": "Business Advantage",
-        "desc": "Mid-term lease for SMEs with low upfront cost and deductible benefits.",
-        "tax_saving": "Yes",
-        "flexi_allowed": False
-    }
+    }   
 ]
 
 lease_terms = [12, 24, 36, 48]
@@ -118,12 +100,16 @@ def generate_product(pid):
         "Summary": summary
     }
 
-# Generate 50 realistic products
-products = [generate_product(i) for i in range(50)]
+# Generate 20 realistic products
+num_records=20
+products = [generate_product(i) for i in range(num_records)]
 df = pd.DataFrame(products)
+leasing_chunk_data = df[["Summary","Product ID"]]
 
 # Save as CSV
-df.to_csv("../data/leasing_data.csv", index=False)
+df.to_csv("data/leasing_data_new.csv", index=False)
+leasing_chunk_data.to_csv("data/leasing_chunk_data_new.csv",index=False)
+
 
 print(df.head(10))
 
