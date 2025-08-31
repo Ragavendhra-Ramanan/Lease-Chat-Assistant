@@ -32,3 +32,4 @@ class AgentState:
     is_ev: str =""
     action: str =""
     clarifying_question: str =""
+    country: str =""

@@ -37,7 +37,7 @@ origins = [
     "http://127.0.0.1:4200",  # optional
 ]
 
-
+global country
 client = None
 router = RouteNode()
 decomposition = DecompositionNode()
@@ -86,6 +86,17 @@ def get_quote_data() -> bool:
     base_dir = os.path.dirname(os.path.abspath(__file__))
     quote_df = pd.read_csv(os.path.join(base_dir,"data/quote_data_new.csv"))
     return quote_df
+
+def get_country(userId):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    user_df = pd.read_csv(os.path.join(base_dir,"data/user_data.csv"))
+    matched= user_df[user_df['userId']==userId]
+    if matched.empty:
+        return None
+    return matched.iloc[0]['country']
+
+
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -178,6 +189,7 @@ async def login_user(credentials : Login):
                 userId= str(user_data['userId']),
                 userName= str(user_data['firstName']) + " "+ str(user_data['lastName']) 
             )
+
     return login_response
 
 @app.post("/api/auth/guestLogin")
@@ -248,14 +260,15 @@ async def start_conversation(request:StartConversation):
 @app.get("/api/chat/recommendations/{userID}")
 async def recommendations(userID:int):
     quote_df = await asyncio.to_thread(get_quote_data)
+    country = await asyncio.to_thread(get_country,userID)
     if(userID in contract_df['Customer ID'].values):
         return await get_customer_retention_recommendation(client=client,user_id=userID)
     elif (userID in quote_df['User ID'].values):
         return await get_potential_customer_recommendation(user_id=userID,client=client)
     elif await asyncio.to_thread(user_exists_in_search,userID):
-        return await get_potential_user_engagement_recommendation(client=client, user_id=userID)
+        return await get_potential_user_engagement_recommendation(client=client, user_id=userID,country=country)
     else:
-        return await get_new_user_recommendation()
+        return await get_new_user_recommendation(country=country)
     #print(await get_user_preferences(client=client,user_id=userID))
     #return 
 
@@ -280,6 +293,7 @@ async def send_bot_message(request: ConversationRequest):
     state.previous_query = get_last_query(request.userId,request.conversationId)
     state.query = request.messages.message
     state.customer_id =  request.userId
+    state.country = await asyncio.to_thread(get_country,userId)
     response = ConversationResponse(
             messages=[request.messages],              # empty list or actual messages
             userId= request.userId  ,     # string

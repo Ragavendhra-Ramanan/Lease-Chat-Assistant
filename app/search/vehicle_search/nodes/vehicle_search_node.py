@@ -18,8 +18,11 @@ class VehicleNode(BaseNode):
         if not state.customer_id in self.guest_user_df['userId'].values:
             append_preference(user_id=int(state.customer_id),preference_string=state.vehicle_filters,types="Vehicle")
             save_all_to_file(types="Vehicle")
-        is_ev = state.is_ev  
-        where_filters=extract_filters(state.vehicle_filters)
+        is_ev = state.is_ev
+        if 'country' not in state.vehicle_filters:
+            where_filters = extract_filters(state.vehicle_filters+f' country: {state.country}')
+        else:     
+            where_filters=extract_filters(state.vehicle_filters)
         vehicle_query = inject_filters(state.rewritten_query, state.vehicle_filters, "vehicles")
         # search
         vehicle_collection = self.client.collections.get("Car")
