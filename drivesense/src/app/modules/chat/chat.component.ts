@@ -70,10 +70,6 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   }
   getMessageContent(message: Message): SafeHtml {
     var html = marked.parse(message.message) as string;
-
-    if (message.fileStream) {
-      html += ` <a href="${message.fileStream}" target="_blank">📄 Quote </a>`;
-    }
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
   scrollToBottom(): void {
@@ -126,17 +122,6 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       }
     }, 30);
   }
-
-  //   private createPdfUrl(base64: string): string {
-  //   const byteChars = atob(base64);
-  //   const byteNumbers = new Array(byteChars.length);
-  //   for (let i = 0; i < byteChars.length; i++) {
-  //     byteNumbers[i] = byteChars.charCodeAt(i);
-  //   }
-  //   const byteArray = new Uint8Array(byteNumbers);
-  //   const blob = new Blob([byteArray], { type: 'application/pdf' });
-  //   return URL.createObjectURL(blob);
-  // }
 
   openPdf(base64: string) {
     const byteChars = atob(base64);
