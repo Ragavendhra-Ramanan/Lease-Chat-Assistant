@@ -62,8 +62,8 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   }
   onRecommendationClick(reco: string) {
     this.recommendations = [];
-    const parts = reco.split(':');
-    this.message = parts.length > 1 ? parts[1].trim() : reco;
+    const idx = reco.indexOf(':');
+    this.message = idx !== -1 ? reco.substring(idx + 1).trim() : reco;
     this.sendMessage();
   }
   ngAfterViewChecked() {
