@@ -300,7 +300,6 @@ async def send_bot_message(request: ConversationRequest):
         await flush_buffer_to_db()
     final_message:str =""
     state = get_client_state(request.userId,request.conversationId)
-    print(state,"state")
     state.previous_query = get_last_query(request.userId,request.conversationId)
     state.query = request.messages.message
     state.customer_id =  request.userId
@@ -351,6 +350,7 @@ async def send_bot_message(request: ConversationRequest):
             await buffer_message(convo_doc)
             return response
     state = await router.run(state)
+    print(state)
     save_client_state(user_id=request.userId,conversation_id=request.conversationId,state=state)
     if len(state.route) ==0:
         general_state=await general_node.run(state)

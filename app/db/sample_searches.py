@@ -28,18 +28,18 @@ async def run_sample():
     #     print("VehicleID:", obj.properties.get("vehicleID"))
     #     print("Summary:", obj.properties.get("summary"))
     #     print("---")
-    sample_query = "Contract ending nextt week"
+    sample_query = "car"
     filters = "leaseExpiryDate"
     from datetime import datetime
     from weaviate.classes.query import Filter
     another_query_date = datetime(2028, 6, 15, 12, 0, 0) 
     print(another_query_date,"date")
-    filter_value = ["V4000"]  # optional, can include multiple IDs
-    vehicle_collection = client.collections.get("Contract")
+    filter_value = "V1043"  # optional, can include multiple IDs
+    vehicle_collection = client.collections.get("Car")
     results = await async_query(vehicle_collection,
                                  query=sample_query,
                                  alpha=0.75, 
-                                 where=Filter.by_property("leaseExpiryDate").greater_or_equal(another_query_date),
+                                 where=Filter.by_property("vehicle_id").equal(filter_value),
                                  limit=3)
     print(results)
 

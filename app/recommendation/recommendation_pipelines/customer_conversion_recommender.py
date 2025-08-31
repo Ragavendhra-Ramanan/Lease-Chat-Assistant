@@ -49,10 +49,10 @@ def convert_to_customer(user_id,
                 top_vehicle = candidates.iloc[idx]
                 return (
                 f"Recommended Vehicle (Last Quote with Better Price):\n"
-                f"{top_vehicle['Vehicle ID']}\n"
-                f"{top_vehicle['Make']}\n"
-                f"{top_vehicle['Model']}\n"
-                f"Price: {top_vehicle['Price']}\n"
+                f"{top_vehicle['Vehicle ID']},\n"
+                f"{top_vehicle['Make']},\n"
+                f"{top_vehicle['Model']},\n"
+                f"Price: {top_vehicle['Price']},\n"
                 f"Country: {top_vehicle['Country']}"
                 )
 
@@ -71,8 +71,8 @@ def convert_to_customer(user_id,
 
                 return (
                 f"Recommended Product (Last Quote with Better Price):\n"
-                f"{top_product['Product ID']}\n"
-                f"{top_product['Product Name']}\n"
+                f"{top_product['Product ID']},\n"
+                f"{top_product['Product Name']},\n"
                 f"Lease Term: {top_product['Lease Term']}"
                 )
 
@@ -97,10 +97,10 @@ def convert_to_customer(user_id,
 
                 return (
                 f"Recommended Contract Vehicle (Last Quote with Better Price):\n"
-                f" {top_vehicle['Vehicle ID']}\n"
-                f"{top_vehicle['Make']}\n"
-                f"{top_vehicle['Model']}\n"
-                f"Price: {top_vehicle['Price']}\n"
+                f" {top_vehicle['Vehicle ID']},\n"
+                f"{top_vehicle['Make']},\n"
+                f"{top_vehicle['Model']},\n"
+                f"Price: {top_vehicle['Price']},\n"
                 f"Country: {top_vehicle['Country']}"
                 )
 
@@ -124,7 +124,7 @@ def convert_to_customer(user_id,
 
                 return (
                 f"Recommended Contract Product (Last Quote with Better Price):\n"
-                f"{top_product['Product ID']}\n"
-                f"{top_product['Product Name']}\n"
+                f"{top_product['Product ID']},\n"
+                f"{top_product['Product Name']},\n"
                 f"Lease Term: {top_product['Lease Term']}"
                 )
