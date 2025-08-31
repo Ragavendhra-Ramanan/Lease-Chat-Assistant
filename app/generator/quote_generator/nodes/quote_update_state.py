@@ -7,7 +7,7 @@ class QuoteUpdateNode(BaseNode):
     Updates the state based on user choice for vehicle or product filtering steps.
     """
 
-    async def run(self, state:AgentState):
+    async def run(self, state: AgentState):
         context = state.quote_context  # vehicle or product
         step = state.quote_step
         user_choice = state.query
@@ -32,7 +32,7 @@ class QuoteUpdateNode(BaseNode):
                     min_p, max_p = map(int, user_choice.strip("()").split(","))
                     state.quote_filters["Price"] = (min_p, max_p)
                 except:
-                    state.quote_intermediate_results = "Invalid price range format. Try again like (10000,20000)."
+                    state.quote_intermediate_results = "```Invalid price range format. Try again like (10000,20000).```"
                 state.quote_step = "country"
 
             elif step == "country":
@@ -54,7 +54,7 @@ class QuoteUpdateNode(BaseNode):
                     state.quote_step = "product_name"  # start product filtering from first step
                     state.quote_next_agent = "filtering"
                 else:
-                    state.quote_intermediate_results = "Okay, search cancelled."
+                    state.quote_intermediate_results = "```Okay, search cancelled.```"
 
         # --- PRODUCT path ---
         elif context == "product":
@@ -87,6 +87,6 @@ class QuoteUpdateNode(BaseNode):
                     state.quote_context = "quote"
                     state.quote_next_agent = "quote"
                 else:
-                    state.quote_intermediate_results = "Okay, search cancelled."
+                    state.quote_intermediate_results = "```Okay, search cancelled.```"
 
         return state

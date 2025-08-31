@@ -8,6 +8,9 @@ Instructions:
 4. If the user query contains no numeric conditions, do not perform numeric filtering; instead, include entries relevant by make, model, fuel, mileage, country, or other attributes.
 5. Highlight **EV alternatives** if relevant, else ignore.
 
+Rule:
+- The output should always be formatted in markdown with  points.
+
 Context:
 {context}
 

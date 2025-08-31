@@ -136,7 +136,7 @@ async def async_query(collection, query=None, filters=None,filter_val=None,where
             filter_to_apply = Filter.by_property(filters).contains_any(filter_val)
         else:
             filter_to_apply = Filter.by_property(filters).equal(filter_val)
-    if where !=[]:
+    if where is not None:
         # If simple filter exists, combine with 'And'
         if filter_to_apply is not None:
             filter_to_apply = where.append(filter_to_apply)

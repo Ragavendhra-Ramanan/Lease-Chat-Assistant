@@ -9,7 +9,7 @@ from clarifier_agent.nodes.clarifier_node import ClarifierNode
 from uuid import uuid4
 import json
 import os
-from collections import Counter
+from collections import defaultdict
 from datetime import datetime
 from typing import Dict, List
 from utils.flows import ROUTE_MAP
@@ -29,8 +29,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
 import random
 import base64
-from io import BytesIO
-#from fpdf import FPDF
+from fpdf import FPDF
 
 origins = [
     "http://localhost:4200",  # frontend URL
@@ -116,9 +115,13 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         # Optionally flush remaining messages before shutdown
+        buffer_copy = []
         async with buffer_lock:
             if message_buffer:
-                await flush_buffer_to_db()
+                buffer_copy = message_buffer.copy()
+                message_buffer.clear()
+        if buffer_copy:
+            await flush_buffer_to_db(buffer_copy)
 
         # shutdown
         mongo_client.close()
@@ -226,7 +229,13 @@ async def get_conversation(userId: str):
 @app.post("/api/chat/startNewConversation")
 async def start_conversation(request:StartConversation):
     """Start a new conversation and return conversation_id."""
-    await flush_buffer_to_db()
+    buffer_copy = []
+    async with buffer_lock:
+        if message_buffer:            
+            buffer_copy = message_buffer.copy()
+            message_buffer.clear()
+    if buffer_copy:
+        await flush_buffer_to_db(buffer_copy)    
     conversation_id = str(uuid4())
     now = datetime.now().isoformat(timespec='seconds')
     welcome = Message(
@@ -254,7 +263,7 @@ async def start_conversation(request:StartConversation):
         "conversationId": conversation_id,
         "messages": welcome.model_dump()
     }
-    message_buffer.append(convo_doc)
+    await buffer_message(convo_doc)
     return response
 
 @app.get("/api/chat/recommendations/{userID}")
@@ -284,12 +293,14 @@ async def send_bot_message(request: ConversationRequest):
             "messages": message_data
     }
     
-    message_buffer.append(convo_doc)
+    await buffer_message(convo_doc)
+
     if len(message_buffer) >= MAX_BATCH_SIZE:
         # Flush the buffer to MongoDB
         await flush_buffer_to_db()
     final_message:str =""
     state = get_client_state(request.userId,request.conversationId)
+    print(state,"state")
     state.previous_query = get_last_query(request.userId,request.conversationId)
     state.query = request.messages.message
     state.customer_id =  request.userId
@@ -300,21 +311,45 @@ async def send_bot_message(request: ConversationRequest):
             conversationId=request.conversationId # string
             )
     if "quotation" in state.route:
-        final_message= await run_quotation_node(request=request)
-        now = datetime.now().isoformat(timespec='seconds')  
-        response.messages.append(Message(
-            sender="bot",
-            message=final_message,
-            timestamp=now,
-            fileStream=""
-        ))
-        convo_doc = {
-        "userId": request.userId,
-        "conversationId": request.conversationId,
-        "messages": response.messages[-1].model_dump()
-        }
-        message_buffer.append(convo_doc)
-        return response
+        flag,final_message= await run_quotation_node(request=request)
+        now = datetime.now().isoformat(timespec='seconds')
+        if(flag=="quote_result"):
+            fileStream = text_to_pdf_base64(final_message)  
+            pdf_test = Message(
+                sender="bot",
+                message="Quote generated",
+                timestamp=now,
+                fileStream=fileStream
+            )
+            pdf_data = pdf_test.model_dump()  
+            convo_doc = {
+                    "userId": userId,
+                    "conversationId": conversationId,
+                    "messages": pdf_data
+            }          
+            await buffer_message(convo_doc)
+
+            pdf_response = ConversationResponse(
+                userId=userId,
+                conversationId=conversationId,
+                messages=[pdf_test],        
+            ) 
+            
+            return pdf_response  
+        else:
+            response.messages.append(Message(
+                sender="bot",
+                message=final_message,
+                timestamp=now,
+                fileStream=""
+            ))
+            convo_doc = {
+            "userId": request.userId,
+            "conversationId": request.conversationId,
+            "messages": response.messages[-1].model_dump()
+            }
+            await buffer_message(convo_doc)
+            return response
     state = await router.run(state)
     save_client_state(user_id=request.userId,conversation_id=request.conversationId,state=state)
     if len(state.route) ==0:
@@ -329,7 +364,7 @@ async def send_bot_message(request: ConversationRequest):
         "conversationId": request.conversationId,
         "messages": response.messages[-1].model_dump()
         }
-        message_buffer.append(convo_doc)
+        await buffer_message(convo_doc)
         return response
     elif "quotation" in state.route:
         state.quote_context = "vehicle"
@@ -344,7 +379,7 @@ async def send_bot_message(request: ConversationRequest):
         "conversationId": request.conversationId,
         "messages": response.messages[-1].model_dump()
         }
-        message_buffer.append(convo_doc)
+        await buffer_message(convo_doc)
         return response
     now = datetime.now().isoformat(timespec='seconds')  
     response.messages.append(Message(
@@ -364,45 +399,70 @@ async def send_bot_message(request: ConversationRequest):
     "conversationId": request.conversationId,
     "messages": response.messages[-1].model_dump()
     }
-    message_buffer.append(convo_doc)
+    await buffer_message(convo_doc)
     return response
-    
-async def flush_buffer_to_db():
-    global message_buffer
-    if not message_buffer:
-        return
-    
-    buffer_copy = message_buffer.copy()
-    message_buffer.clear()
-    try:
-        #validation to ensure there is atleast one user message
-        list_convo_id = [msg.get("conversationId") for msg in buffer_copy]
-        count_convo_id = dict(Counter(list_convo_id))
-        for msg in buffer_copy:
-            if(count_convo_id[msg.get("conversationId")]<2):
-                message_buffer.append(msg)
-            else:           
-                await conversations_collection.update_one(
-                    {
-                        "userId": str(int(msg.get("userId"))),
-                        "conversationId": msg.get("conversationId")
-                    },
-                    {
-                        "$push": {"messages": msg.get("messages")}
-                    },
-                    upsert=True
-                )
-            #print(f"Inserted {len(buffer_copy)} messages to DB.")
-    except Exception as e:
-        print(f"[Error] Failed to insert batch: {e}")
+async def buffer_message(convo_doc):
+    flag = False
+    buffer_copy = []
+    async with buffer_lock:
+        message_buffer.append(convo_doc)
+        if len(message_buffer) >= MAX_BATCH_SIZE:
+            buffer_copy = message_buffer.copy()
+            message_buffer.clear()            
+            flag = True
+
+    if(flag):        
+        # Flush the buffer to MongoDB
+        await flush_buffer_to_db(buffer_copy)
+async def flush_buffer_to_db(buffer_copy):
+    if not buffer_copy:
+        return    
+
+    grouped_messages = defaultdict(list)
+    for msg in buffer_copy:
+        convo_id = msg.get("conversationId")
+        grouped_messages[convo_id].append(msg)
+
+    #validation to prevent storing only welcome message of system  
+    for convo_id, messages in grouped_messages.items():
+        flag = False
+        userId = str(int(messages[0]["userId"]))
+        conversationId = convo_id
+        check_convo = conversations_collection.find_one({"userId":userId ,"conversationId":conversationId})
+        
+        if(check_convo)==True:
+            flag = True
+        else:
+            has_system_msg = any(m["messages"]["sender"] == "bot" for m in messages)
+            has_user_msg = any(m["messages"]["sender"] == "user" for m in messages)
+            if(has_system_msg and has_user_msg):
+                flag = True
+
+        if(flag):           
+            await conversations_collection.update_one(
+                {
+                    "userId": userId,
+                    "conversationId": conversationId
+                },
+                {
+                    "$push": {"messages": { "$each": [m["messages"] for m in messages] }}
+                },
+                upsert=True
+            )
+        else:
+            async with buffer_lock:
+                message_buffer.extend(messages)
 
 async def periodic_flush_task():
     while True:
-        await asyncio.sleep(1*60)  # every 10mins
+        buffer_copy = []
+        await asyncio.sleep(10*60)  # every 10mins
         async with buffer_lock:
-            if message_buffer:
-                await flush_buffer_to_db()
-
+            if message_buffer:            
+                buffer_copy = message_buffer.copy()
+                message_buffer.clear()            
+        if buffer_copy:
+            await flush_buffer_to_db(buffer_copy)
 async def decompose_tasks(request: ConversationRequest):
     context=[]
     questions = []
@@ -446,7 +506,7 @@ async def run_quotation_node(request:ConversationRequest):
     if state.quote_next_agent == "filtering":
         state = await quote_filtering_node.run(state)
         save_client_state(request.userId,request.conversationId,state=state)
-        return state.quote_intermediate_results
+        return "intermediate",state.quote_intermediate_results
     
     elif state.quote_next_agent == "quote":
         quote_df = await asyncio.to_thread(get_quote_data)
@@ -456,7 +516,7 @@ async def run_quotation_node(request:ConversationRequest):
         state.quote_context = ""
         state.quote_next_agent = ""
         save_client_state(request.userId,conversation_id=request.conversationId,state=state)
-        return state.quote_results
+        return "quote_result",state.quote_results
 
 async def get_conversation_result(request: ConversationRequest,router_passed:bool):    
     query = request.messages.message
@@ -501,3 +561,31 @@ async def get_conversation_result(request: ConversationRequest,router_passed:boo
     add_short_term_memory_from_dict(user_id=state.customer_id, conversation_id=request.conversationId,query=state.rewritten_query,response=state.final_answer)
     return response, state.rewritten_query
 
+def text_to_pdf_base64(text: str) -> str:
+    # Create a PDF object
+    pdf = FPDF()
+    pdf.add_page()
+
+    # Title styling
+    pdf.set_font("Arial", "B", 16)
+    pdf.set_text_color(47, 54, 124)
+    pdf.cell(0, 10, "GENERATED QUOTE INFORMATION", ln=True, align='C')
+    pdf.ln(10)
+
+    # Body text styling
+    pdf.set_font("Arial", "", 12)
+    pdf.set_text_color(50, 50, 50)
+    pdf.set_font("Arial", size=12)
+    pdf.set_auto_page_break(auto=True, margin=15)
+    pdf.set_x(pdf.l_margin)
+
+    # Split the text into lines and write each line
+    for line in text.splitlines():
+        pdf.multi_cell(0, 10, txt=line)    
+        pdf.ln(2)
+
+    # Get the PDF as a string (bytes) instead of saving to file
+    pdf_out = pdf.output(dest='S').encode('latin1')  # FPDF returns str in 'latin1'
+    base64_pdf = base64.b64encode(pdf_out).decode('utf-8')
+
+    return base64_pdf  

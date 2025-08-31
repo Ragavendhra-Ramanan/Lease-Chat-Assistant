@@ -94,8 +94,8 @@ You will provide:
 
 ### 4. Generate Clarifying Question (if action = "clarify")
 - If **no filters** can be inferred from the current or previous query, include a clarifying question to the user
-- Vehicle → `"Which car details are you interested in? Please provide any of the following: Make, Model, Year, Fuel, Gear Type."`
-- Product → `"Which product details would you like? Please provide any of the following: Product Name, Lease Term, Flexi Lease, Tax Saving Plan, Maintenance Type."`
+- Vehicle → `"Which car details are you interested in? Please provide any of the following: Make (Toyota, Nissan), Model, Year, Fuel, Gear Type."`
+- Product → `"Which product details would you like? Please provide any of the following: Product Name (Value Lease, Corporate Saver), Lease Term, Flexi Lease (Yes/ No), Tax Saving Plan, Maintenance Type."`
 - Contract → `"Please provide the contract ID or customer details."`
 - Generic / unknown → `"Could you please provide more details?"`
 
