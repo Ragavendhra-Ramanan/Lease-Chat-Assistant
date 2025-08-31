@@ -19,12 +19,11 @@ from utils.helper_functions import USER_CSV_FILE, load_user_data, GUEST_USER_CSV
 import pandas as pd 
 import random
 from datetime import datetime
-from collections import Counter
+from collections import defaultdict
 from typing import List
 from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
 import base64
-from io import BytesIO
 from fpdf import FPDF
 
 origins = [
@@ -84,9 +83,13 @@ async def lifespan(app: FastAPI):
         yield
     finally:
         # Optionally flush remaining messages before shutdown
+        buffer_copy = []
         async with buffer_lock:
             if message_buffer:
-                await flush_buffer_to_db()
+                buffer_copy = message_buffer.copy()
+                message_buffer.clear()
+        if buffer_copy:
+            await flush_buffer_to_db(buffer_copy)
 
         # shutdown
         mongo_client.close()
@@ -196,7 +199,13 @@ async def get_conversation(userId: str):
 async def start_conversation(request:StartConversation):
     """Start a new conversation and return conversation_id."""
     #Push all conversations to the db
-    await flush_buffer_to_db()
+    buffer_copy = []
+    async with buffer_lock:
+        if message_buffer:            
+            buffer_copy = message_buffer.copy()
+            message_buffer.clear()
+    if buffer_copy:
+        await flush_buffer_to_db(buffer_copy)
 
     state = get_client_state(request.userId)
     conversation_id = str(uuid4())
@@ -212,8 +221,7 @@ async def start_conversation(request:StartConversation):
     response = ConversationResponse(
         userId= request.userId,
         conversationId=conversation_id,
-        messages=[welcome],
-        
+        messages=[welcome],        
     )    
 
     convo_doc = {
@@ -221,7 +229,7 @@ async def start_conversation(request:StartConversation):
         "conversationId": conversation_id,
         "messages": welcome.model_dump()
     }
-    message_buffer.append(convo_doc)
+    await buffer_message(convo_doc)
     state.customer_id = request.userId
     save_client_state(request.userId, state)
     return response
@@ -244,11 +252,38 @@ async def decompose_tasks(request: ConversationRequest):
             "messages": message_data
     }
     
-    message_buffer.append(convo_doc)
+    await buffer_message(convo_doc)
 
-    if len(message_buffer) >= MAX_BATCH_SIZE:
-        # Flush the buffer to MongoDB
-        await flush_buffer_to_db()
+    if("quote" in message_data.get("message").lower()):
+        #PDF generation
+        now = datetime.now().isoformat(timespec='seconds')  
+        quote_info = """     1. Country: Guernsey, Make: Toyota, Model: RAV4, Year: 2023, Mileage: 16.5 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 184, Price: 35028 EUR, Preowned: Yes
+        2. Country: Kazakhstan, Make: Toyota, Model: Camry, Year: 2010, Mileage: 19.3 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 181, Price: 33692 INR, Preowned: Yes
+        3. Country: Bouvet Island (Bouvetoya), Make: Toyota, Model: Camry, Year: 2016, Mileage: 3.0 kmpl, Fuel: EV, Gear: Manual, Horsepower: 406, Price: 32217 EUR, Preowned: No
+        4. Country: China, Make: Toyota, Model: Camry, Year: 2021, Mileage: 24.7 kmpl, Fuel: Petrol, Gear: Automatic, Horsepower: 114, Price: 46582 USD, Preowned: Yes
+        5. Country: Senegal, Make: Toyota, Model: Corolla, Year: 2007, Mileage: 5.6 kmpl, Fuel: EV, Gear: Automatic, Horsepower: 461, Price: 78858 INR, Preowned: No"""
+        fileStream = text_to_pdf_base64(quote_info)  
+        pdf_test = Message(
+            sender="bot",
+            message="Quote generated",
+            timestamp=now,
+            fileStream=fileStream
+        )
+        pdf_data = pdf_test.model_dump()  
+        convo_doc = {
+                "userId": userId,
+                "conversationId": conversationId,
+                "messages": pdf_data
+        }          
+        await buffer_message(convo_doc)
+
+        pdf_response = ConversationResponse(
+            userId=userId,
+            conversationId=conversationId,
+            messages=[pdf_test],        
+        ) 
+        
+        return pdf_response  
 
     context=[]
     questions = []
@@ -279,7 +314,7 @@ async def decompose_tasks(request: ConversationRequest):
             final_answer = await decomposition_result.run(context=context,questions=questions)
             print(final_answer)
             response = ConversationResponse(
-                messages=[request.messages],              # empty list or actual messages
+                messages=[request.messages],  # empty list or actual messages
                 userId= request.userId  ,     # string
                 conversationId=request.conversationId # string
                 )
@@ -303,10 +338,11 @@ async def decompose_tasks(request: ConversationRequest):
     "conversationId": request.conversationId,
     "messages": response.messages[-1].model_dump()
     }
-    message_buffer.append(convo_doc)
+    await buffer_message(convo_doc)
     return response
 
-    """""" #PDF generation
+    """"""
+    #PDF generation
     now = datetime.now().isoformat(timespec='seconds')  
     quote_info = """     1. Country: Guernsey, Make: Toyota, Model: RAV4, Year: 2023, Mileage: 16.5 kmpl, Fuel: Hybrid, Gear: Manual, Horsepower: 184, Price: 35028 EUR, Preowned: Yes
     2. Country: Kazakhstan, Make: Toyota, Model: Camry, Year: 2010, Mileage: 19.3 kmpl, Fuel: Diesel, Gear: Manual, Horsepower: 181, Price: 33692 INR, Preowned: Yes
@@ -320,12 +356,21 @@ async def decompose_tasks(request: ConversationRequest):
         timestamp=now,
         fileStream=fileStream
     )
+    pdf_data = pdf_test.model_dump()  
+    convo_doc = {
+            "userId": userId,
+            "conversationId": conversationId,
+            "messages": pdf_data
+    }          
+    await buffer_message(convo_doc)
+
     pdf_response = ConversationResponse(
         userId=userId,
         conversationId=conversationId,
         messages=[pdf_test],        
-    )
-    return pdf_response
+    ) 
+    
+    return pdf_response    
     """"""
 
 def text_to_pdf_base64(text: str) -> str:
@@ -356,44 +401,70 @@ def text_to_pdf_base64(text: str) -> str:
     base64_pdf = base64.b64encode(pdf_out).decode('utf-8')
 
     return base64_pdf  
-    
-async def flush_buffer_to_db():
-    global message_buffer
-    if not message_buffer:
-        return
-    
-    buffer_copy = message_buffer.copy()
-    message_buffer.clear()
 
-    try:
-        #validation to ensure there is atleast one user message
-        list_convo_id = [msg.get("conversationId") for msg in buffer_copy]
-        count_convo_id = dict(Counter(list_convo_id))
+async def buffer_message(convo_doc):
+    flag = False
+    buffer_copy = []
+    async with buffer_lock:
+        message_buffer.append(convo_doc)
+        if len(message_buffer) >= MAX_BATCH_SIZE:
+            buffer_copy = message_buffer.copy()
+            message_buffer.clear()            
+            flag = True
+
+    if(flag):        
+        # Flush the buffer to MongoDB
+        await flush_buffer_to_db(buffer_copy)
+
+async def flush_buffer_to_db(buffer_copy):
+    if not buffer_copy:
+        return    
+
+    grouped_messages = defaultdict(list)
+    for msg in buffer_copy:
+        convo_id = msg.get("conversationId")
+        grouped_messages[convo_id].append(msg)
+
+    #validation to prevent storing only welcome message of system  
+    for convo_id, messages in grouped_messages.items():
+        flag = False
+        userId = str(int(messages[0]["userId"]))
+        conversationId = convo_id
+        check_convo = conversations_collection.find_one({"userId":userId ,"conversationId":conversationId})
         
-        for msg in buffer_copy:      
-            if(count_convo_id[msg.get("conversationId")]<2):
-                message_buffer.append(msg)
-            else:           
-                await conversations_collection.update_one(
-                    {
-                        "userId": msg.get("userId"),
-                        "conversationId": msg.get("conversationId")
-                    },
-                    {
-                        "$push": {"messages": msg.get("messages")}
-                    },
-                    upsert=True
-                )
-            #print(f"Inserted {len(buffer_copy)} messages to DB.")
-    except Exception as e:
-        print(f"[Error] Failed to insert batch: {e}")
+        if(check_convo)==True:
+            flag = True
+        else:
+            has_system_msg = any(m["messages"]["sender"] == "bot" for m in messages)
+            has_user_msg = any(m["messages"]["sender"] == "user" for m in messages)
+            if(has_system_msg and has_user_msg):
+                flag = True
+
+        if(flag):           
+            await conversations_collection.update_one(
+                {
+                    "userId": userId,
+                    "conversationId": conversationId
+                },
+                {
+                    "$push": {"messages": { "$each": [m["messages"] for m in messages] }}
+                },
+                upsert=True
+            )
+        else:
+            async with buffer_lock:
+                message_buffer.extend(messages)
 
 async def periodic_flush_task():
     while True:
-        await asyncio.sleep(1*60)  # every 10mins
+        buffer_copy = []
+        await asyncio.sleep(10*60)  # every 10mins
         async with buffer_lock:
-            if message_buffer:
-                await flush_buffer_to_db()
+            if message_buffer:            
+                buffer_copy = message_buffer.copy()
+                message_buffer.clear()            
+        if buffer_copy:
+            await flush_buffer_to_db(buffer_copy)
 
 async def get_conversation_result(request: ConversationRequest):    
     query = request.messages.message
