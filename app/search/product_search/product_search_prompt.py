@@ -10,6 +10,9 @@ Instructions:
 6. Ignore any context that is not related.
 7. Keep your answer concise and focused strictly on the user query.
 
+Rule:
+- The output should always be formatted in markdown with  points.
+
 Context:
 {context}
 

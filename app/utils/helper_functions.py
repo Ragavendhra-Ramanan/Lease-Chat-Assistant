@@ -20,6 +20,12 @@ def get_data():
     guest_user_df = pd.read_csv(os.path.join(base_dir,"../data/guest_user_data.csv"))
     return vehicle_df, product_df, contract_df,guest_user_df
 
+def load_user_data_by_id(userId):
+    user_data = pd.read_csv(os.path.join(base_dir, "../data/user_data.csv"))
+    row = user_data[user_data["userId"] == userId]
+    if not row.empty:
+        return row.iloc[0].to_dict()
+    return None  # 
 def filter_df(df: pd.DataFrame, filters: Dict[str, Any]) -> pd.DataFrame:
     for key, value in filters.items():
         if isinstance(value, tuple):  # numeric range

@@ -254,7 +254,7 @@ class HybridRecommenderSystemWithClicks:
             top_vehicle = self.vehicles.loc[self.vehicles["Vehicle ID"] == top_vehicle_id, 
                                             ["Vehicle ID", "Make", "Model", "Year"]].iloc[0].to_dict()
             vehicle_str = (
-                f"Recommended Vehicle:\n"
+                f"Recommended Vehicle:(Based on Similar users with Contract)\n"
                 f"Vehicle ID: {top_vehicle['Vehicle ID']}\n"
                 f"Make: {top_vehicle['Make']}\n"
                 f"Model: {top_vehicle['Model']}\n"
@@ -281,7 +281,7 @@ class HybridRecommenderSystemWithClicks:
             top_product = self.plans.loc[self.plans["Product ID"] == top_product_id, 
                                         ["Product ID", "Product Name", "Lease Term"]].iloc[0].to_dict()
             product_str = (
-                f"Recommended Product:\n"
+                f"Recommended Product:(Based on Similar users with Contract)\n"
                 f"Product ID: {top_product['Product ID']}\n"
                 f"Product Name: {top_product['Product Name']}\n"
                 f"Lease Term: {top_product['Lease Term']}"

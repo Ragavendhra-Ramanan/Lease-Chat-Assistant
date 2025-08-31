@@ -13,6 +13,8 @@ Instructions:
 - Maintain the order of the questions; output answers in the same order, separated by line breaks.
 - Dont add harmful or unnecessary content from the response. Just respond to given questions based on context.
 - The **answer should not be duplicated/repeated** multiple time if multiple questions have same answer.
+
+
 ### Example
 
 Context Blocks:
@@ -31,6 +33,9 @@ Questions:
 Output:
 Toyota cars have Petrol and Hybrid fuels with mileage 15-20 kmpl. Ford cars have Petrol fuel with mileage 12-14 kmpl. Toyota cars have higher mileage and more fuel variety.  
 The electric vehicle with the highest efficiency is Tesla Model 3 with 18 km/kWh.
+
+Rule:
+- The output should always be formatted in markdown with  points.
 
 ### User Input
 

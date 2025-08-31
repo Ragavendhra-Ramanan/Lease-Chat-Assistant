@@ -4,13 +4,15 @@ import random
 import pandas as pd
 from datetime import datetime
 import asyncio
-import os 
+import os
+from utils.helper_functions import load_user_data_by_id 
 class QuoteNode(BaseNode):
     """
     Async Quote Node: Calculates vehicle-product quote with adjustments.
     """
     async def run(self, state: AgentState, contract_df: pd.DataFrame,quote_df):        
         # --- Take first vehicle candidate ---
+        user_data = load_user_data_by_id(state.customer_id)
         chosen_vehicle = state.quote_vehicle_candidates[0]
         state.quote_final_vehicle = chosen_vehicle
 
@@ -61,18 +63,24 @@ class QuoteNode(BaseNode):
         }
 
         state.quote_step = "quotation_end"
+        quote_dict = await asyncio.to_thread(self.append_quote_row,quote_df,user_id,chosen_vehicle['Vehicle ID'],chosen_product['Product ID'],
+                                     emi,quote_price,discount_applied)
         state.quote_results = (
             f"Here's your quote:\n"
+            f"Name:{user_data['firstName']} {user_data['lastName']}\n"
+            f"Contact: {user_data['email']} | {user_data['mobile']}\n"
+            f"Created Date : {quote_dict['Created Date']}\n"
             f"Vehicle: {chosen_vehicle.get('Make', '')} {chosen_vehicle.get('Model', '')} | "
-            f"Base Price={base_price:.2f}\n"
+            f"Base Price={base_price:.2f} {chosen_vehicle['Currency']} \n"
             f"Product: {chosen_product.get('Product Name', 'None')}\n"
-            f"Discount Applied: {discount_rate*100:.0f}% | "
-            f"Flexi Multiplier: {flexi_multiplier} | "
-            f"Tax Saving: {tax_saving_discount} | "
-            f"Adjusted Price={adjusted_price:.2f} | Tax={tax:.2f} | Total={quote_price:.2f} | Monthly EMI={emi}"
+            f"Lease Term: {chosen_product['Lease Term']}\n"
+            f"Discount Applied: {discount_rate*100:.0f}% \n "
+            f"Adjusted Price={adjusted_price:.2f} {chosen_vehicle['Currency']}\n"
+            f"Tax={tax:.2f} {chosen_vehicle['Currency']}\n" 
+            f"Total={quote_price:.2f} {chosen_vehicle['Currency']}\n"
+            f"Monthly EMI={emi} {chosen_vehicle['Currency']}\n"
+            f"Quote Expiry= 30 days*"
         )
-        quote_df = await asyncio.to_thread(self.append_quote_row,quote_df,user_id,chosen_vehicle['Vehicle ID'],chosen_product['Product ID'],
-                                     emi,quote_price,discount_applied)
         return state
     def append_quote_row(
     self,
@@ -114,3 +122,4 @@ class QuoteNode(BaseNode):
         quote_df = pd.concat([quote_df, pd.DataFrame([new_row])], ignore_index=True)
         base_dir = os.path.dirname(os.path.abspath(__file__))
         quote_df.to_csv(os.path.join(base_dir,"../../../data/quote_data_new.csv"),index=False)
+        return new_row
