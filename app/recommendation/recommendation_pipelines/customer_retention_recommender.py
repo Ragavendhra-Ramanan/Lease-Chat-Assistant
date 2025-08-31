@@ -220,6 +220,68 @@ class HybridRecommenderSystemWithClicks:
             "cf_based": cf_based,
             "popularity_based": popularity_based,
         }
+    def recommend_top_vehicle_and_product(self, user_id: str, weights=(1.0, 1.0, 1.0)):
+        """
+        Recommend the top vehicle and product by combining content/cf/popularity scores.
+        Returns two separate markdown strings: one for vehicle, one for product.
+        """
+        # Get separate recommendations
+        veh_scores = self.recommend_vehicles_separate(user_id)
+        prod_scores = self.recommend_products_separate(user_id)
+
+        # --- Combine vehicle scores ---
+        vehicle_df = pd.DataFrame({
+            "Vehicle ID": [x["Vehicle ID"] for x in veh_scores["content_based"]],
+            "content": [x["score"] for x in veh_scores["content_based"]],
+            "cf": [x["score"] for x in veh_scores["cf_based"]],
+            "popularity": [x["score"] for x in veh_scores["popularity_based"]],
+        })
+        vehicle_df["final_score"] = (
+            weights[0]*vehicle_df["content"] + 
+            weights[1]*vehicle_df["cf"] + 
+            weights[2]*vehicle_df["popularity"]
+        )
+        top_vehicle_id = vehicle_df.sort_values("final_score", ascending=False).iloc[0]["Vehicle ID"]
+
+        # Lookup full vehicle details
+        top_vehicle = self.vehicles.loc[self.vehicles["Vehicle ID"] == top_vehicle_id, 
+                                        ["Vehicle ID", "Make", "Model", "Year"]].iloc[0].to_dict()
+
+        # --- Combine product scores ---
+        product_df = pd.DataFrame({
+            "Product ID": [x["Product ID"] for x in prod_scores["content_based"]],
+            "content": [x["score"] for x in prod_scores["content_based"]],
+            "cf": [x["score"] for x in prod_scores["cf_based"]],
+            "popularity": [x["score"] for x in prod_scores["popularity_based"]],
+        })
+        product_df["final_score"] = (
+            weights[0]*product_df["content"] + 
+            weights[1]*product_df["cf"] + 
+            weights[2]*product_df["popularity"]
+        )
+        top_product_id = product_df.sort_values("final_score", ascending=False).iloc[0]["Product ID"]
+
+        # Lookup full product details
+        top_product = self.plans.loc[self.plans["Product ID"] == top_product_id, 
+                                    ["Product ID", "Product Name", "Lease Term"]].iloc[0].to_dict()
+
+        # --- Format as two separate markdown strings ---
+        vehicle_markdown = f"""# Recommended Vehicle
+            - {top_vehicle['Vehicle ID']}    
+            - {top_vehicle['Make']}  
+            -  {top_vehicle['Model']}
+            - Year: {top_vehicle['Year']}  
+            """
+
+        product_markdown = f"""# Recommended Product
+
+        - {top_product['Product ID']}  
+        - {top_product['Product Name']}  
+        - Lease Term : {top_product['Lease Term']}  
+    """
+
+        return vehicle_markdown, product_markdown
+
 
 
     # def register_click(self, user_id: str, vehicle_id: Optional[str] = None, rec_type: str = "content"):

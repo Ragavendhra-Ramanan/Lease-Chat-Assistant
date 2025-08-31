@@ -30,7 +30,7 @@ def build_structured_filters(structured_pref: list):
         elif str(val).startswith("="):
             filters.append(Filter.by_property(field).equal(float(val[1:])))
         else:
-            filters.append(Filter.by_property(field).equal(val))
+            filters.append(Filter.by_property(field).equal(int(val)))
     if not filters:
         return None
     f = filters[0]
@@ -155,6 +155,7 @@ async def static_search_recommendation(
     if vehicle_pref:
         vehicle_query = combine_preferences(vehicle_pref)
         vehicle_filter = build_structured_filters(vehicle_structured_likes + vehicle_structured_dislikes)
+        print(vehicle_query,vehicle_filter,"ghbj")
         v_resp = await asyncio.to_thread(
             client.collections.get("Car").query.hybrid,
             query=vehicle_query,

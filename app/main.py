@@ -7,6 +7,8 @@ from router.nodes.router_node import RouteNode
 from models.agent_state import AgentState
 from clarifier_agent.nodes.clarifier_node import ClarifierNode
 from uuid import uuid4
+import json
+import os
 from collections import Counter
 from datetime import datetime
 from typing import Dict, List
@@ -19,7 +21,9 @@ from decomposition.nodes.decomposition_node import DecompositionNode
 from decomposition.nodes.decomposition_result_node import DecompositionResultNode
 from utils.helper_functions import USER_CSV_FILE, load_user_data,GUEST_USER_CSV_FILE
 from  search.other_search.nodes.other_search_node import GeneralSearchNode
-from recommendation.recommender_engine import get_new_user_recommendation, get_potential_customer_recommendation,get_preferences_by_search
+from recommendation.recommender_engine import (
+     get_new_user_recommendation, get_potential_customer_recommendation,get_potential_user_engagement_recommendation,
+     get_customer_retention_recommendation)
 import pandas as pd 
 from motor.motor_asyncio import AsyncIOMotorClient
 import asyncio
@@ -40,7 +44,7 @@ decomposition = DecompositionNode()
 decomposition_result = DecompositionResultNode()
 clarifier_node = ClarifierNode()
 general_node = GeneralSearchNode()
-vehicle_df, product_df,contract_df, quote_df = get_data()
+vehicle_df, product_df,contract_df, guest_user_df = get_data()
 quote_filtering_node = ROUTE_MAP["filtering"](vehicle_df, product_df, filter_df)
 quote_update_node = ROUTE_MAP["quote_field_update"]()
 quote_generate_node = ROUTE_MAP["quote"]()
@@ -67,7 +71,21 @@ def get_last_query(user_id: str,conversation_id:str) -> str:
     recent_memory = get_recent_memory(user_id,conversation_id)
     if not recent_memory:
         return ""
-    return recent_memory[-1]["query"]
+    return recent_memory[-1]["query"]   
+
+def user_exists_in_search(user_id) -> bool:
+    """Check if a user_id exists in the JSON data"""
+    # Load JSON file
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    with open(os.path.join(base_dir,"data/conversation_intents/vehicles/unstructured_vehicle.json"), "r") as f:
+        data = json.load(f)
+        print(data,"data")
+    return str(int(user_id)) in data
+
+def get_quote_data() -> bool:
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    quote_df = pd.read_csv(os.path.join(base_dir,"data/quote_data_new.csv"))
+    return quote_df
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -229,10 +247,17 @@ async def start_conversation(request:StartConversation):
 
 @app.get("/api/chat/recommendations/{userID}")
 async def recommendations(userID:int):
-    print("Recommendation")
+    quote_df = await asyncio.to_thread(get_quote_data)
+    if(userID in contract_df['Customer ID'].values):
+        return await get_customer_retention_recommendation(client=client,user_id=userID)
+    elif (userID in quote_df['User ID'].values):
+        return await get_potential_customer_recommendation(user_id=userID,client=client)
+    elif await asyncio.to_thread(user_exists_in_search,userID):
+        return await get_potential_user_engagement_recommendation(client=client, user_id=userID)
+    else:
+        return await get_new_user_recommendation()
     #print(await get_user_preferences(client=client,user_id=userID))
-    return await get_new_user_recommendation()
-    #return await get_potential_customer_recommendation(user_id=userID,client=client)
+    #return 
 
 @app.post("/api/chat/sendMessage")
 async def send_bot_message(request: ConversationRequest):
@@ -254,6 +279,7 @@ async def send_bot_message(request: ConversationRequest):
     state = get_client_state(request.userId,request.conversationId)
     state.previous_query = get_last_query(request.userId,request.conversationId)
     state.query = request.messages.message
+    state.customer_id =  request.userId
     response = ConversationResponse(
             messages=[request.messages],              # empty list or actual messages
             userId= request.userId  ,     # string
@@ -409,7 +435,8 @@ async def run_quotation_node(request:ConversationRequest):
         return state.quote_intermediate_results
     
     elif state.quote_next_agent == "quote":
-        state = await quote_generate_node.run(state)
+        quote_df = await asyncio.to_thread(get_quote_data)
+        state = await quote_generate_node.run(state,contract_df,quote_df)
         state.route = ""
         state.quote_step = "preowned"
         state.quote_context = ""
@@ -443,9 +470,9 @@ async def get_conversation_result(request: ConversationRequest,router_passed:boo
     if "contract" in state.route:
         flow_instance = ROUTE_MAP["contract"](client=client,df=contract_df,limit=limit)
     elif "product" in state.route:
-        flow_instance = ROUTE_MAP["product"](client=client,limit=limit)
+        flow_instance = ROUTE_MAP["product"](client=client,limit=limit,guest_user_df=guest_user_df)
     elif "vehicle" in state.route:
-        flow_instance = ROUTE_MAP["vehicle"](client=client,limit=limit)
+        flow_instance = ROUTE_MAP["vehicle"](client=client,limit=limit,guest_user_df=guest_user_df)
     else:
         flow_instance = ROUTE_MAP["general"]()
     state: AgentState = await flow_instance.run(state)

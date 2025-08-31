@@ -8,14 +8,16 @@ from db.weaviate_operations import async_query
 from models.agent_state import AgentState
 from utils.numeric_filters import extract_filters
 from conversation_intents.extract_conversation_intent import append_preference, save_all_to_file
+import pandas as pd
 class VehicleNode(BaseNode):
-    def __init__(self, client, limit):
+    def __init__(self, client, limit, guest_user_df:pd.DataFrame):
         self.client = client
         self.limit = limit
+        self.guest_user_df = guest_user_df 
     async def run(self, state:AgentState):
-
-        append_preference(user_id=int(state.customer_id),preference_string=state.vehicle_filters,types="vehicle")
-        save_all_to_file(types="vehicle")
+        if not state.customer_id in self.guest_user_df['userId'].values:
+            append_preference(user_id=int(state.customer_id),preference_string=state.vehicle_filters,types="Vehicle")
+            save_all_to_file(types="Vehicle")
         is_ev = state.is_ev  
         where_filters=extract_filters(state.vehicle_filters)
         vehicle_query = inject_filters(state.rewritten_query, state.vehicle_filters, "vehicles")
