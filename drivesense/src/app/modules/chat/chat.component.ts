@@ -37,27 +37,29 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   ) {
     this.messages = [];
   }
-ngOnInit(): void {
-  this.userId = sessionStorage.getItem('userId') || '';
+  ngOnInit(): void {
+    this.userId = sessionStorage.getItem('userId') || '';
 
-  this.conversationService.activeConversation$.subscribe((convo) => {
-    if (convo) {
-      this.conversationId = convo.conversationId;
-      this.messages = convo.messages || [];
-      if (!this.messages || this.messages.length === 1) {
-        this.messageService.getRecommendations(this.userId).subscribe((recs) => {
-          this.recommendations = recs || [];
-        });
+    this.conversationService.activeConversation$.subscribe((convo) => {
+      if (convo) {
+        this.conversationId = convo.conversationId;
+        this.messages = convo.messages || [];
+        if (!this.messages || this.messages.length === 1) {
+          this.messageService
+            .getRecommendations(this.userId)
+            .subscribe((recs) => {
+              this.recommendations = recs || [];
+            });
+        } else {
+          this.recommendations = [];
+        }
       } else {
+        this.conversationId = '';
+        this.messages = [];
         this.recommendations = [];
       }
-    } else {
-      this.conversationId = '';
-      this.messages = [];
-      this.recommendations = [];
-    }
-  });
-}
+    });
+  }
   onRecommendationClick(reco: string) {
     this.recommendations = [];
     this.message = reco;
@@ -70,8 +72,8 @@ ngOnInit(): void {
     var html = marked.parse(message.message) as string;
 
     if (message.fileStream) {
-    html += ` <a href="${message.fileStream}" target="_blank">📄 Quote </a>`;
-  }
+      html += ` <a href="${message.fileStream}" target="_blank">📄 Quote </a>`;
+    }
     return this.sanitizer.bypassSecurityTrustHtml(html);
   }
   scrollToBottom(): void {
@@ -87,8 +89,13 @@ ngOnInit(): void {
 
     var userMsg: ConversationRequest = {
       conversationId: this.conversationId,
-      userId: this.userId,  
-      messages: { sender: 'user', message: this.message, timestamp: new Date().toISOString(), fileStream: '' },
+      userId: this.userId,
+      messages: {
+        sender: 'user',
+        message: this.message,
+        timestamp: new Date().toISOString(),
+        fileStream: '',
+      },
     };
 
     this.messages.push(userMsg.messages);
@@ -97,28 +104,17 @@ ngOnInit(): void {
       this.isBotTyping = false;
 
       const lastMsg = botMsg.messages[botMsg.messages.length - 1];
-
-       if (lastMsg.fileStream) {
-      // ✅ Convert to URL only when needed
-      const pdfUrl = this.createPdfUrl(lastMsg.fileStream);
-        this.messages.push({
-        sender: 'bot',
-        message: lastMsg.message || '📄 Click to open PDF',
-        fileStream: pdfUrl,
-        timestamp: new Date().toISOString()
-      });
-    } else {
-      this.simulateTyping(lastMsg.message, 'bot');
-    }
-
-      // const fullText = botMsg.messages[botMsg.messages.length - 1].message;
-      // this.simulateTyping(fullText, 'bot');
+      if (lastMsg.fileStream) {
+        this.messages.push(lastMsg);
+      } else {
+        this.simulateTyping(lastMsg.message, 'bot');
+      }
     });
     this.message = '';
   }
   simulateTyping(fullText: string, sender: 'bot' | 'user') {
     let index = 0;
-    const typingMsg: Message = { sender, message: '' , timestamp: ''};
+    const typingMsg: Message = { sender, message: '', timestamp: '' };
     this.messages.push(typingMsg);
 
     const interval = setInterval(() => {
@@ -131,14 +127,27 @@ ngOnInit(): void {
     }, 30);
   }
 
-  private createPdfUrl(base64: string): string {
-  const byteChars = atob(base64);
-  const byteNumbers = new Array(byteChars.length);
-  for (let i = 0; i < byteChars.length; i++) {
-    byteNumbers[i] = byteChars.charCodeAt(i);
+  //   private createPdfUrl(base64: string): string {
+  //   const byteChars = atob(base64);
+  //   const byteNumbers = new Array(byteChars.length);
+  //   for (let i = 0; i < byteChars.length; i++) {
+  //     byteNumbers[i] = byteChars.charCodeAt(i);
+  //   }
+  //   const byteArray = new Uint8Array(byteNumbers);
+  //   const blob = new Blob([byteArray], { type: 'application/pdf' });
+  //   return URL.createObjectURL(blob);
+  // }
+
+  openPdf(base64: string) {
+    const byteChars = atob(base64);
+    const byteNumbers = new Array(byteChars.length);
+    for (let i = 0; i < byteChars.length; i++) {
+      byteNumbers[i] = byteChars.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+
+    window.open(url, '_blank');
   }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: 'application/pdf' });
-  return URL.createObjectURL(blob);
-}
 }
