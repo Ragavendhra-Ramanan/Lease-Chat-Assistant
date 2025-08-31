@@ -89,14 +89,14 @@ export class ChatComponent implements AfterViewChecked, OnInit {
       userId: this.userId,
       messages: {
         sender: 'user',
-        message: this.message.toUpperCase(),
+        message: this.message,
         timestamp: new Date().toISOString(),
         fileStream: '',
       },
     };
 
     this.messages.push(userMsg.messages);
-
+    userMsg.messages.message = userMsg.messages.message.toUpperCase();
     this.messageService.sendMessage(userMsg).subscribe((botMsg) => {
       this.isBotTyping = false;
 
