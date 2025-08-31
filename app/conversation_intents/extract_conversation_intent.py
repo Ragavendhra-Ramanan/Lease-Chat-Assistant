@@ -63,10 +63,10 @@ def append_preference(user_id: str, preference_string: str, types: str):
     now = datetime.now(timezone.utc).isoformat()
 
     # Select memory store
-    if types == "vehicle":
+    if types == "Vehicle":
         memory_stores = vehicle_memory_stores
         suffix = "_vehicle"
-    elif types == "product":
+    elif types == "Product":
         memory_stores = product_memory_stores
         suffix = "_product"
     else:
@@ -136,10 +136,10 @@ def save_all_to_file(types: str):
     If user_id exists in JSON, append entries; else, create new user node.
     Clears the in-memory store after saving.
     """
-    if types == "vehicle":
+    if types == "Vehicle":
         memory_stores = vehicle_memory_stores
         file_paths = vehicle_file_paths
-    elif types == "product":
+    elif types == "Product":
         memory_stores = product_memory_stores
         file_paths = product_file_paths
     else:
@@ -173,10 +173,10 @@ def save_all_to_file(types: str):
         memory_stores[store_name] = {}
 
 def get_user_preferences(store_name: str, user_id: str, types :str):
-    if (types=="vehicle"):
+    if (types=="Vehicle"):
             memory_stores = vehicle_memory_stores
             store_name = f"{store_name}_vehicle"
-    elif (types == "product"):
+    elif (types == "Product"):
         memory_stores = product_memory_stores
         store_name = f"{store_name}_product"
     return memory_stores.get(store_name, {}).get(user_id, [])
@@ -186,17 +186,19 @@ def load_user_preferences_dict(user_id: str, types: str):
     Load all preference categories from JSON files for a given user_id
     and return as a dictionary with file/category names as keys.
     """
-    if types == "vehicle":
+    if types == "Vehicle":
         file_paths = vehicle_file_paths
-    elif types == "product":
+        suffix = "vehicle"
+    elif types == "Product":
         file_paths = product_file_paths
+        suffix = "product"
     else:
         raise ValueError(f"Unknown type: {types}")
 
     user_prefs = {}
 
     for store_key in ["unstructured", "structured", "dislike_unstructured", "dislike_structured"]:
-        file_key = f"{store_key}_{types}"
+        file_key = f"{store_key}_{suffix}"
         path = os.path.join(base_dir, file_paths[file_key])
         data = {}
         if Path(path).exists():

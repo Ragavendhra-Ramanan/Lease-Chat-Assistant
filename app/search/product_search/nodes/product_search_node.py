@@ -9,14 +9,15 @@ from models.agent_state import AgentState
 from utils.numeric_filters import extract_filters
 from conversation_intents.extract_conversation_intent import append_preference,save_all_to_file
 class ProductNode(BaseNode):
-    def __init__(self,client, limit):
+    def __init__(self,client, limit, guest_user_df):
         self.client = client
         self.limit = limit
-
+        self.guest_user_df = guest_user_df
+        
     async def run(self, state:AgentState):
-        print(state.product_filters,"filter")
-        append_preference(user_id=int(state.customer_id),preference_string=state.product_filters,types="product")
-        save_all_to_file(types="product")
+        if not state.customer_id in self.guest_user_df['userId'].values:
+            append_preference(user_id=int(state.customer_id),preference_string=state.product_filters,types="Product")
+            save_all_to_file(types="Product")
         product_query = inject_filters(state.rewritten_query, state.product_filters, "product")
         where_filters = extract_filters(state.product_filters)
         product_collection = self.client.collections.get("Product")
