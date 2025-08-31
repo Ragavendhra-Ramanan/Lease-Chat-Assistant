@@ -169,13 +169,14 @@ async def static_search_recommendation(
                                         structured_likes=vehicle_structured_likes,
                                         structured_dislikes=vehicle_structured_dislikes)
         top_vehicle= v_ranked[0]
-        results["vehicles"] = f"""**Recommended Based on Search:**
-                        - Vehicle ID: {top_vehicle["properties"]['vehicle_id']}
-                        - Make: {top_vehicle["properties"]['make']}  
-                        - Model: {top_vehicle["properties"]['model']}  
-                        - Price: {top_vehicle["properties"]['price']}  
-                        - Country: {top_vehicle["properties"]['country']}  
-                        """
+        results["vehicles"] = (
+             f"Recommended Vehicle (Based on Search):\n"
+            f"{top_vehicle['properties']['vehicle_id']}\n"
+            f"{top_vehicle['properties']['make']}\n"
+            f"{top_vehicle['properties']['model']}\n"
+            f"Price: {top_vehicle['properties']['price']}\n"
+            f"Country: {top_vehicle['properties']['country']}"
+        )
     if product_pref:
         # --- Products ---
         product_query = combine_preferences(product_pref)
@@ -193,10 +194,10 @@ async def static_search_recommendation(
                                         structured_likes=product_structured_likes,
                                         structured_dislikes=product_structured_dislikes)
         top_product = p_ranked[0]
-        results["products"] = f"""**Recommended Based on Search:**
-                        - Product ID: {top_product["properties"]['product_id']}  
-                        - Product Name: {top_product["properties"]['product_name']}  
-                        - Lease Term: {top_product["properties"]['lease_term']}  
-                        """
-
+        results["products"] = (
+            f"Recommended Product (Based on search):\n"
+            f"{top_product['properties']['product_id']}\n"
+            f"{top_product['properties']['product_name']}\n"
+            f"Lease Term: {top_product['properties']['lease_term']}"
+        )
     return results

@@ -47,13 +47,14 @@ def convert_to_customer(user_id,
                 recommender_knn.fit(candidates_embedding)
                 idx = recommender_knn.kneighbors(target_vehicle_embedding, return_distance=False)[0][0]
                 top_vehicle = candidates.iloc[idx]
-                return f"""**Recommended Vehicle (Last Quote with Better Price):**
-                        - Vehicle ID: {top_vehicle['Vehicle ID']}
-                        - Make: {top_vehicle['Make']}  
-                        - Model: {top_vehicle['Model']}  
-                        - Price: {top_vehicle['Price']}  
-                        - Country: {top_vehicle['Country']}  
-                        """
+                return (
+                f"Recommended Vehicle (Last Quote with Better Price):\n"
+                f"{top_vehicle['Vehicle ID']}\n"
+                f"{top_vehicle['Make']}\n"
+                f"{top_vehicle['Model']}\n"
+                f"Price: {top_vehicle['Price']}\n"
+                f"Country: {top_vehicle['Country']}"
+                )
 
         elif ((request_data=="Product") and (request_type=="quote")):
                 candidates = product_df[(product_df["Lease Term"] <= last_lease_term)
@@ -68,11 +69,12 @@ def convert_to_customer(user_id,
                 idx = recommender_knn.kneighbors(target_product_embedding, return_distance=False)[0][0]
                 top_product = candidates.iloc[idx]
 
-                return f"""**Recommended Product (Last Quote with Better Price):**
-                        - Product ID: {top_product['Product ID']}  
-                        - Product Name: {top_product['Product Name']}  
-                        - Lease Term: {top_product['Lease Term']}  
-                        """
+                return (
+                f"Recommended Product (Last Quote with Better Price):\n"
+                f"{top_product['Product ID']}\n"
+                f"{top_product['Product Name']}\n"
+                f"Lease Term: {top_product['Lease Term']}"
+                )
 
 
         elif ((request_data=="Vehicle") and (request_type=="contract")):
@@ -93,13 +95,14 @@ def convert_to_customer(user_id,
                 idx = recommender_knn.kneighbors(target_vehicle_embedding, return_distance=False)[0][0]
                 top_vehicle = candidates.iloc[idx]
 
-                return f"""**Recommended Contract Vehicle (Last Quote with Better Price):**
-                        - Vehicle ID: {top_vehicle['Vehicle ID']}
-                        - Make: {top_vehicle['Make']}  
-                        - Model: {top_vehicle['Model']}  
-                        - Price: {top_vehicle['Price']}  
-                        - Country: {top_vehicle['Country']}  
-                        """
+                return (
+                f"Recommended Contract Vehicle (Last Quote with Better Price):\n"
+                f" {top_vehicle['Vehicle ID']}\n"
+                f"{top_vehicle['Make']}\n"
+                f"{top_vehicle['Model']}\n"
+                f"Price: {top_vehicle['Price']}\n"
+                f"Country: {top_vehicle['Country']}"
+                )
 
 
         elif ((request_data=="Product") and (request_type=="contract")):
@@ -119,8 +122,9 @@ def convert_to_customer(user_id,
                 idx = recommender_knn.kneighbors(target_product_embedding, return_distance=False)[0][0]
                 top_product = candidates.iloc[idx]
 
-                return f"""**Recommended Contract Product (Last Quote with Better Price):**
-                        - Product ID: {top_product['Product ID']}  
-                        - Product Name: {top_product['Product Name']}  
-                        - Lease Term: {top_product['Lease Term']}  
-                        """
+                return (
+                f"Recommended Contract Product (Last Quote with Better Price):\n"
+                f"{top_product['Product ID']}\n"
+                f"{top_product['Product Name']}\n"
+                f"Lease Term: {top_product['Lease Term']}"
+                )

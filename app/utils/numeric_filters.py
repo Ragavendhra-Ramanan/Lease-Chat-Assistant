@@ -4,7 +4,7 @@ from weaviate.collections.classes.filters import Filter, _FilterValue, _Operator
 
 NUMERIC_FIELDS = ["price", "horsepower", "year", "mileage", "lease_term", "monthlyEMI"]
 DATE_FIELDS = {"lease_start_date": "leaseStartDate", "lease_expiry_date": "leaseExpiryDate"}
-STRING_FIELDS = ["vehicle_id", "contract_id", "quote_id", "product_id"]
+STRING_FIELDS = ["vehicle_id", "contract_id", "quote_id", "product_id","country"]
 
 OP_MAP = {
     "<": _Operator.LESS_THAN,
@@ -74,12 +74,18 @@ def extract_filters(query: str):
             ]
 
 
-    # Combine filters: same field → AND, different fields → list
-    result_filters = []
+     # Combine filters
+    combined_filters = []
     for field, filters in field_filters.items():
         if len(filters) == 1:
-            result_filters.append(filters[0])
+            combined_filters.append(filters[0])
         else:
-            result_filters.append(Filter.all_of(filters))
-    print(result_filters,"filters")
-    return result_filters
+            combined_filters.append(Filter.all_of(filters))
+
+    if not combined_filters:
+        return None
+    elif len(combined_filters) == 1:
+        return combined_filters[0]
+    else:
+        # Combine different fields with AND
+        return Filter.all_of(combined_filters)

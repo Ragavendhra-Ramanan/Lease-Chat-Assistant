@@ -141,7 +141,7 @@ async def async_query(collection, query=None, filters=None,filter_val=None,where
         if filter_to_apply is not None:
             filter_to_apply = where.append(filter_to_apply)
         else:
-            filter_to_apply = where[0] if len(where)==1 else where
+            filter_to_apply =  where
     # Run the synchronous query in a separate thread to keep async
     response =  await asyncio.to_thread(
         collection.query.hybrid,
