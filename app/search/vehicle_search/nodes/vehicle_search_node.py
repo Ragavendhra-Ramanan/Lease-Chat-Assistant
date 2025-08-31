@@ -19,7 +19,7 @@ class VehicleNode(BaseNode):
             append_preference(user_id=int(state.customer_id),preference_string=state.vehicle_filters,types="Vehicle")
             save_all_to_file(types="Vehicle")
         is_ev = state.is_ev
-        if 'country' not in state.vehicle_filters:
+        if 'country' not in state.vehicle_filters and 'vehicle_id' not in state.vehicle_filters:
             where_filters = extract_filters(state.vehicle_filters+f' country: {state.country}')
         else:     
             where_filters=extract_filters(state.vehicle_filters)
@@ -40,6 +40,7 @@ class VehicleNode(BaseNode):
                                  alpha=0.75, 
                                  limit=2)
             context.extend(ev_context)
+        print(context,"context")    
         vehicle_summary_str = "\n\n".join(f"{i+1}. {ctx}" for i, ctx in enumerate(context))
         vehicle_prompt = PromptTemplate(
             template=VEHICLE_SEARCH_PROMPT,

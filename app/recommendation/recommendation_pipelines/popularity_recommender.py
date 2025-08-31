@@ -46,7 +46,7 @@ def get_new_arrivals(request_type: str, vehicle_df, products_df, country=None):
 
         vehicle_df["Inserted Date"] = pd.to_datetime(vehicle_df["Inserted Date"])
         latest_vehicle = vehicle_df.sort_values("Inserted Date", ascending=False).head().sample(2).iloc[0]
-        return f"Latest Vehicle: {latest_vehicle['Vehicle ID']}, {latest_vehicle['Make']}, {latest_vehicle['Model']}, Year {latest_vehicle['Year']}"
+        return f"Latest Vehicle: {latest_vehicle['Vehicle ID']}, {latest_vehicle['Make']}, {latest_vehicle['Model']}, Price {latest_vehicle['Price']}"
 
     else:
         products_df["Inserted Date"] = pd.to_datetime(products_df["Inserted Date"])
