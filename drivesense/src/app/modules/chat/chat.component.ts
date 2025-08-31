@@ -83,7 +83,7 @@ export class ChatComponent implements AfterViewChecked, OnInit {
   sendMessage() {
     if (!this.message.trim()) return;
     this.isBotTyping = true;
-
+    this.recommendations = [];
     var userMsg: ConversationRequest = {
       conversationId: this.conversationId,
       userId: this.userId,
