@@ -116,5 +116,35 @@
       "query": "V1059",
       "timestamp": "2025-08-31T05:28:10.316110+00:00"
     }
+  ],
+  "6296": [
+    {
+      "query": "Toyota V1059 Camry",
+      "timestamp": "2025-08-31T06:45:33.174136+00:00"
+    },
+    {
+      "query": "V1044 Ford F-150 Lightning",
+      "timestamp": "2025-08-31T06:51:22.109284+00:00"
+    },
+    {
+      "query": "V1044 Ford F-150 Lightning",
+      "timestamp": "2025-08-31T06:58:13.188297+00:00"
+    },
+    {
+      "query": "Toyota Camry V1059",
+      "timestamp": "2025-08-31T07:05:36.670658+00:00"
+    },
+    {
+      "query": "V1044 Ford F-150 Lightning EV",
+      "timestamp": "2025-08-31T07:07:42.544302+00:00"
+    },
+    {
+      "query": "Audi",
+      "timestamp": "2025-08-31T07:09:29.991484+00:00"
+    },
+    {
+      "query": "Ford",
+      "timestamp": "2025-08-31T07:09:33.324103+00:00"
+    }
   ]
 }

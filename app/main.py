@@ -334,19 +334,17 @@ async def flush_buffer_to_db():
     
     buffer_copy = message_buffer.copy()
     message_buffer.clear()
-
     try:
         #validation to ensure there is atleast one user message
         list_convo_id = [msg.get("conversationId") for msg in buffer_copy]
         count_convo_id = dict(Counter(list_convo_id))
-        
-        for msg in buffer_copy:      
+        for msg in buffer_copy:
             if(count_convo_id[msg.get("conversationId")]<2):
                 message_buffer.append(msg)
             else:           
                 await conversations_collection.update_one(
                     {
-                        "userId": msg.get("userId"),
+                        "userId": str(int(msg.get("userId"))),
                         "conversationId": msg.get("conversationId")
                     },
                     {
