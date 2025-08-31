@@ -2,7 +2,7 @@
 button {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   font-size:18px;
-  background: #2f367c;
+  background: #2f357c74;
   color: white;
   border: none;
   padding: 10px;
@@ -11,7 +11,7 @@ button {
 }
 
 button:hover:not(:disabled) {
-  background: #4048a3; 
+  background: #181c45; 
 }
 .login-container {
   @extend .auth-container;

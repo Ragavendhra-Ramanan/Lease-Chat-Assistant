@@ -33,8 +33,7 @@
   button {
     font-family: inherit;
     font-size: 18px;
-    background: #2f367c;
-    color: white;
+    background: #2f357c74;
     border: none;
     padding: 10px;
     cursor: pointer;
@@ -42,7 +41,7 @@
     transition: background 0.3s ease;
 
     &:hover:not(:disabled) {
-      background: #4048a3;
+      background: #181c45; 
     }
   }
 
@@ -54,7 +53,7 @@
 }
 
 .error {
-  color: black;
+  color: rgb(255, 0, 0);
   font-size: 12px;
 }
 
