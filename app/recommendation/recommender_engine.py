@@ -103,5 +103,3 @@ async def get_potential_user_engagement_recommendation(client,user_id):
     preference_2 = await get_preferences_by_search(client,user_id,"Product")
     preference_3= await get_preferences_by_date(request_type="Vehicle")
     return [preference_1,preference_2,preference_3]
-
-

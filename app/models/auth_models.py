@@ -18,3 +18,10 @@ class SignupResponse(BaseModel):
 
 class LoginResponse(BaseModel):
   userId : str
+  userName: str
+
+class GuestLogin(BaseModel):
+  contact: str
+  
+class GuestLoginResponse(BaseModel):
+  userId : str
