@@ -4,6 +4,7 @@ from weaviate.collections.classes.filters import Filter, _FilterValue, _Operator
 
 NUMERIC_FIELDS = ["price", "horsepower", "year", "mileage", "lease_term", "monthlyEMI"]
 DATE_FIELDS = {"lease_start_date": "leaseStartDate", "lease_expiry_date": "leaseExpiryDate"}
+STRING_FIELDS = ["vehicle_id", "contract_id", "quote_id", "product_id"]
 
 OP_MAP = {
     "<": _Operator.LESS_THAN,
@@ -57,6 +58,21 @@ def extract_filters(query: str):
             per_field.append(_FilterValue(value=value, operator=operator, target=prop_name))
 
         field_filters[prop_name] = per_field
+    
+    #string id's
+    for field in STRING_FIELDS:
+        pattern = rf"{field}\s*:?\s*(=)?\s*([A-Za-z0-9_-]+)"
+        matches = list(re.finditer(pattern, query, re.IGNORECASE))
+        if matches:
+            field_filters[field] = [
+                _FilterValue(
+                    value=m.group(2),
+                    operator=_Operator.EQUAL,
+                    target=field,
+                )
+                for m in matches
+            ]
+
 
     # Combine filters: same field → AND, different fields → list
     result_filters = []
@@ -65,4 +81,5 @@ def extract_filters(query: str):
             result_filters.append(filters[0])
         else:
             result_filters.append(Filter.all_of(filters))
+    print(result_filters,"filters")
     return result_filters

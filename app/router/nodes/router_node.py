@@ -25,14 +25,16 @@ class RouteNode(BaseNode):
         # Use asyncio to run sync invoke in thread if LLM is sync
         response = await router_chain.ainvoke({"query": state.query,
                                                "previous_query": state.previous_query,
-                                               "date_field":datetime.datetime.now()})
-
+                                               "date_field":datetime.datetime.now().replace(tzinfo=datetime.timezone.utc)  })
+        print(response['text'],"response")
         decision = response["text"].route
         state.route = decision
         state.rewritten_query = response['text'].rewritten_query
         state.product_filters = response['text'].product_filters
         state.vehicle_filters = response['text'].vehicle_filters
         state.contract_filters = response['text'].contract_filters
+        state.action = response['text'].action
+        state.clarifying_question = response['text'].clarifying_question
         state.is_ev = response['text'].is_ev
         state.retrieval_mode = response['text'].retrieval_mode
         state.trace.append(["ROUTER", f"Query='{state.query}' → Route='{decision}'"])

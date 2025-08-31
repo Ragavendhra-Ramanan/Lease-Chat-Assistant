@@ -15,7 +15,10 @@ class ContractNode(BaseNode):
         self.contract_df = df
         self.limit = limit
     async def run(self, state:AgentState):
-
+        exists = state.customer_id in self.contract_df["Customer ID"].values
+        if(not exists):
+            state.final_answer = " No Contracts found"
+            return state
         results = {"contract": [], "vehicle": [], "product": []}
         vehicle_filters = extract_filters(state.vehicle_filters)
         product_filters = extract_filters(state.product_filters)

@@ -30,3 +30,5 @@ class AgentState:
     quote_context: str = ""
     quote_results: str = ""
     is_ev: str =""
+    action: str =""
+    clarifying_question: str =""

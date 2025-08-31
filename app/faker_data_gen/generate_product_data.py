@@ -20,33 +20,21 @@ product_templates = [
         "flexi_allowed": False
     },
     {
-        "name": "Flexi Lease",
+        "name": "Dynamic Lease",
         "desc": "Flexible lease with upgrade or exit options after mid-term, ideal for dynamic users.",
         "tax_saving": "No",
         "flexi_allowed": True
     },
     {
-        "name": "Corporate Saver",
-        "desc": "Business-focused lease offering tax deductions, bundled insurance, and priority servicing.",
-        "tax_saving": "Yes",
+        "name": "Value Lease",
+        "desc": "Affordable leasing for small cars with lower monthly costs and basic maintenance.",
+        "tax_saving": "No",
         "flexi_allowed": False
     },
     {
-        "name": "Premium EV Lease",
-        "desc": "Exclusive EV lease with charging benefits, subsidies, and zero-emission perks.",
+        "name": "Corporate Saver",
+        "desc": "Business-focused lease offering tax deductions, bundled insurance, and priority servicing.",
         "tax_saving": "Yes",
-        "flexi_allowed": True
-    },
-    {
-        "name": "Startup Flexi",
-        "desc": "Short-term flexible lease for startups with minimal lock-in and scalable options.",
-        "tax_saving": "Yes",
-        "flexi_allowed": True
-    },
-    {
-        "name": "Luxury Drive",
-        "desc": "Premium leasing for high-end cars with concierge service, garage maintenance, and roadside support.",
-        "tax_saving": "No",
         "flexi_allowed": False
     },
     {
@@ -56,23 +44,17 @@ product_templates = [
         "flexi_allowed": True
     },
     {
-        "name": "Family Plan",
+        "name": "Premium EV Lease",
+        "desc": "Exclusive EV lease with charging benefits, subsidies, and zero-emission perks.",
+        "tax_saving": "Yes",
+        "flexi_allowed": True
+    },    
+    {
+        "name": "FamilyRide Lease",
         "desc": "Designed for family cars with long-term stability, garage maintenance, and roadside cover.",
         "tax_saving": "No",
         "flexi_allowed": False
-    },
-    {
-        "name": "Compact Saver",
-        "desc": "Affordable leasing for small cars with lower monthly costs and basic maintenance.",
-        "tax_saving": "No",
-        "flexi_allowed": False
-    },
-    {
-        "name": "Business Advantage",
-        "desc": "Mid-term lease for SMEs with low upfront cost and deductible benefits.",
-        "tax_saving": "Yes",
-        "flexi_allowed": False
-    }
+    }   
 ]
 
 lease_terms = [12, 24, 36, 48]
@@ -118,98 +100,62 @@ def generate_product(pid):
         "Summary": summary
     }
 
-# Generate 50 realistic products
-products = [generate_product(i) for i in range(50)]
+# Generate 20 realistic products
+num_records=20
+products = [generate_product(i) for i in range(num_records)]
 df = pd.DataFrame(products)
+leasing_chunk_data = df[["Summary","Product ID"]]
 
 # Save as CSV
-df.to_csv("../data/leasing_data.csv", index=False)
+df.to_csv("../data/leasing_data_new.csv", index=False)
+leasing_chunk_data.to_csv("../data/leasing_chunk_data_new.csv",index=False)
+
 
 print(df.head(10))
 
 """
 1. Product Templates (Real Business Archetypes)
-
 Instead of letting Faker invent nonsense, I predefined 10 realistic product types:
-
 Standard Lease → predictable monthly, stable
-
 Flexi Lease → exit/upgrade early
-
 Corporate Saver / Business Advantage → tax-deduction plans for companies
-
 Premium EV Lease / Eco Mobility → EV- and hybrid-specific with charging perks
-
 Luxury Drive → concierge, garage-based maintenance for premium cars
-
 Family Plan / Compact Saver → practical, cheaper, stable options
-
 Each template comes with:
-
 name
-
 description (brochure-style)
-
 whether it allows flexi
-
 whether it’s tax_saving
-
 This makes sure product names/descriptions are consistent and believable.
-
 2. Lease Term Logic
-
 Lease terms chosen from 12, 24, 36, 48 months (real-world standard durations).
-
 Flexi plans usually available only for shorter terms (≤ 24 months).
-
 Long leases (36–48 months) = stable, not flexi.
-
 3. Renewal Cycle Logic
-
 If 12 months → renewal cycle is Quarterly (frequent checks).
-
 If 24 months → can be Bi-Annual or Annual.
-
 If 36–48 months → always Annual renewal (too long for frequent renewals).
-
 4. Flexi Lease Logic
-
 If the template allows flexi and lease term ≤ 24 months → Flexi = Yes.
-
 Otherwise → Flexi = No.
-
 This mimics real-world where flexibility is offered only on short/medium leases.
-
 5. Maintenance Type Logic
-
 If Flexi Lease = Yes → Maintenance = Roadside (since cars change more, easier roadside support).
-
 If Flexi Lease = No → Maintenance = Garage (stable cars, scheduled servicing).
-
 6. Tax Saving Plan Logic
-
 Corporate / EV products → Always Yes (since these are deductible or government-incentivized).
-
 Luxury / Family / Compact plans → No (personal usage, not deductible).
-
 7. Inserted Date
-
 Generated within last 18 months (to simulate new product launches gradually entering the catalog).
-
 8. Short Description
-
 Starts with the template brochure text,
-
 Then appends lease term and renewal cycle info,
 e.g.
 “Exclusive EV lease with charging benefits. Lease term is 24 months, renewal is annual.”
-
 This makes descriptions read like sales collateral.
-
 9. Summary
-
 Compact string with key fields:
 "Premium EV Lease, 24 months, Flexi: Yes, Tax Saving: Yes, Renewal: Annual, Maintenance: Roadside"
-
 Useful for quick filtering or search indexing.
 """

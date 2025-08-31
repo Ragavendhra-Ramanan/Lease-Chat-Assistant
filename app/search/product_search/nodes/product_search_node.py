@@ -15,7 +15,7 @@ class ProductNode(BaseNode):
 
     async def run(self, state:AgentState):
         print(state.product_filters,"filter")
-        append_preference(user_id=state.customer_id,preference_string=state.product_filters,types="product")
+        append_preference(user_id=int(state.customer_id),preference_string=state.product_filters,types="product")
         save_all_to_file(types="product")
         product_query = inject_filters(state.rewritten_query, state.product_filters, "product")
         where_filters = extract_filters(state.product_filters)
