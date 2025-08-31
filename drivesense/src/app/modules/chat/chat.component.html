@@ -15,8 +15,19 @@
       *ngFor="let message of messages"
       class="message"
       [ngClass]="message.sender"
-      [innerHTML]="getMessageContent(message)"
-    ></div>
+    >
+  
+    <!-- normal text with markdown -->
+    <div [innerHTML]="getMessageContent(message)"></div>
+
+    <!-- PDF link if filestream exists -->
+    <button *ngIf="message.fileStream"
+            class="pdf-btn"
+            (click)="openPdf(message.fileStream)">
+      📄 Open PDF
+    </button>
+  </div>
+
     <div *ngIf="isBotTyping" class="message bot typing-loader">
       <span></span><span></span><span></span>
     </div>
