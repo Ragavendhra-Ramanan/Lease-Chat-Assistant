@@ -44,7 +44,6 @@ def create_vehicle_collection(client):
         Property(name="price", data_type=DataType.INT),
         Property(name="currency", data_type=DataType.TEXT),
         Property(name="preowned", data_type=DataType.TEXT),
-        Property(name="inserted_date", data_type=DataType.TEXT),
         Property(name="summary", data_type=DataType.TEXT),
     ],
     vectorizer_config=Configure.Vectorizer.text2vec_openai(),  # OpenAI embeddings
@@ -74,7 +73,6 @@ def create_product_collection(client):
         Property(name="tax_saving_plan", data_type=DataType.TEXT),
         Property(name="renewal_cycle", data_type=DataType.TEXT),
         Property(name="maintenance_type", data_type=DataType.TEXT),
-        Property(name="inserted_date", data_type=DataType.TEXT),
         Property(name="summary", data_type=DataType.TEXT),
     ],
     vectorizer_config=Configure.Vectorizer.text2vec_openai(),  # use OpenAI embeddings
@@ -104,12 +102,12 @@ def create_contract_collection(client):
             Property(name="VehicleID", data_type=DataType.TEXT),
             Property(name="ProductID", data_type=DataType.TEXT),
             Property(name="MonthlyEMI", data_type=DataType.NUMBER),
+            Property(name="ContractPrice", data_type=DataType.NUMBER),
             Property(name="LeaseStartDate", data_type=DataType.DATE),
             Property(name="LeaseExpiryDate", data_type=DataType.DATE),
             Property(name="RoadAssistance", data_type=DataType.TEXT),
             Property(name="Maintenance", data_type=DataType.TEXT),
             Property(name="DiscountApplied", data_type=DataType.TEXT),
-            Property(name="PreferredCustomer", data_type=DataType.TEXT),
             Property(name="Summary", data_type=DataType.TEXT),  # vectorized field
         ]
     )

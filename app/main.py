@@ -5,6 +5,7 @@ from utils.secrets import weaviate_api_key, weaviate_url, openai_api_key
 from models.conversation_request import ConversationResponse, ConversationRequest, Message, StartConversation
 from router.nodes.router_node import RouteNode
 from models.agent_state import AgentState
+from clarifier_agent.nodes.clarifier_node import ClarifierNode
 from uuid import uuid4
 from typing import Dict
 from utils.flows import ROUTE_MAP
@@ -15,7 +16,8 @@ from memory.memory_store import get_recent_memory, add_short_term_memory_from_di
 from decomposition.nodes.decomposition_node import DecompositionNode
 from decomposition.nodes.decomposition_result_node import DecompositionResultNode
 from utils.helper_functions import USER_CSV_FILE, load_user_data
-
+from  search.other_search.nodes.other_search_node import GeneralSearchNode
+from recommendation.recommender_engine import get_new_user_recommendation, get_potential_customer_recommendation,get_preferences_by_search
 import pandas as pd 
 
 origins = [
@@ -28,26 +30,30 @@ client = None
 router = RouteNode()
 decomposition = DecompositionNode()
 decomposition_result = DecompositionResultNode()
-vehicle_df, product_df,contract_df = get_data()
+clarifier_node = ClarifierNode()
+general_node = GeneralSearchNode()
+vehicle_df, product_df,contract_df, quote_df = get_data()
 quote_filtering_node = ROUTE_MAP["filtering"](vehicle_df, product_df, filter_df)
 quote_update_node = ROUTE_MAP["quote_field_update"]()
 quote_generate_node = ROUTE_MAP["quote"]()
 
 # Initialize in main.py
 conversations: Dict[str, Dict[str, any]] = {}
-def get_client_state(user_id: str) -> AgentState:
+def get_client_state(user_id: str,conversation_id:str) -> AgentState:
     if user_id not in conversations:
-        conversations[user_id] = AgentState()
-    return conversations[user_id]
+        conversations[user_id] = dict()
+    if conversation_id not in conversations[user_id]:
+        conversations[user_id][conversation_id]=AgentState()
+    return conversations[user_id][conversation_id]
 
-def save_client_state(user_id: str, state: AgentState):
-    conversations[user_id] = state
+def save_client_state(user_id: str, conversation_id:str, state: AgentState):
+    conversations[user_id][conversation_id] = state
 
-def get_last_query(user_id: str) -> str:
+def get_last_query(user_id: str,conversation_id:str) -> str:
     """
     Returns the last user query from memory, or empty string if none.
     """
-    recent_memory = get_recent_memory(user_id)
+    recent_memory = get_recent_memory(user_id,conversation_id)
     if not recent_memory:
         return ""
     return recent_memory[-1]["query"]
@@ -128,83 +134,137 @@ async def login_user(credentials : Login):
 @app.post("/api/chat/startNewConversation")
 async def start_conversation(request:StartConversation):
     """Start a new conversation and return conversation_id."""
-    state = get_client_state(request.userId)
     conversation_id = str(uuid4())
     welcome = Message(
         sender="bot",
-        message="Hi, welcome! I will help in product search, vehicle search, contract search and quote generation"
+        message="""
+        Hi! Welcome to our Leasing Assistant
+
+        I can help you with:
+
+        1. **Product Search** - Find the right products for your needs.
+        2. **Vehicle Search** - Browse and compare vehicles.
+        3. **Contract Search** - Access and review your contracts.
+        4. **Quote Generation** - Get personalized lease quotes.
+        """
     )
     response = ConversationResponse(
         userId= request.userId,
         conversationId=conversation_id,
         messages=[welcome]
     )
-    state.customer_id = request.userId
-    save_client_state(request.userId, state)
     return response
 
 @app.get("/api/chat/recommendations/{userID}")
 async def recommendations(userID:int):
-    return ["Toyota cars", "Flexi lease term 24 months" , "quote generation"]
-
+    print("Recommendation")
+    #print(await get_user_preferences(client=client,user_id=userID))
+    #return await get_new_user_recommendation()
+    return await get_potential_customer_recommendation(user_id=userID,client=client)
 @app.post("/api/chat/sendMessage")
+async def send_bot_message(request: ConversationRequest):
+    final_message:str =""
+    state = get_client_state(request.userId,request.conversationId)
+    state.previous_query = get_last_query(request.userId,request.conversationId)
+    state.query = request.messages.message
+    response = ConversationResponse(
+            messages=[request.messages],              # empty list or actual messages
+            userId= request.userId  ,     # string
+            conversationId=request.conversationId # string
+            )
+    if "quotation" in state.route:
+        final_message= await run_quotation_node(request=request)
+        response.messages.append(Message(
+            sender="bot",
+            message=final_message
+        ))
+        return response
+    state = await router.run(state)
+    save_client_state(user_id=request.userId,conversation_id=request.conversationId,state=state)
+    if len(state.route) ==0:
+        general_state=await general_node.run(state)
+        final_message = general_state.final_answer
+    elif state.action =="clarify":
+        final_message=state.clarifying_question
+    elif state.action =="decomposition":
+        return await decompose_tasks(request=request)
+    elif "quotation" in state.route:
+        state.quote_context = "vehicle"
+        save_client_state(user_id=request.userId,conversation_id=request.conversationId,state=state)
+        state:AgentState = await quote_filtering_node.run(state)
+        save_client_state(user_id=request.userId,conversation_id=request.conversationId,state=state)
+        final_message = state.quote_intermediate_results
+    else:
+        return await get_conversation_result(request=request,router_passed=True)
+    response.messages.append(Message(
+            sender="bot",
+            message=final_message
+        ))
+    add_short_term_memory_from_dict(
+        user_id=request.userId,
+        conversation_id=request.conversationId,
+        query=state.query,
+        response=state.final_answer
+    )
+    return response
+
 async def decompose_tasks(request: ConversationRequest):
     context=[]
     questions = []
     query = request.messages.message
-    state = get_client_state(request.userId)
-    if "quotation" not in state.route:
-        decomposition_values, rewritten_query = await decomposition.run(query)
-        flag = False
-        print("\nTasks To do\n")
-        print(decomposition_values)
-        for task, retriever in decomposition_values:
-            if retriever: 
-                flag = True
-                request.messages.message = task
-                task_response , query_retrieved = await get_conversation_result(request=request)
-                if "quotation" in state.route:
-                    return task_response
-                print("\nResponse\n")
-                print(state.final_answer)
-                questions.append(query_retrieved)
-                context.append([f"{task} : {state.final_answer}"])
-            else:
-                questions.append(task)
-        if flag:
-            if len(questions) == 0:
-                questions.append(rewritten_query)
-            print("\nFinal Combined result\n")      
-            final_answer = await decomposition_result.run(context=context,questions=questions)
-            print(final_answer)
-            response = ConversationResponse(
-                messages=[request.messages],              # empty list or actual messages
-                userId= request.userId  ,     # string
-                conversationId=request.conversationId # string
-                )
-            response.messages.append(Message(
-                sender="bot",
-                message=final_answer
-            ))
-        else:
-            response,query_retrieved= await get_conversation_result(request=request)
+    state = get_client_state(request.userId,request.conversationId)
+    decomposition_values, rewritten_query = await decomposition.run(query)
+    print("\nTasks To do\n")
+    print(decomposition_values)
+    for task, retriever in decomposition_values:
+        if retriever: 
+            request.messages.message = task
+            task_response , query_retrieved = await get_conversation_result(request=request,router_passed=False)
+            print("\nResponse\n")
+            print(state.final_answer)
             questions.append(query_retrieved)
-        add_short_term_memory_from_dict(user_id=request.userId,query=",".join(questions),response=response)
+            context.append([f"{task} : {state.final_answer}"])
+        else:
+            questions.append(task)
 
-    else:
-        response,query = await get_conversation_result(request=request)
+    print("\nFinal Combined result\n")      
+    final_answer = await decomposition_result.run(context=context,questions=questions)
+    print(final_answer)
+    response = ConversationResponse(
+        messages=[request.messages],              # empty list or actual messages
+        userId= request.userId  ,     # string
+        conversationId=request.conversationId # string
+        )
+    response.messages.append(Message(
+        sender="bot",
+        message=final_answer
+    ))
+    add_short_term_memory_from_dict(user_id=request.userId,conversation_id=request.conversationId,query=",".join(questions),response=response)
     return response
-async def get_conversation_result(request: ConversationRequest):    
+
+async def run_quotation_node(request:ConversationRequest):
+    state = get_client_state(request.userId,request.conversationId)
+    state:AgentState = await quote_update_node.run(state)
+    if state.quote_next_agent == "filtering":
+        state = await quote_filtering_node.run(state)
+        save_client_state(request.userId,request.conversationId,state=state)
+        return state.quote_intermediate_results
+    
+    elif state.quote_next_agent == "quote":
+        state = await quote_generate_node.run(state)
+        state.route = ""
+        state.quote_step = "preowned"
+        state.quote_context = ""
+        state.quote_next_agent = ""
+        save_client_state(request.userId,conversation_id=request.conversationId,state=state)
+        return state.quote_results
+
+async def get_conversation_result(request: ConversationRequest,router_passed:bool):    
     query = request.messages.message
-    state = get_client_state(request.userId)
+    state = get_client_state(request.userId,request.conversationId)
     state.trace = [[]]
-    state.previous_query = get_last_query(state.customer_id)
+    state.previous_query = get_last_query(state.customer_id,conversation_id=request.conversationId)
     state.query = query
-    # #memory context
-    # memory_text = ""
-    # if is_relevant_to_memory(state.customer_id, state.query):
-    #     memory_entries = get_recent_memory(state.customer_id)
-    #     memory_text = "\n".join([f"User: {m['query']} | Bot: {m['response']}" for m in memory_entries])
     response = ConversationResponse(
     messages=[request.messages],              # empty list or actual messages
     userId= request.userId  ,     # string
@@ -213,64 +273,29 @@ async def get_conversation_result(request: ConversationRequest):
     sender = "bot"
     response.conversationId = request.conversationId
     response.userId = request.userId
-    if "quotation" in state.route:
-        state = await quote_update_node.run(state)
-        if state.quote_next_agent == "filtering":
-            state = await quote_filtering_node.run(state)
-            save_client_state(request.userId,state=state)
-            response.messages.append(Message(
-                sender=sender,
-                message=state.quote_intermediate_results
-
-            ))
-            return response,state.rewritten_query
-        elif state.quote_next_agent == "quote":
-            state = await quote_generate_node.run(state)
-            state.route = ""
-            state.quote_step = "preowned"
-            state.quote_context = ""
-            state.quote_next_agent = ""
-            save_client_state(request.userId,state=state)
-            response.messages.append(Message(
-                sender=sender,
-                message=state.quote_results
-            )) 
-            return response,state.rewritten_query
-
-    state = await router.run(state)
-    routes = state.route
+    if not router_passed:
+        state = await router.run(state)
     flow_instance = None
     state.customer_id = request.userId
     print("\nCurrent task\n")
     print(state.rewritten_query)
-    print(routes,"route")    
+    print(state.route,"route")    
     limit = 5
     # Pick flow by checking membership
-    if "quotation" in routes:
-        flow_instance = quote_filtering_node
-        state.quote_context = "vehicle"
-    elif "contract" in routes:
+    if "contract" in state.route:
         flow_instance = ROUTE_MAP["contract"](client=client,df=contract_df,limit=limit)
-    elif "product" in routes:
+    elif "product" in state.route:
         flow_instance = ROUTE_MAP["product"](client=client,limit=limit)
-    elif "vehicle" in routes:
+    elif "vehicle" in state.route:
         flow_instance = ROUTE_MAP["vehicle"](client=client,limit=limit)
     else:
         flow_instance = ROUTE_MAP["general"]()
-
-
     state: AgentState = await flow_instance.run(state)
-    if "quotation" in routes:
-        response.messages.append(Message(
-                sender=sender,
-                message=state.quote_intermediate_results
-            ))
-        save_client_state(request.userId,state=state)
-        return response,state.rewritten_query
     response.messages.append(Message(
                 sender=sender,
                 message=state.final_answer
             ))
-    save_client_state(request.userId,state=state)
-    add_short_term_memory_from_dict(user_id=state.customer_id, query=state.rewritten_query,response=state.final_answer)
-    return response,state.rewritten_query
+    save_client_state(request.userId,request.conversationId,state=state)
+    add_short_term_memory_from_dict(user_id=state.customer_id, conversation_id=request.conversationId,query=state.rewritten_query,response=state.final_answer)
+    return response, state.rewritten_query
+

@@ -14,7 +14,7 @@ class VehicleNode(BaseNode):
         self.limit = limit
     async def run(self, state:AgentState):
 
-        append_preference(user_id=state.customer_id,preference_string=state.vehicle_filters,types="vehicle")
+        append_preference(user_id=int(state.customer_id),preference_string=state.vehicle_filters,types="vehicle")
         save_all_to_file(types="vehicle")
         is_ev = state.is_ev  
         where_filters=extract_filters(state.vehicle_filters)

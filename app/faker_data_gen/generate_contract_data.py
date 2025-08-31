@@ -1,9 +1,10 @@
 import pandas as pd
 from faker import Faker
-from datetime import timedelta
+from dateutil.relativedelta import relativedelta
 import random
 
 fake= Faker()
+percent_dict = {12:0.15,24:20,36:35,48:40}
 def generate_contracts_df(vehicle_data, product_data, n=20):
     contracts = []
     customer_pool = [f"{1000+i}" for i in range(1, 21)]  # 20 customers
@@ -20,11 +21,12 @@ def generate_contracts_df(vehicle_data, product_data, n=20):
         # Lease term & EMI calculation
         lease_term = int(product["Lease Term"])
         base_price = vehicle["Price"]
-        emi = round((base_price / lease_term) * random.uniform(1.05, 1.15), 2)
+        price = base_price * percent_dict[int(lease_term)] #depreciation price of vehicle based on lease duration
+        emi = round((price / int(lease_term)) * random.uniform(1.05, 1.15), 2) 
 
         # Start & expiry dates
         start_date = fake.date_between(start_date="-3y", end_date="today")
-        expiry_date = start_date + timedelta(days=30 * lease_term)
+        expiry_date = start_date + relativedelta(months=lease_term)
 
         # Maintenance & assistance
         maintenance = "Yes" if product["Maintenance Type"] in ["Garage", "Roadside"] else "No"
@@ -49,6 +51,7 @@ def generate_contracts_df(vehicle_data, product_data, n=20):
             "Existing Customer": existing_customer,
             "Vehicle ID": vehicle["Vehicle ID"],
             "Product ID": product["Product ID"],
+            "Contract Price": price,
             "Monthly EMI": emi,
             "Lease Start Date": start_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
             "Lease Expiry Date": expiry_date.strftime("%Y-%m-%dT%H:%M:%SZ"),
@@ -68,11 +71,13 @@ def generate_contracts_df(vehicle_data, product_data, n=20):
     return df
 
 if __name__ == "__main__":
-    num_records = 500
-    vehicles_df = pd.read_csv("../data/vehicle_data.csv")
-    products_df = pd.read_csv("../data/leasing_data.csv")
+    num_records = 200
+    vehicles_df = pd.read_csv("../data/vehicle_data_new.csv")
+    products_df = pd.read_csv("../data/leasing_data_new.csv")
     df_contracts = generate_contracts_df(n=num_records,vehicle_data=vehicles_df,product_data=products_df)
-    df_contracts.to_csv("../data/contract_data.csv", index=False)
+    df_contracts.to_csv("../data/contract_data_new.csv", index=False)    
+    contract_chunk_data = df_contracts[["Summary","Contract ID","Customer ID","Vehicle ID","Product ID"]]    
+    contract_chunk_data.to_csv("../data/customer_contract_data_new.csv",index=False)
     print(df_contracts.head())
 
 """

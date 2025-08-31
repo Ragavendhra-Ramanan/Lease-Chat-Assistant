@@ -180,3 +180,31 @@ def get_user_preferences(store_name: str, user_id: str, types :str):
         memory_stores = product_memory_stores
         store_name = f"{store_name}_product"
     return memory_stores.get(store_name, {}).get(user_id, [])
+
+def load_user_preferences_dict(user_id: str, types: str):
+    """
+    Load all preference categories from JSON files for a given user_id
+    and return as a dictionary with file/category names as keys.
+    """
+    if types == "vehicle":
+        file_paths = vehicle_file_paths
+    elif types == "product":
+        file_paths = product_file_paths
+    else:
+        raise ValueError(f"Unknown type: {types}")
+
+    user_prefs = {}
+
+    for store_key in ["unstructured", "structured", "dislike_unstructured", "dislike_structured"]:
+        file_key = f"{store_key}_{types}"
+        path = os.path.join(base_dir, file_paths[file_key])
+        data = {}
+        if Path(path).exists():
+            with open(path, "r") as f:
+                try:
+                    data = json.load(f)
+                except json.JSONDecodeError:
+                    data = {}
+        user_prefs[file_key] = data.get(str(user_id), [])
+
+    return user_prefs

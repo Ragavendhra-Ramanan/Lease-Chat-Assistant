@@ -13,11 +13,12 @@ def inject_filters(query: str, filters: str, entity: str) -> str:
         return f"{query}. Additionally filter {entity} records by: {filters}"
 
 def get_data():
-    vehicle_df = pd.read_csv(os.path.join(base_dir,"../data/vehicle_data.csv"))  # your dataset
-    product_df = pd.read_csv(os.path.join(base_dir,"../data/leasing_data.csv"))  # your dataset
-    contract_df = pd.read_csv(os.path.join(base_dir,"../data/contract_data.csv"))  # your dataset
+    vehicle_df = pd.read_csv(os.path.join(base_dir,"../data/vehicle_data_new.csv"))  # your dataset
+    product_df = pd.read_csv(os.path.join(base_dir,"../data/leasing_data_new.csv"))  # your dataset
+    contract_df = pd.read_csv(os.path.join(base_dir,"../data/contract_data_new.csv"))  # your dataset
+    quote_df = pd.read_csv(os.path.join(base_dir,"../data/quote_data_new.csv"))
+    return vehicle_df, product_df, contract_df, quote_df
 
-    return vehicle_df, product_df, contract_df
 def filter_df(df: pd.DataFrame, filters: Dict[str, Any]) -> pd.DataFrame:
     for key, value in filters.items():
         if isinstance(value, tuple):  # numeric range

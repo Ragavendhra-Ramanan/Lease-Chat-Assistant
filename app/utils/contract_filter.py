@@ -22,7 +22,7 @@ def parse_contract_string(contract_str: str):
         value = value.strip()
         
         # Handle date fields with operator
-        if key in ["lease_start_date", "lease_expiry_date","monthly_emi"]:
+        if key in ["lease_start_date", "lease_expiry_date","monthly_emi","contract_price"]:
             match = re.match(r"(<=|>=|<|>|=)?\s*(\d{4}-\d{2}-\d{2})", value)
             if match:
                 op, date_val = match.groups()
@@ -45,13 +45,14 @@ def filter_contract_data(filter_dict, df, customer_id):
     "lease_expiry_date": "Lease Expiry Date",
     "maintenance": "Maintenance",
     "monthly_emi": "Monthly EMI",
+    "contract_price":"Contract Price",
     "contract_id": "Contract ID",
     "discount_applied": "Discount Applied",
     "road_assistance" : "Road Assistance"
     }
     df = df[df["Customer ID"]==customer_id].copy()
-    df["Lease Start Date"] = pd.to_datetime(df["Lease Start Date"]).dt.tz_convert(None)
-    df["Lease Expiry Date"] = pd.to_datetime(df["Lease Expiry Date"]).dt.tz_convert(None)
+    df["Lease Start Date"] = pd.to_datetime(df["Lease Start Date"]).dt.tz_convert("UTC")
+    df["Lease Expiry Date"] = pd.to_datetime(df["Lease Expiry Date"]).dt.tz_convert("UTC")
     mask = pd.Series(True, index=df.index)
 
     for key, df_col in column_map.items():
@@ -59,7 +60,7 @@ def filter_contract_data(filter_dict, df, customer_id):
             # Handle date fields with operators
             if key in ["lease_start_date", "lease_expiry_date"]:
                 op = filter_dict.get(key + "_op", "=")
-                date_val = pd.to_datetime(filter_dict[key])
+                date_val = pd.to_datetime(filter_dict[key]).tz_localize("UTC")
                 mask &= (op_map[op](df[df_col], date_val))
             else:
                 mask &= (df[df_col] == filter_dict[key])
