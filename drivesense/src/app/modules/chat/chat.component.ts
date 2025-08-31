@@ -96,7 +96,6 @@ export class ChatComponent implements AfterViewChecked, OnInit {
     };
 
     this.messages.push(userMsg.messages);
-    userMsg.messages.message = userMsg.messages.message.toUpperCase();
     this.messageService.sendMessage(userMsg).subscribe((botMsg) => {
       this.isBotTyping = false;
 
