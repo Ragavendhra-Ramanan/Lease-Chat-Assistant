@@ -6,7 +6,7 @@ def get_most_popular(request_data, request_type, vehicles_df, products_df, quote
         merged = vehicles_df.merge(counts, on="Vehicle ID", how="left").fillna({"quote_count": 0})
         top_item = merged.sort_values("quote_count", ascending=False).iloc[0]
 
-        markdown = f"**Top Quoted Vehicle:**\n- Make: {top_item['Make']}, Vehicle ID: {top_item['Vehicle ID']}, Model: {top_item['Model']}, Quotes: {int(top_item['quote_count'])}"
+        markdown = f"**Top Quoted Vehicle:**\n-  {top_item['Vehicle ID']}, {top_item['Make']},{top_item['Model']}, Year {top_item['Year']}"
         return markdown
 
     elif request_data == "Product" and request_type == "quote":
@@ -14,7 +14,7 @@ def get_most_popular(request_data, request_type, vehicles_df, products_df, quote
         merged = products_df.merge(counts, on="Product ID", how="left").fillna({"quote_count": 0})
         top_item = merged.sort_values("quote_count", ascending=False).iloc[0]
 
-        markdown = f"**Top Quoted Product:**\n- Product Name: {top_item['Product Name']}, Product ID: {top_item['Product ID']}, Lease Term: {top_item['Lease Term']}, Quotes: {int(top_item['quote_count'])}"
+        markdown = f"**Top Quoted Product:**\n- {top_item['Product ID']}, {top_item['Product Name']}, Lease Term {top_item['Lease Term']}"
         return markdown
 
     elif request_data == "Vehicle" and request_type == "contract":
@@ -22,7 +22,7 @@ def get_most_popular(request_data, request_type, vehicles_df, products_df, quote
         merged = vehicles_df.merge(counts, on="Vehicle ID", how="left").fillna({"contract_count": 0})
         top_item = merged.sort_values("contract_count", ascending=False).iloc[0]
 
-        markdown = f"**Top Contracted Vehicle:**\n- Make: {top_item['Make']}, Vehicle ID: {top_item['Vehicle ID']}, Model: {top_item['Model']}, Contracts: {int(top_item['contract_count'])}"
+        markdown = f"**Top Contracted Vehicle:**\n- {top_item['Make']}, {top_item['Vehicle ID']}, {top_item['Model']}, Year {top_item['Year']}"
         return markdown
 
     elif request_data == "Product" and request_type == "contract":
@@ -30,7 +30,7 @@ def get_most_popular(request_data, request_type, vehicles_df, products_df, quote
         merged = products_df.merge(counts, on="Product ID", how="left").fillna({"contract_count": 0})
         top_item = merged.sort_values("contract_count", ascending=False).iloc[0]
 
-        markdown = f"**Top Contracted Product:**\n- Product Name: {top_item['Product Name']}, Product ID: {top_item['Product ID']}, Lease Term: {top_item['Lease Term']}, Contracts: {int(top_item['contract_count'])}"
+        markdown = f"**Top Contracted Product:**\n- {top_item['Product Name']}, {top_item['Product ID']}, Lease Term: {top_item['Lease Term']}"
         return markdown
 
 
@@ -49,10 +49,10 @@ def get_new_arrivals(request_type:str,vehicle_df,products_df):
         # Create Markdown string
         markdown_message = (
             f"**Latest Vehicle:**\n"
-            f"- Vehicle ID: {first_vehicle['Vehicle ID']}\n"
-            f"- Make: {first_vehicle['Make']}\n"
-            f"- Model: {first_vehicle['Model']}\n"
-            f"- Year: {first_vehicle['Year']}"
+            f"- {first_vehicle['Vehicle ID']}\n"
+            f"- {first_vehicle['Make']}\n"
+            f"-  {first_vehicle['Model']}\n"
+            f"- Year {first_vehicle['Year']}"
         )
     else:
         products_df["Inserted Date"] = pd.to_datetime(products_df["Inserted Date"])
@@ -62,8 +62,8 @@ def get_new_arrivals(request_type:str,vehicle_df,products_df):
         first_product = products_sorted.iloc[0]
         markdown_message = (
             f"**Latest Product:**\n"
-            f"- Product ID: {first_product['Product ID']}\n"
-            f"- Product Name: {first_product['Product Name']}\n"
-            f"- Lease Term: {first_product['Lease Term']} months"
+            f"-{first_product['Product ID']}\n"
+            f"- {first_product['Product Name']}\n"
+            f"- Lease Term {first_product['Lease Term']} "
         )
     return markdown_message

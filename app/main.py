@@ -1,24 +1,32 @@
 from fastapi import FastAPI, HTTPException
 from contextlib import asynccontextmanager
 from db.vectordb_operations import connection_to_wcs, close_connection
-from utils.secrets import weaviate_api_key, weaviate_url, openai_api_key
-from models.conversation_request import ConversationResponse, ConversationRequest, Message, StartConversation
+from utils.secrets import weaviate_api_key, weaviate_url, openai_api_key, mongo_uri
+from models.conversation_request import ConversationResponse, ConversationRequest, Message, StartConversation, conversation_helper
 from router.nodes.router_node import RouteNode
 from models.agent_state import AgentState
 from clarifier_agent.nodes.clarifier_node import ClarifierNode
 from uuid import uuid4
-from typing import Dict
+from collections import Counter
+from datetime import datetime
+from typing import Dict, List
 from utils.flows import ROUTE_MAP
 from utils.helper_functions import get_data, filter_df
-from models.auth_models import User, SignupResponse, Login, LoginResponse
+from models.auth_models import User, SignupResponse, Login, LoginResponse, GuestLogin, GuestLoginResponse
 from fastapi.middleware.cors import CORSMiddleware
 from memory.memory_store import get_recent_memory, add_short_term_memory_from_dict
 from decomposition.nodes.decomposition_node import DecompositionNode
 from decomposition.nodes.decomposition_result_node import DecompositionResultNode
-from utils.helper_functions import USER_CSV_FILE, load_user_data
+from utils.helper_functions import USER_CSV_FILE, load_user_data,GUEST_USER_CSV_FILE
 from  search.other_search.nodes.other_search_node import GeneralSearchNode
 from recommendation.recommender_engine import get_new_user_recommendation, get_potential_customer_recommendation,get_preferences_by_search
 import pandas as pd 
+from motor.motor_asyncio import AsyncIOMotorClient
+import asyncio
+import random
+import base64
+from io import BytesIO
+#from fpdf import FPDF
 
 origins = [
     "http://localhost:4200",  # frontend URL
@@ -37,6 +45,9 @@ quote_filtering_node = ROUTE_MAP["filtering"](vehicle_df, product_df, filter_df)
 quote_update_node = ROUTE_MAP["quote_field_update"]()
 quote_generate_node = ROUTE_MAP["quote"]()
 
+message_buffer: List[ConversationResponse] = []
+MAX_BATCH_SIZE = 20
+buffer_lock = asyncio.Lock()
 # Initialize in main.py
 conversations: Dict[str, Dict[str, any]] = {}
 def get_client_state(user_id: str,conversation_id:str) -> AgentState:
@@ -61,13 +72,33 @@ def get_last_query(user_id: str,conversation_id:str) -> str:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     global client
+    global conversations_collection
     # startup
     client = connection_to_wcs(weaviate_url=weaviate_url,
                                weaviate_api_key=weaviate_api_key,
                                openai_api_key=openai_api_key)
-    yield
-    # shutdown
-    close_connection(client=client)
+    # MongoDB setup
+    mongo_client = AsyncIOMotorClient(mongo_uri)
+    db = mongo_client["chat_db"]
+    conversations_collection = db["conversations"]
+    flush_task = asyncio.create_task(periodic_flush_task())
+    
+    try:
+        yield
+    finally:
+        # Optionally flush remaining messages before shutdown
+        async with buffer_lock:
+            if message_buffer:
+                await flush_buffer_to_db()
+
+        # shutdown
+        mongo_client.close()
+        close_connection(client=client)
+        flush_task.cancel()        
+        try:
+            await flush_task
+        except asyncio.CancelledError:
+            print("[Shutdown] Flush task cancelled cleanly.")
 
 app = FastAPI(lifespan=lifespan)
 
@@ -126,15 +157,48 @@ async def login_user(credentials : Login):
     # Convert row to dict and remove password
     user_data = user_row.iloc[0].to_dict()
     login_response = LoginResponse(
-                userId= str(user_data['userId'])
+                userId= str(user_data['userId']),
+                userName= str(user_data['firstName']) + " "+ str(user_data['lastName']) 
             )
     return login_response
 
+@app.post("/api/auth/guestLogin")
+async def guest_user(credentials : GuestLogin):
+    df = pd.read_csv(GUEST_USER_CSV_FILE)
+    contact = credentials.contact
+    
+    # Check user by email or mobile
+    user_row = df[(df["contact"] == contact)]   
+    if user_row.empty:
+        guser_id = str(random.randint(5000,9999))
+        guest_user = {
+        "userId": guser_id,
+        "contact": contact
+        }    
+        df = pd.concat([df, pd.DataFrame([guest_user])], ignore_index=True)
+        df.to_csv(GUEST_USER_CSV_FILE, index=False)
+    else:
+        user_data = user_row.iloc[0].to_dict()  
+        guser_id =  user_data["userId"] 
+        
+    guest_login_response = GuestLoginResponse(
+                userId=str(guser_id),
+    )
+    return guest_login_response
+
+@app.get("/api/chat/getConversations/{userId}", response_model=List[ConversationResponse])
+async def get_conversation(userId: str):
+    convo = await conversations_collection.find({"userId": userId}).to_list()
+    if not convo:
+        return []
+    return [conversation_helper(c) for c in convo]
 
 @app.post("/api/chat/startNewConversation")
 async def start_conversation(request:StartConversation):
     """Start a new conversation and return conversation_id."""
+    await flush_buffer_to_db()
     conversation_id = str(uuid4())
+    now = datetime.now().isoformat(timespec='seconds')
     welcome = Message(
         sender="bot",
         message="""
@@ -142,27 +206,50 @@ async def start_conversation(request:StartConversation):
 
         I can help you with:
 
-        1. **Product Search** - Find the right products for your needs.
-        2. **Vehicle Search** - Browse and compare vehicles.
-        3. **Contract Search** - Access and review your contracts.
-        4. **Quote Generation** - Get personalized lease quotes.
-        """
+        1. Product Search - Find the right products for your needs.
+        2. Vehicle Search - Browse and compare vehicles.
+        3. Contract Search - Access and review your contracts.
+        4. Quote Generation - Get personalized lease quotes.
+        """,
+         timestamp=now,
+        fileStream=""
     )
     response = ConversationResponse(
         userId= request.userId,
         conversationId=conversation_id,
         messages=[welcome]
     )
+    convo_doc = {
+        "userId": request.userId,
+        "conversationId": conversation_id,
+        "messages": welcome.model_dump()
+    }
+    message_buffer.append(convo_doc)
     return response
 
 @app.get("/api/chat/recommendations/{userID}")
 async def recommendations(userID:int):
     print("Recommendation")
     #print(await get_user_preferences(client=client,user_id=userID))
-    #return await get_new_user_recommendation()
-    return await get_potential_customer_recommendation(user_id=userID,client=client)
+    return await get_new_user_recommendation()
+    #return await get_potential_customer_recommendation(user_id=userID,client=client)
+
 @app.post("/api/chat/sendMessage")
 async def send_bot_message(request: ConversationRequest):
+    conversationId = request.conversationId
+    userId = request.userId      
+            
+    message_data = request.messages.model_dump()
+    convo_doc = {
+            "userId": userId,
+            "conversationId": conversationId,
+            "messages": message_data
+    }
+    
+    message_buffer.append(convo_doc)
+    if len(message_buffer) >= MAX_BATCH_SIZE:
+        # Flush the buffer to MongoDB
+        await flush_buffer_to_db()
     final_message:str =""
     state = get_client_state(request.userId,request.conversationId)
     state.previous_query = get_last_query(request.userId,request.conversationId)
@@ -174,10 +261,19 @@ async def send_bot_message(request: ConversationRequest):
             )
     if "quotation" in state.route:
         final_message= await run_quotation_node(request=request)
+        now = datetime.now().isoformat(timespec='seconds')  
         response.messages.append(Message(
             sender="bot",
-            message=final_message
+            message=final_message,
+            timestamp=now,
+            fileStream=""
         ))
+        convo_doc = {
+        "userId": request.userId,
+        "conversationId": request.conversationId,
+        "messages": response.messages[-1].model_dump()
+        }
+        message_buffer.append(convo_doc)
         return response
     state = await router.run(state)
     save_client_state(user_id=request.userId,conversation_id=request.conversationId,state=state)
@@ -187,7 +283,14 @@ async def send_bot_message(request: ConversationRequest):
     elif state.action =="clarify":
         final_message=state.clarifying_question
     elif state.action =="decomposition":
-        return await decompose_tasks(request=request)
+        response = await decompose_tasks(request=request)
+        convo_doc = {
+        "userId": request.userId,
+        "conversationId": request.conversationId,
+        "messages": response.messages[-1].model_dump()
+        }
+        message_buffer.append(convo_doc)
+        return response
     elif "quotation" in state.route:
         state.quote_context = "vehicle"
         save_client_state(user_id=request.userId,conversation_id=request.conversationId,state=state)
@@ -195,10 +298,20 @@ async def send_bot_message(request: ConversationRequest):
         save_client_state(user_id=request.userId,conversation_id=request.conversationId,state=state)
         final_message = state.quote_intermediate_results
     else:
-        return await get_conversation_result(request=request,router_passed=True)
+        response,rewritten_query = await get_conversation_result(request=request,router_passed=True)
+        convo_doc = {
+        "userId": request.userId,
+        "conversationId": request.conversationId,
+        "messages": response.messages[-1].model_dump()
+        }
+        message_buffer.append(convo_doc)
+        return response
+    now = datetime.now().isoformat(timespec='seconds')  
     response.messages.append(Message(
             sender="bot",
-            message=final_message
+            message=final_message,
+            timestamp=now,
+            fileStream=""
         ))
     add_short_term_memory_from_dict(
         user_id=request.userId,
@@ -206,7 +319,51 @@ async def send_bot_message(request: ConversationRequest):
         query=state.query,
         response=state.final_answer
     )
+    convo_doc = {
+    "userId": request.userId,
+    "conversationId": request.conversationId,
+    "messages": response.messages[-1].model_dump()
+    }
+    message_buffer.append(convo_doc)
     return response
+    
+async def flush_buffer_to_db():
+    global message_buffer
+    if not message_buffer:
+        return
+    
+    buffer_copy = message_buffer.copy()
+    message_buffer.clear()
+
+    try:
+        #validation to ensure there is atleast one user message
+        list_convo_id = [msg.get("conversationId") for msg in buffer_copy]
+        count_convo_id = dict(Counter(list_convo_id))
+        
+        for msg in buffer_copy:      
+            if(count_convo_id[msg.get("conversationId")]<2):
+                message_buffer.append(msg)
+            else:           
+                await conversations_collection.update_one(
+                    {
+                        "userId": msg.get("userId"),
+                        "conversationId": msg.get("conversationId")
+                    },
+                    {
+                        "$push": {"messages": msg.get("messages")}
+                    },
+                    upsert=True
+                )
+            #print(f"Inserted {len(buffer_copy)} messages to DB.")
+    except Exception as e:
+        print(f"[Error] Failed to insert batch: {e}")
+
+async def periodic_flush_task():
+    while True:
+        await asyncio.sleep(1*60)  # every 10mins
+        async with buffer_lock:
+            if message_buffer:
+                await flush_buffer_to_db()
 
 async def decompose_tasks(request: ConversationRequest):
     context=[]
@@ -235,9 +392,12 @@ async def decompose_tasks(request: ConversationRequest):
         userId= request.userId  ,     # string
         conversationId=request.conversationId # string
         )
+    now = datetime.now().isoformat(timespec='seconds')  
     response.messages.append(Message(
         sender="bot",
-        message=final_answer
+        message=final_answer,
+        timestamp=now,
+        fileStream=""
     ))
     add_short_term_memory_from_dict(user_id=request.userId,conversation_id=request.conversationId,query=",".join(questions),response=response)
     return response
@@ -291,9 +451,12 @@ async def get_conversation_result(request: ConversationRequest,router_passed:boo
     else:
         flow_instance = ROUTE_MAP["general"]()
     state: AgentState = await flow_instance.run(state)
+    now = datetime.now().isoformat(timespec='seconds')  
     response.messages.append(Message(
                 sender=sender,
-                message=state.final_answer
+                message=state.final_answer,
+                timestamp=now,
+                fileStream=""
             ))
     save_client_state(request.userId,request.conversationId,state=state)
     add_short_term_memory_from_dict(user_id=state.customer_id, conversation_id=request.conversationId,query=state.rewritten_query,response=state.final_answer)
